@@ -1,0 +1,26 @@
+<Project>
+    
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <EnableNETAnalyzers>true</EnableNETAnalyzers>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <AnalysisLevel>latest</AnalysisLevel>
+      <AnalysisMode>All</AnalysisMode>
+      <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+      <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <EnableStyleCopAnalyzers>true</EnableStyleCopAnalyzers>
+    </PropertyGroup>
+</Project>
