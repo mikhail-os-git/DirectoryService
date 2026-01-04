@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Relations;
 using DirectoryService.Domain.ValueObjects;
 
@@ -6,46 +7,55 @@ namespace DirectoryService.Domain.Positions;
 
 public class Position
 {
-    public const int MAX_DESCRIPTION_LENGTH = 1000;
     public Guid Id { get; private set; }
-    public Name Name { get; private set; } = null!;
+    public DepartmentName DepartmentName { get; private set; } = null!;
     public string? Description { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     
-    private List<DepartmentPosition> _departmentPositions = [];
+    private readonly List<DepartmentPosition> _departmentPositions = [];
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
     
-    private Position(Guid id, Name name, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
+    private Position(Guid id, DepartmentName departmentName, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
-        Name = name;
+        DepartmentName = departmentName;
         Description = description;
         IsActive = isActive;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    public static Result<Position, string> Create(Name name, bool isActive,
+    public static Result<Position, string> Create(DepartmentName departmentName, bool isActive,
         string? description = null)
     {
         Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;
 
-        if (!string.IsNullOrWhiteSpace(description))
+        if (!StringValidator.IsEmpty(description))
         {
-            if (description.Length > MAX_DESCRIPTION_LENGTH)
+            int max = 1000;
+            if (!StringValidator.Required(description!, max))
             {
-                return $"the description text is too long, the maximum number of characters: {MAX_DESCRIPTION_LENGTH}";
+                return $"the description text is too long, the maximum number of characters: {max}";
             }
         }
 
-        return new Position(id, name, description, isActive, now, now);
+        return new Position(id, departmentName, description, isActive, now, now);
     }
     
-    public void AddDepartment(Guid departmentId)
+    public void AddDepartments(params IEnumerable<Guid> departmentIds)
     {
-        _departmentPositions.Add(new DepartmentPosition(departmentId, Id));
+        foreach (var id in departmentIds)
+        { 
+            if(id != Guid.Empty && !CheckDepartment(id))
+                _departmentPositions.Add(new DepartmentPosition(id, Id));
+        }
+    }
+    
+    private bool CheckDepartment(Guid id)
+    {
+        return _departmentPositions.Any(dp => dp.DepartmentId == id);
     }
 }

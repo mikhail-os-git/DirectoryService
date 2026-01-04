@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Common;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -14,7 +15,7 @@ public record Timezone
 
     public static Result<Timezone, string> Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (StringValidator.IsEmpty(value))
         {
             return "The timezone must be specified.";
         }

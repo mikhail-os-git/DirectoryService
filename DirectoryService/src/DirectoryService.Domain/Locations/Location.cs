@@ -7,21 +7,21 @@ namespace DirectoryService.Domain.Locations;
 public class Location
 {
     public Guid Id { get; private set; }
-    public Name Name { get; private set; }
+    public DepartmentName DepartmentName { get; private set; }
     public Address Address { get; private set; }
     public Timezone Timezone { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     
-    private List<DepartmentLocation> _departmentLocations = [];
+    private readonly List<DepartmentLocation> _departmentLocations = [];
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     
-    private Location(Guid id, Name name, Address address, Timezone timezone, bool isActive, DateTime createdAt,
+    private Location(Guid id, DepartmentName departmentName, Address address, Timezone timezone, bool isActive, DateTime createdAt,
         DateTime updatedAt)
     {
         Id = id;
-        Name = name;
+        DepartmentName = departmentName;
         Address = address;
         Timezone = timezone;
         IsActive = isActive;
@@ -29,16 +29,25 @@ public class Location
         UpdatedAt = updatedAt;
     }
 
-    public static Result<Location, string> Create(Name name, Address address, Timezone timezone)
+    public static Result<Location, string> Create(DepartmentName departmentName, Address address, Timezone timezone)
     {
         Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;
 
-        return new Location(id, name, address, timezone, true, now, now);
+        return new Location(id, departmentName, address, timezone, true, now, now);
     }
 
-    public void AddDepartment(Guid departmentId)
+    public void AddDepartments(params Guid[] departmentIds)
     {
-        _departmentLocations.Add(new DepartmentLocation(departmentId, Id));
+        foreach (Guid id in departmentIds)
+        {
+            if(id != Guid.Empty && !CheckDepartment(id))
+                _departmentLocations.Add(new DepartmentLocation(id, Id));
+        }
+    }
+
+    private bool CheckDepartment(Guid id)
+    {
+        return _departmentLocations.Any(dl => dl.DepartmentId == id);
     }
 }

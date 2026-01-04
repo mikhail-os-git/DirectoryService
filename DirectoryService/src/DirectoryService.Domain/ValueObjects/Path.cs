@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Common;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -6,7 +7,7 @@ public record Path
 {
     public string Value { get; }
 
-    private List<string> _roads = [];
+    private readonly List<string> _roads = [];
 
     public IReadOnlyList<string> Roads => _roads;
 
@@ -18,7 +19,7 @@ public record Path
 
     private static Result<Path, string> Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (StringValidator.IsEmpty(value))
         {
             return "The value must not be empty.";
         }
@@ -26,7 +27,7 @@ public record Path
         foreach (char ch in value)
         {
             if(ch == '.' || ch == '-') continue;
-            if (!char.IsAsciiLetter(ch))
+            if (!StringValidator.IsEnglishLetter(ch))
             {
                 return $"The path can contain only English letters and symbols: '.' and '-";
             }

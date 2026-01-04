@@ -8,7 +8,7 @@ namespace DirectoryService.Domain.Departments;
 public class Department
 {
     public Guid Id { get; private set; }
-    public Name Name { get; private set; }
+    public DepartmentName DepartmentName { get; private set; }
     public Identifier Identifier { get; private set; }
     public Guid? ParentId { get; private set; }
     public Path Path { get; private set; }
@@ -17,15 +17,15 @@ public class Department
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
-    private List<DepartmentLocation> _departmentLocations = [];
-    private List<DepartmentPosition> _departmentPositions = [];
+    private readonly List<DepartmentLocation> _departmentLocations = [];
+    private readonly List<DepartmentPosition> _departmentPositions = [];
     
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
     
     private Department(
         Guid id, 
-        Name name,
+        DepartmentName departmentName,
         Identifier identifier,
         Guid? parentId,
         Path path,
@@ -35,7 +35,7 @@ public class Department
         DateTime updatedAt)
     {
         Id = id;
-        Name = name;
+        DepartmentName = departmentName;
         Identifier = identifier;
         ParentId = parentId;
         Path = path;
@@ -45,23 +45,44 @@ public class Department
         UpdatedAt = updatedAt;
     }
     
-    public static Result<Department, string> Create(Name name, Identifier identifier, Path path, short depth, Guid? parentId = null)
+    public static Result<Department, string> Create(DepartmentName departmentName, Identifier identifier, Path path, short depth, Guid? parentId = null)
     {
         Guid id = Guid.NewGuid();
         DateTime now = DateTime.UtcNow;
         
-        return new Department(id, name, identifier, parentId, path, depth, true, now, now);
+        return new Department(id, departmentName, identifier, parentId, path, depth, true, now, now);
         
     }
 
-    public void AddLocation(Guid locationId)
+    public Department AddLocations(params Guid[] locationIds)
     {
-        _departmentLocations.Add(new DepartmentLocation(Id, locationId));
-    }
+        foreach (Guid id in locationIds)
+        {
+            if(id != Guid.Empty && !CheckLocation(id))
+                _departmentLocations.Add(new DepartmentLocation(Id, id));
+        }
 
-    public void AddPosition(Guid positionId)
-    {
-        _departmentPositions.Add(new DepartmentPosition(Id, positionId));
+        return this;
     }
     
+    public Department AddPositions(params Guid[] positionIds)
+    {
+        foreach (Guid id in positionIds)
+        {
+            if(id != Guid.Empty && !CheckPosition(id))
+                _departmentPositions.Add(new DepartmentPosition(Id, id));
+        }
+
+        return this;
+    }
+    
+    private bool CheckLocation(Guid id)
+    {
+        return _departmentLocations.Any(dl => dl.LocationId == id);
+    }
+
+    private bool CheckPosition(Guid id)
+    {
+        return _departmentPositions.Any(dp => dp.PositionId == id);
+    }
 }

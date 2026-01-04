@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Common;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -30,22 +31,22 @@ public record Address
         bool invalidPostalCode = false;
         List<string> fields = [];
 
-        if (string.IsNullOrWhiteSpace(country))
+        if (StringValidator.IsEmpty(country))
         {
             fields.Add("Country");
         }
         
-        if (string.IsNullOrWhiteSpace(city))
+        if (StringValidator.IsEmpty(city))
         {
             fields.Add("City");
         }
 
-        if (string.IsNullOrWhiteSpace(street))
+        if (StringValidator.IsEmpty(street))
         {
             fields.Add("Street");
         }
 
-        if (string.IsNullOrWhiteSpace(houseNumber))
+        if (StringValidator.IsEmpty(houseNumber))
         {
             fields.Add("House Number");
         }
@@ -76,8 +77,6 @@ public record Address
 
     public override string ToString()
     {
-        string res =
-            $"{nameof(Country)}: {Country} ,{nameof(City)}: {City}, {nameof(Street)}: {Street}, {nameof(HouseNumber)}: {HouseNumber}, {nameof(PostalCode)}: {PostalCode}.";
-        return res;
+        return $"{nameof(Country)}: {Country} ,{nameof(City)}: {City}, {nameof(Street)}: {Street}, {nameof(HouseNumber)}: {HouseNumber}, {nameof(PostalCode)}: {PostalCode}.";
     } 
 }
