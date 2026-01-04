@@ -7,7 +7,7 @@ namespace DirectoryService.Domain.Locations;
 public class Location
 {
     public Guid Id { get; private set; }
-    public DepartmentName DepartmentName { get; private set; }
+    public LocationName LocationName { get; private set; }
     public Address Address { get; private set; }
     public Timezone Timezone { get; private set; }
     public bool IsActive { get; private set; }
@@ -17,11 +17,11 @@ public class Location
     private readonly List<DepartmentLocation> _departmentLocations = [];
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     
-    private Location(Guid id, DepartmentName departmentName, Address address, Timezone timezone, bool isActive, DateTime createdAt,
+    private Location(Guid id, LocationName locationName, Address address, Timezone timezone, bool isActive, DateTime createdAt,
         DateTime updatedAt)
     {
         Id = id;
-        DepartmentName = departmentName;
+        LocationName = locationName;
         Address = address;
         Timezone = timezone;
         IsActive = isActive;
@@ -29,12 +29,12 @@ public class Location
         UpdatedAt = updatedAt;
     }
 
-    public static Result<Location, string> Create(DepartmentName departmentName, Address address, Timezone timezone)
+    public static Result<Location, string> Create(LocationName locationName, Address address, Timezone timezone)
     {
         Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;
 
-        return new Location(id, departmentName, address, timezone, true, now, now);
+        return new Location(id, locationName, address, timezone, true, now, now);
     }
 
     public void AddDepartments(params Guid[] departmentIds)

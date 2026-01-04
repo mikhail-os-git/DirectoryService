@@ -8,7 +8,7 @@ namespace DirectoryService.Domain.Positions;
 public class Position
 {
     public Guid Id { get; private set; }
-    public DepartmentName DepartmentName { get; private set; } = null!;
+    public PositionName PositionName { get; private set; } = null!;
     public string? Description { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -17,17 +17,17 @@ public class Position
     private readonly List<DepartmentPosition> _departmentPositions = [];
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
     
-    private Position(Guid id, DepartmentName departmentName, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
+    private Position(Guid id, PositionName positionName, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
-        DepartmentName = departmentName;
+        PositionName = positionName;
         Description = description;
         IsActive = isActive;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    public static Result<Position, string> Create(DepartmentName departmentName, bool isActive,
+    public static Result<Position, string> Create(PositionName positionName, bool isActive,
         string? description = null)
     {
         Guid id = Guid.NewGuid();
@@ -42,10 +42,10 @@ public class Position
             }
         }
 
-        return new Position(id, departmentName, description, isActive, now, now);
+        return new Position(id, positionName, description, isActive, now, now);
     }
     
-    public void AddDepartments(params IEnumerable<Guid> departmentIds)
+    public void AddDepartments(params Guid[] departmentIds)
     {
         foreach (var id in departmentIds)
         { 
