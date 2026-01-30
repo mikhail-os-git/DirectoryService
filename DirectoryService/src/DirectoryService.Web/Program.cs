@@ -1,4 +1,6 @@
 using System.Globalization;
+using DirectoryService.Infrastructure;
+using DirectoryService.Web.Configurations;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -9,9 +11,12 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    
+    builder.Services.AddDependencies(builder.Configuration);
+    
     builder.Services.AddControllers();
     builder.Services.AddOpenApi();
-
+    
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -19,13 +24,12 @@ try
         app.MapOpenApi();
     
         app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "DirectoryService"));  
+        
     }
+    
+    app?.MapControllers();
 
-// app.UseHttpsRedirection();
-// app.UseAuthorization(); 
-    app.MapControllers();
-
-    app.Run();
+    app?.Run();
 
 }
 catch (Exception ex)

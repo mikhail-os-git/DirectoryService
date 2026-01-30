@@ -35,4 +35,9 @@ public record Timezone
 
         return "The time zone was specified incorrectly.";
     }
+
+    public static Timezone FromDb(string timezone)
+    {
+        return new Timezone(timezone);
+    }
 }

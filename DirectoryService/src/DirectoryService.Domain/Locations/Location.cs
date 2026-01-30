@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Relations;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
 
 namespace DirectoryService.Domain.Locations;
@@ -7,9 +7,9 @@ namespace DirectoryService.Domain.Locations;
 public class Location
 {
     public Guid Id { get; private set; }
-    public LocationName LocationName { get; private set; }
-    public Address Address { get; private set; }
-    public Timezone Timezone { get; private set; }
+    public LocationName LocationName { get; private set; } = null!;
+    public Address Address { get; private set; } = null!;
+    public Timezone Timezone { get; private set; } = null!;
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -27,6 +27,11 @@ public class Location
         IsActive = isActive;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+    }
+    
+    // EF Core
+    private Location()
+    {
     }
 
     public static Result<Location, string> Create(LocationName locationName, Address address, Timezone timezone)

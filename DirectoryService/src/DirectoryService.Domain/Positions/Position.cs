@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
-using DirectoryService.Domain.Relations;
+using DirectoryService.Domain.Common.Constants;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
 
 namespace DirectoryService.Domain.Positions;
@@ -35,10 +36,9 @@ public class Position
 
         if (!StringValidator.IsEmpty(description))
         {
-            int max = 1000;
-            if (!StringValidator.Required(description!, max))
+            if (!StringValidator.Required(description!, LengthConstants.MAX_LENGTH_1000))
             {
-                return $"the description text is too long, the maximum number of characters: {max}";
+                return $"the description text is too long, the maximum number of characters: {LengthConstants.MAX_LENGTH_1000}";
             }
         }
 
