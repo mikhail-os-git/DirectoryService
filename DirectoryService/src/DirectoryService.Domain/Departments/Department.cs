@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Relations;
 using DirectoryService.Domain.ValueObjects;
 using Path = DirectoryService.Domain.ValueObjects.Path;
 
@@ -8,10 +7,10 @@ namespace DirectoryService.Domain.Departments;
 public class Department
 {
     public Guid Id { get; private set; }
-    public DepartmentName DepartmentName { get; private set; }
-    public Identifier Identifier { get; private set; }
+    public DepartmentName DepartmentName { get; private set; } = null!;
+    public Identifier Identifier { get; private set; } = null!;
     public Guid? ParentId { get; private set; }
-    public Path Path { get; private set; }
+    public Path Path { get; private set; } = null!;
     public short Depth { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -22,6 +21,11 @@ public class Department
     
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
+    
+    // EF Core
+    private Department()
+    {
+    }
     
     private Department(
         Guid id, 

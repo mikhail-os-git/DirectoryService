@@ -1,20 +1,25 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using DirectoryService.Domain.Common.Constants;
 
 namespace DirectoryService.Domain.ValueObjects;
 
 public record DepartmentName
 {
-    public const int MAX_LENGTH = 150;
-    public const int MIN_LENGTH = 3;
-    
-    public string Value { get; }
+    public const int MAX_LENGTH = LengthConstants.MAX_LENGTH_150;
+    public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_3;
+    public string Value { get; } = null!;
 
+    // EF core
+    private DepartmentName()
+    {
+    }
+    
     private DepartmentName(string value)
     {
         Value = value;
     }
-
+    
     public static Result<DepartmentName, string> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
@@ -28,4 +33,7 @@ public record DepartmentName
         
         return new DepartmentName(value);
     }
+
+    public static DepartmentName FromDb(string value) => new(value);
+
 }

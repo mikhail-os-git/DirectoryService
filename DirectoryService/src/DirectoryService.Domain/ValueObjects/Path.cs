@@ -14,10 +14,10 @@ public record Path
     private Path(string value)
     {
         Value = value;
-        _roads = value.Split('.').ToList();
+        _roads = SplitRoads(value);
     }
 
-    private static Result<Path, string> Create(string value)
+    public static Result<Path, string> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
         {
@@ -34,5 +34,15 @@ public record Path
         }
         
         return new Path(value);
+    }
+
+    public static Path FromDb(string path)
+    {
+        return new Path(path);
+    }
+    
+    private static List<string> SplitRoads(string path)
+    {
+        return path.Split('.').ToList();
     }
 }

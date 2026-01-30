@@ -1,12 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using DirectoryService.Domain.Common.Constants;
 
 namespace DirectoryService.Domain.ValueObjects;
 
 public record Identifier
 {
-    public const int MAX_LENGTH = 150;
-    public const int MIN_LENGTH = 3;
+    public const int MAX_LENGTH = LengthConstants.MAX_LENGTH_150;
+    public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_3;
     public string Value { get; }
 
     private Identifier(string value)
@@ -30,5 +31,8 @@ public record Identifier
             return "The identifier must contain only English letters.";
         
         return new Identifier(value);
+
     }
+    
+    public static Identifier FromDb(string value) => new(value);
 }

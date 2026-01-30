@@ -12,8 +12,14 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    
-    <PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Migrations\**\*.cs">
+      <NoWarn>$(NoWarn);SA1413;CA1861</NoWarn>
+    </Compile>
+  </ItemGroup>
+
+  <PropertyGroup>
       <EnableNETAnalyzers>true</EnableNETAnalyzers>
       <ImplicitUsings>enable</ImplicitUsings>
       <AnalysisLevel>latest</AnalysisLevel>

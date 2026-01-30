@@ -1,12 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using DirectoryService.Domain.Common.Constants;
 
 namespace DirectoryService.Domain.ValueObjects;
 
 public record PositionName
 {
-    public const int MAX_LENGTH = 100;
-    public const int MIN_LENGTH = 3;
+    public const int MAX_LENGTH = LengthConstants.MAX_LENGTH_100;
+    public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_3;
     
     public string Value { get; }
 
@@ -27,5 +28,10 @@ public record PositionName
         }
 
         return new PositionName(value);
+    }
+
+    public static PositionName FromDb(string name)
+    {
+        return new PositionName(name);
     }
 }
