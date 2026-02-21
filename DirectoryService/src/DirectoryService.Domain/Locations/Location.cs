@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Departments;
-using DirectoryService.Domain.ValueObjects;
+using DirectoryService.Infrastructure.Departments;
+using DirectoryService.Infrastructure.ValueObjects;
 
-namespace DirectoryService.Domain.Locations;
+namespace DirectoryService.Infrastructure.Locations;
 
 public class Location
 {

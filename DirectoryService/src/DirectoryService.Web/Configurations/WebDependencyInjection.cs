@@ -1,10 +1,7 @@
-﻿using DirectoryService.Infrastructure;
-using DirectoryService.Infrastructure.Configurations;
-using Microsoft.OpenApi;
-using Serilog;
+﻿using Serilog;
 using Serilog.Exceptions;
 
-namespace DirectoryService.Web.Configurations;
+namespace DirectoryService.Infrastructure.Configurations;
 
 public static class WebDependencyInjection
 {

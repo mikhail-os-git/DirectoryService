@@ -1,8 +1,6 @@
-﻿using DirectoryService.Domain.Departments;
+﻿namespace DirectoryService.Infrastructure.Departments;
 
-namespace DirectoryService.Application.Departments;
-
-public interface IDepartmentRepository
+public interface IDepartmentsRepository
 {
     Task<Guid> AddAsync(Department department, CancellationToken cancellationToken);
     

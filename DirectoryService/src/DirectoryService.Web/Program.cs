@@ -1,6 +1,6 @@
 using System.Globalization;
 using DirectoryService.Infrastructure;
-using DirectoryService.Web.Configurations;
+using DirectoryService.Infrastructure.Configurations;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

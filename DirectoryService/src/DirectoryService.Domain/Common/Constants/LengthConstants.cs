@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace DirectoryService.Domain.Common.Constants;
+﻿namespace DirectoryService.Infrastructure.Common.Constants;
 
 #pragma warning disable CA1815
 public readonly struct LengthConstants

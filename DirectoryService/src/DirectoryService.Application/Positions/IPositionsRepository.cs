@@ -1,8 +1,6 @@
-﻿using DirectoryService.Domain.Positions;
+﻿namespace DirectoryService.Infrastructure.Positions;
 
-namespace DirectoryService.Application.Positions;
-
-public interface IPositionRepository
+public interface IPositionsRepository
 {
     Task<Guid> AddAsync(Position position, CancellationToken cancellationToken);
     
