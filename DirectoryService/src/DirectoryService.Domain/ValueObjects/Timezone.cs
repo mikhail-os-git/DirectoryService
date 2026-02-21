@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Common;
+using DirectoryService.Infrastructure.Common;
 
-namespace DirectoryService.Domain.ValueObjects;
+namespace DirectoryService.Infrastructure.ValueObjects;
 
 public record Timezone
 {

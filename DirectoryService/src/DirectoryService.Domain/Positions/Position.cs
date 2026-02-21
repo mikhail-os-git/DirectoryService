@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Common;
-using DirectoryService.Domain.Common.Constants;
-using DirectoryService.Domain.Departments;
-using DirectoryService.Domain.ValueObjects;
+using DirectoryService.Infrastructure.Common;
+using DirectoryService.Infrastructure.Common.Constants;
+using DirectoryService.Infrastructure.Departments;
+using DirectoryService.Infrastructure.ValueObjects;
 
-namespace DirectoryService.Domain.Positions;
+namespace DirectoryService.Infrastructure.Positions;
 
 public class Position
 {

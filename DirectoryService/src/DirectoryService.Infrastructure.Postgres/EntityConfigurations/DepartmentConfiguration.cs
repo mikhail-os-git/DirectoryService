@@ -1,11 +1,10 @@
-﻿using DirectoryService.Domain.Common.Constants;
-using DirectoryService.Domain.Departments;
-using DirectoryService.Domain.ValueObjects;
+﻿using DirectoryService.Infrastructure.Departments;
+using DirectoryService.Infrastructure.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Path = DirectoryService.Domain.ValueObjects.Path;
+using Path = DirectoryService.Infrastructure.ValueObjects.Path;
 
-namespace DirectoryService.Infrastructure.Configurations;
+namespace DirectoryService.Infrastructure.EntityConfigurations;
 
 public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
 {

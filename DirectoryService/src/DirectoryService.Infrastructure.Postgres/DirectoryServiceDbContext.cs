@@ -1,7 +1,6 @@
-﻿using DirectoryService.Application.Departments;
-using DirectoryService.Domain.Departments;
-using DirectoryService.Domain.Locations;
-using DirectoryService.Domain.Positions;
+﻿using DirectoryService.Infrastructure.Departments;
+using DirectoryService.Infrastructure.Locations;
+using DirectoryService.Infrastructure.Positions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

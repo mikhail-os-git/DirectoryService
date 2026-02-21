@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Common;
-using DirectoryService.Domain.Common.Constants;
+using DirectoryService.Infrastructure.Common;
+using DirectoryService.Infrastructure.Common.Constants;
 
-namespace DirectoryService.Domain.ValueObjects;
+namespace DirectoryService.Infrastructure.ValueObjects;
 
 public record LocationName
 {

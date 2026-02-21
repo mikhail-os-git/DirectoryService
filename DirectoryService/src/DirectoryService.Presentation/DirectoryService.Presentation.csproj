@@ -1,14 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>DirectoryService.Presentation</RootNamespace>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\DirectoryService.Domain\DirectoryService.Domain.csproj" />
-      <ProjectReference Include="..\DirectoryService.Web\DirectoryService.Web.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DirectoryService.Application\DirectoryService.Application.csproj" />
+    <ProjectReference Include="..\DirectoryService.Contracts\DirectoryService.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.9" />
+  </ItemGroup>
 
 </Project>
