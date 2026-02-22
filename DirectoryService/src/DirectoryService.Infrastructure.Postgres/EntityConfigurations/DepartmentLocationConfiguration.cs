@@ -3,7 +3,7 @@ using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DirectoryService.Infrastructure.Configurations;
+namespace DirectoryService.Infrastructure.EntityConfigurations;
 
 public class DepartmentLocationConfiguration: IEntityTypeConfiguration<DepartmentLocation>
 {

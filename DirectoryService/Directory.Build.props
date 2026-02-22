@@ -12,12 +12,18 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Migrations\**\*.cs">
-      <NoWarn>$(NoWarn);SA1413;CA1861</NoWarn>
-    </Compile>
-  </ItemGroup>
+  
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1848</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+<!--    <RootNamespace>DirectoryService.Infrastructure</RootNamespace>-->
+    <NoWarn>$(NoWarn);SA1413;CA1861</NoWarn>
+  </PropertyGroup>
 
   <PropertyGroup>
       <EnableNETAnalyzers>true</EnableNETAnalyzers>

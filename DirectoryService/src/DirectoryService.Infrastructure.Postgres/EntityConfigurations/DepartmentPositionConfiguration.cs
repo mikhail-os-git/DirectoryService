@@ -3,7 +3,7 @@ using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DirectoryService.Infrastructure.Configurations;
+namespace DirectoryService.Infrastructure.EntityConfigurations;
 
 public class DepartmentPositionConfiguration: IEntityTypeConfiguration<DepartmentPosition>
 {

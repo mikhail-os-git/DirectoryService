@@ -1,4 +1,7 @@
-﻿using DirectoryService.Domain.Common.Constants;
+﻿using DirectoryService.Application.Configuration;
+using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Domain.Common.Constants;
+using DirectoryService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,16 +16,20 @@ public static class InfrastructureDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Repositories здесь создать и зарегестрировать
+        return services.UseCaseRegistration().DbContextRegistration(configuration).AddRepositories();
+    }
+    
+    private static IServiceCollection DbContextRegistration(this IServiceCollection services, IConfiguration configuration)
+    {
         services.AddDbContextPool<DirectoryServiceDbContext>((sp, options) =>
         {
             string? connectionString = configuration.GetConnectionString(DatabaseConstants.DATABASE);
-            IHostEnvironment hostEnviroment = sp.GetRequiredService<IHostEnvironment>();
+            IHostEnvironment hostEnv = sp.GetRequiredService<IHostEnvironment>();
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
 
             options.UseNpgsql(connectionString);
 
-            if (hostEnviroment.IsDevelopment())
+            if (hostEnv.IsDevelopment())
             {
                 options.EnableSensitiveDataLogging();
                 options.EnableDetailedErrors();
@@ -32,5 +39,11 @@ public static class InfrastructureDependencyInjection
         });
 
         return services;
+    }
+    
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        // Здесь будет регестрация всех Репозиториев
+        return services.AddScoped<ILocationsRepository, LocationsRepository>();
     }
 }

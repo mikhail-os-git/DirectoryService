@@ -1,6 +1,4 @@
-﻿using DirectoryService.Infrastructure;
-using DirectoryService.Infrastructure.Configurations;
-using Microsoft.OpenApi;
+﻿using DirectoryService.Infrastructure.Configurations;
 using Serilog;
 using Serilog.Exceptions;
 
