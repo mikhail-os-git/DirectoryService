@@ -1,6 +1,6 @@
-﻿using DirectoryService.Infrastructure.Common.Constants;
-using DirectoryService.Infrastructure.Configuration;
-using DirectoryService.Infrastructure.Locations.Interfaces;
+﻿using DirectoryService.Application.Configuration;
+using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

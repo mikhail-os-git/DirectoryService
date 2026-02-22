@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Infrastructure.Common;
-using DirectoryService.Infrastructure.Common.Constants;
+using DirectoryService.Domain.Common;
+using DirectoryService.Domain.Common.Constants;
 
-namespace DirectoryService.Infrastructure.ValueObjects;
+namespace DirectoryService.Domain.ValueObjects;
 
 public record PositionName
 {

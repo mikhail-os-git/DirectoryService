@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Infrastructure.ValueObjects;
-using Path = DirectoryService.Infrastructure.ValueObjects.Path;
+using DirectoryService.Domain.ValueObjects;
+using Path = DirectoryService.Domain.ValueObjects.Path;
 
-namespace DirectoryService.Infrastructure.Departments;
+namespace DirectoryService.Domain.Departments;
 
 public class Department
 {

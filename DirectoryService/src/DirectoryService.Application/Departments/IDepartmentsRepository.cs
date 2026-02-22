@@ -1,4 +1,6 @@
-﻿namespace DirectoryService.Infrastructure.Departments;
+﻿using DirectoryService.Domain.Departments;
+
+namespace DirectoryService.Application.Departments;
 
 public interface IDepartmentsRepository
 {

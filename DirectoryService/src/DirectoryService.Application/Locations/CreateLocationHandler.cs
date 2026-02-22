@@ -1,37 +1,38 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Infrastructure.Locations.Interfaces;
-using DirectoryService.Infrastructure.ValueObjects;
+using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Domain.Locations;
+using DirectoryService.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
-namespace DirectoryService.Infrastructure.Locations;
+namespace DirectoryService.Application.Locations;
 
-public class LocationCreateHandler : ILocationCreateHandler
+public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
 {
     private readonly ILocationsRepository _repository;
-    private readonly ILogger<LocationCreateHandler> _logger;
+    private readonly ILogger<CreateLocationHandler> _logger;
 
-    public LocationCreateHandler(ILocationsRepository repository, ILogger<LocationCreateHandler> logger)
+    public CreateLocationHandler(ILocationsRepository repository, ILogger<CreateLocationHandler> logger)
     {
         _repository = repository;
         _logger = logger;
     }
 
-    public async Task<Result<Guid, string>> Handle(LocationRequestDto request, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, string>> Handle(CreateLocationCommand command, CancellationToken cancellationToken = default)
     {
         // Валидпция входных параметров
         
         // Бизнес валидация
         
         // Создание доменных моделей
-        var name = LocationName.Create(request.Name);
+        var name = LocationName.Create(command.Request.Name);
         if (name.IsFailure)
         {
             _logger.LogError("Validation failed for name: {Error}", name.Error);
-
             return name.Error;
         }
 
-        var timezone = Timezone.Create(request.Timezone);
+        var timezone = Timezone.Create(command.Request.Timezone);
 
         if (timezone.IsFailure)
         {
@@ -40,16 +41,15 @@ public class LocationCreateHandler : ILocationCreateHandler
         }
 
         var address = Address.Create(
-            request.Address.Country,
-            request.Address.City,
-            request.Address.Street,
-            request.Address.HouseNumber,
-            request.Address.PostalCode);
+            command.Request.Address.Country,
+            command.Request.Address.City,
+            command.Request.Address.Street,
+            command.Request.Address.HouseNumber,
+            command.Request.Address.PostalCode);
 
         if (address.IsFailure)
         {
             _logger.LogError("Validation failed for address: {Error}", address.Error);
-            
             return address.Error;
         }
 
@@ -60,7 +60,8 @@ public class LocationCreateHandler : ILocationCreateHandler
         // Сохранение доменных моделей в БД
         var result = await _repository.AddAsync(location.Value, cancellationToken);
 
-        if (result.IsFailure) return result.Error;
+        if (result.IsFailure) 
+            return result.Error;
 
         return result.Value;
     }

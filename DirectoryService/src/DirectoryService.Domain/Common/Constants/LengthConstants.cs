@@ -1,4 +1,4 @@
-﻿namespace DirectoryService.Infrastructure.Common.Constants;
+﻿namespace DirectoryService.Domain.Common.Constants;
 
 #pragma warning disable CA1815
 public readonly struct LengthConstants

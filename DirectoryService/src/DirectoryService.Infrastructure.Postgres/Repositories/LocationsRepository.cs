@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Infrastructure.Locations;
-using DirectoryService.Infrastructure.Locations.Interfaces;
+using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Domain.Locations;
 using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Repositories;

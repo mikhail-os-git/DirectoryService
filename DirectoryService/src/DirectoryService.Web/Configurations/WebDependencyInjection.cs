@@ -1,7 +1,8 @@
-﻿using Serilog;
+﻿using DirectoryService.Infrastructure.Configurations;
+using Serilog;
 using Serilog.Exceptions;
 
-namespace DirectoryService.Infrastructure.Configurations;
+namespace DirectoryService.Web.Configurations;
 
 public static class WebDependencyInjection
 {

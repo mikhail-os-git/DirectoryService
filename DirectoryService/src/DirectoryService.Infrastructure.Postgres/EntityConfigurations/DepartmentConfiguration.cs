@@ -1,8 +1,8 @@
-﻿using DirectoryService.Infrastructure.Departments;
-using DirectoryService.Infrastructure.ValueObjects;
+﻿using DirectoryService.Domain.Departments;
+using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Path = DirectoryService.Infrastructure.ValueObjects.Path;
+using Path = DirectoryService.Domain.ValueObjects.Path;
 
 namespace DirectoryService.Infrastructure.EntityConfigurations;
 

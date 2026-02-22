@@ -1,4 +1,4 @@
-﻿namespace DirectoryService.Infrastructure.Common;
+﻿namespace DirectoryService.Domain.Common;
 
 public static class StringValidator
 {

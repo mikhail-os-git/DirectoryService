@@ -1,4 +1,4 @@
-﻿namespace DirectoryService.Infrastructure.Common.Constants;
+﻿namespace DirectoryService.Domain.Common.Constants;
 
 public static class DatabaseConstants
 {

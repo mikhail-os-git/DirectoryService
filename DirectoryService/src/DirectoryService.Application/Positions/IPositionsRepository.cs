@@ -1,4 +1,6 @@
-﻿namespace DirectoryService.Infrastructure.Positions;
+﻿using DirectoryService.Domain.Positions;
+
+namespace DirectoryService.Application.Positions;
 
 public interface IPositionsRepository
 {

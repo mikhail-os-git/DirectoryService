@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
-using DirectoryService.Infrastructure.Common;
+using DirectoryService.Domain.Common;
 
-namespace DirectoryService.Infrastructure.ValueObjects;
+namespace DirectoryService.Domain.ValueObjects;
 
 public record Address
 {
