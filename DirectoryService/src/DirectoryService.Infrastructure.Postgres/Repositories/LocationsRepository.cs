@@ -16,22 +16,15 @@ public class LocationsRepository: ILocationsRepository
         _logger = logger;
     }
 
-    public async Task<Result<Guid, string>> AddAsync(Location location, CancellationToken cancellationToken)
+    public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _context.Locations.AddAsync(location, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return location.Id;
-
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while adding location with Id {LocationId}", location.Id);
-            return$"Error while adding location with Id {location.Id}";
-        }
+        await _context.Locations.AddAsync(location, cancellationToken);
+        
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        _logger.LogInformation("Location added with Id: {LocationId}", location.Id); 
+        
+        return location.Id;
     }
 
     // public Task<Guid> SaveAsync(Location location, CancellationToken cancellationToken) => throw new NotImplementedException();

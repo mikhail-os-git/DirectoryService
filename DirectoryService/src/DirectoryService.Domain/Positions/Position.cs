@@ -3,6 +3,8 @@ using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.Positions;
 
@@ -28,7 +30,7 @@ public class Position
         UpdatedAt = updatedAt;
     }
 
-    public static Result<Position, string> Create(PositionName positionName, bool isActive,
+    public static Result<Position, Failure> Create(PositionName positionName, bool isActive,
         string? description = null)
     {
         Guid id = Guid.NewGuid();
@@ -38,7 +40,9 @@ public class Position
         {
             if (!StringValidator.Required(description!, LengthConstants.MAX_LENGTH_1000))
             {
-                return $"the description text is too long, the maximum number of characters: {LengthConstants.MAX_LENGTH_1000}";
+                string message =
+                    $"the description text is too long, the maximum number of characters: {LengthConstants.MAX_LENGTH_1000}";
+                return Failure.Validation(message, "position.description.is.invalid");
             }
         }
 

@@ -3,6 +3,8 @@ using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
+using General;
+using General.Errors;
 using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Application.Locations;
@@ -18,7 +20,7 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         _logger = logger;
     }
 
-    public async Task<Result<Guid, string>> Handle(CreateLocationCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, FailList>> Handle(CreateLocationCommand command, CancellationToken cancellationToken = default)
     {
         // Валидпция входных параметров
         
@@ -28,8 +30,8 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         var name = LocationName.Create(command.Request.Name);
         if (name.IsFailure)
         {
-            _logger.LogError("Validation failed for name: {Error}", name.Error);
-            return name.Error;
+            _logger.LogError("Validation failed for name: {Error}", name.Error.ToString());
+            return name.Error.ToFailList();
         }
 
         var timezone = Timezone.Create(command.Request.Timezone);
@@ -37,7 +39,7 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         if (timezone.IsFailure)
         {
             _logger.LogError("Validation failed for timezone: {Error}", timezone.Error);
-            return timezone.Error;
+            return timezone.Error.ToFailList();
         }
 
         var address = Address.Create(
@@ -49,20 +51,18 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
 
         if (address.IsFailure)
         {
-            _logger.LogError("Validation failed for address: {Error}", address.Error);
-            return address.Error;
+            _logger.LogError("Validation failed for address:\n {Error}", address.Error.ToString());
+            return address.Error.ToFailList();
         }
 
         var location = Location.Create(name.Value, address.Value, timezone.Value);
 
-        if (location.IsFailure) return location.Error;
+        if (location.IsFailure) 
+            return location.Error.ToFailList();
         
         // Сохранение доменных моделей в БД
-        var result = await _repository.AddAsync(location.Value, cancellationToken);
+        var id = await _repository.AddAsync(location.Value, cancellationToken);
 
-        if (result.IsFailure) 
-            return result.Error;
-
-        return result.Value;
+        return id;
     }
 }

@@ -2,6 +2,7 @@ using System.Globalization;
 using DirectoryService.Infrastructure;
 using DirectoryService.Infrastructure.Configurations;
 using DirectoryService.Web.Configurations;
+using DirectoryService.Web.Middleware;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -15,11 +16,8 @@ try
     
     builder.Services.AddDependencies(builder.Configuration);
     
-    builder.Services.AddControllers();
-    builder.Services.AddOpenApi();
-    
     var app = builder.Build();
-
+    app.UseExceptionMiddleware();
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();

@@ -6,12 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="3.6.0" />
-    </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\General\General.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="3.6.0" />
+  </ItemGroup>
 
 </Project>
