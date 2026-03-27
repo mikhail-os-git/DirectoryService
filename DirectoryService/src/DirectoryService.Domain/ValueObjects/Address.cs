@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -21,7 +23,7 @@ public record Address
         PostalCode = postalCode;
     }
 
-    public static Result<Address, string> Create(string country, string city, string street, string houseNumber,
+    public static Result<Address, Failure> Create(string country, string city, string street, string houseNumber,
         int postalCode)
     {
         string houseNumberRegex = @"^[A-Za-z0-9/\-\.]+$";
@@ -65,9 +67,11 @@ public record Address
 
         if (fields.Count > 0)
         {
-            return $"the data {string.Join(", ", fields)} was not specified or entered. " +
+             string message = $"the data {string.Join(", ", fields)} was not specified or entered. " +
                    $"{(notEmptyInvalidHouseNumber ? "Incorrect house number." : string.Empty)}" +
                    $"{(invalidPostalCode ? "The postal code is incorrect" : string.Empty)}";
+
+             return Failure.Validation(message, "address.is.invalid");
         }
 
         return new Address(country, city, street, houseNumber, postalCode);

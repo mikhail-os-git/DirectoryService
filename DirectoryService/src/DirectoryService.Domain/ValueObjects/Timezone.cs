@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -13,11 +15,11 @@ public record Timezone
         Value = value;
     }
 
-    public static Result<Timezone, string> Create(string value)
+    public static Result<Timezone, Failure> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
         {
-            return "The timezone must be specified.";
+            return Failure.Validation("The timezone must be specified.", "timezone.is.invalid");
         }
         
         value = value.Trim().Replace(" ", string.Empty, StringComparison.Ordinal);
@@ -32,8 +34,9 @@ public record Timezone
         {
             return new Timezone(value);
         }
+        
+        return Failure.Validation("The time zone was specified incorrectly.", "timezone.is.invalid");
 
-        return "The time zone was specified incorrectly.";
     }
 
     public static Timezone FromDb(string timezone)

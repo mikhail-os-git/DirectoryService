@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.ValueObjects;
+using General;
+using General.Errors;
 using Path = DirectoryService.Domain.ValueObjects.Path;
 
 namespace DirectoryService.Domain.Departments;
@@ -49,7 +51,7 @@ public class Department
         UpdatedAt = updatedAt;
     }
     
-    public static Result<Department, string> Create(DepartmentName departmentName, Identifier identifier, Path path, short depth, Guid? parentId = null)
+    public static Result<Department, Failure> Create(DepartmentName departmentName, Identifier identifier, Path path, short depth, Guid? parentId = null)
     {
         Guid id = Guid.NewGuid();
         DateTime now = DateTime.UtcNow;

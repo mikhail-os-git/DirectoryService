@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.Locations;
 
@@ -34,7 +36,7 @@ public class Location
     {
     }
 
-    public static Result<Location, string> Create(LocationName locationName, Address address, Timezone timezone)
+    public static Result<Location, Failure> Create(LocationName locationName, Address address, Timezone timezone)
     {
         Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;

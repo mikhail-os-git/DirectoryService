@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -17,11 +19,11 @@ public record Path
         _roads = SplitRoads(value);
     }
 
-    public static Result<Path, string> Create(string value)
+    public static Result<Path, Failure> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
         {
-            return "The value must not be empty.";
+            return Failure.Validation("The value must not be empty.", "path.is.invalid");
         }
         
         foreach (char ch in value)
@@ -29,7 +31,8 @@ public record Path
             if(ch == '.' || ch == '-') continue;
             if (!StringValidator.IsEnglishLetter(ch))
             {
-                return $"The path can contain only English letters and symbols: '.' and '-";
+                string message = $"The path can contain only English letters and symbols: '.' and '-";
+                return Failure.Validation(message, "path.is.invalid");
             }
         }
         

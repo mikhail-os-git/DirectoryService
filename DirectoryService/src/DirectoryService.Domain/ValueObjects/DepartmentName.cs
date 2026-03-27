@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
+using General;
+using General.Errors;
 
 namespace DirectoryService.Domain.ValueObjects;
 
@@ -20,15 +22,16 @@ public record DepartmentName
         Value = value;
     }
     
-    public static Result<DepartmentName, string> Create(string value)
+    public static Result<DepartmentName, Failure> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
         {
-            return "The value must not be empty.";
+            return Failure.Validation("The value must not be empty.", "department-name.is.invalid");
         }
         else if (!StringValidator.Required(value, MAX_LENGTH, MIN_LENGTH))
         {
-            return $"The number of characters in the value is too large or too small. The value size should be from {MAX_LENGTH} to {MIN_LENGTH}";
+            string message = $"The number of characters in the value is too large or too small. The value size should be from {MAX_LENGTH} to {MIN_LENGTH}";
+            return Failure.Validation(message, "department-name.is.invalid");
         }
         
         return new DepartmentName(value);
