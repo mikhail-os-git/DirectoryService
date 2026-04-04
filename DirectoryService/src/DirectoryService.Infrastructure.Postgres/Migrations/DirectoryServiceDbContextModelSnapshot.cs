@@ -216,10 +216,12 @@ namespace DirectoryService.Infrastructure.Migrations
 
             modelBuilder.Entity("DirectoryService.Domain.Departments.Department", b =>
                 {
-                    b.HasOne("DirectoryService.Domain.Departments.Department", null)
-                        .WithMany()
+                    b.HasOne("DirectoryService.Domain.Departments.Department", "Parent")
+                        .WithMany("ChildrenDepartments")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("DirectoryService.Domain.Departments.DepartmentLocation", b =>
@@ -301,6 +303,8 @@ namespace DirectoryService.Infrastructure.Migrations
 
             modelBuilder.Entity("DirectoryService.Domain.Departments.Department", b =>
                 {
+                    b.Navigation("ChildrenDepartments");
+
                     b.Navigation("DepartmentLocations");
 
                     b.Navigation("DepartmentPositions");

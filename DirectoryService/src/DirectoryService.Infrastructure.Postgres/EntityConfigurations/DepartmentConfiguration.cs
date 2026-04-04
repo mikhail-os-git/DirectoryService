@@ -29,13 +29,14 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
 
-        builder.Property(d => d.ParentId)
+        builder.Property<Guid?>("ParentId")
             .IsRequired(false)
             .HasColumnName("parent_id");
 
-        builder.HasOne<Department>()
-            .WithMany()
-            .HasForeignKey(d => d.ParentId)
+        builder.HasOne(d => d.Parent)
+            .WithMany(d => d.ChildrenDepartments)
+            .HasForeignKey("ParentId")
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(d => d.Path)
