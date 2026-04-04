@@ -31,6 +31,11 @@ public record Failure
     public static Failure Error(string message, string? code = null) =>
         new(code ?? "error", message, FailureType.ERROR);
 
+    public static Failure Authentication(string message, string? code = null) =>
+        new(code ?? "authentication.failure", message, FailureType.AUTHENTICATION);
+    
+    public static Failure Authorization(string message, string? code = null) =>
+        new(code ?? "authorization.failure", message, FailureType.AUTHORIZATION);
     public static Failure None => new Failure(string.Empty, string.Empty, FailureType.NONE, null);
 
     public FailList ToFailList() => this;
@@ -63,5 +68,15 @@ public enum FailureType
     /// <summary>
     /// Ошибка конфликт
     /// </summary>
-    CONFLICT
+    CONFLICT,
+    
+    /// <summary>
+    /// Ошибка аутентификации
+    /// </summary>
+    AUTHENTICATION,
+    
+    /// <summary>
+    /// Ошибка авторизации
+    /// </summary>
+    AUTHORIZATION
 }
