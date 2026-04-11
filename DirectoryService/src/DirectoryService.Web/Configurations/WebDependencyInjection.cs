@@ -17,6 +17,20 @@ public static class WebDependencyInjection
 
     }
     
+    public static WebApplication Configure(this WebApplication app)
+    {
+        app.UseSerilogRequestLogging();
+
+        // if (app.Environment.IsDevelopment())
+        // {
+        // }
+        app.MapOpenApi();
+    
+        app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "DirectoryService"));  
+        
+        return app;
+    }
+    
     private static IServiceCollection AddLogger(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSerilog((sp, lc) => lc

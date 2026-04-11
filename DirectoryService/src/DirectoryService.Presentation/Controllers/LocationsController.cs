@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DirectoryService.Presentation.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class LocationController: ControllerBase
+public class LocationsController: ControllerBase
 {
     [HttpPost]
     public async Task<EndpointResult<Guid>> Create(
