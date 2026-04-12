@@ -1,4 +1,7 @@
-﻿namespace DirectoryService.Web.Middleware;
+﻿using General;
+using General.Errors;
+
+namespace DirectoryService.Web.Middleware;
 
 public class ExceptionMiddleware
 {
@@ -20,11 +23,13 @@ public class ExceptionMiddleware
         catch (Exception exception)
         {
             _logger.LogError(exception, "Unhandled exception with message: {Message}", exception.Message);
+
+            var envelope = Envelope.Error(Failure.Error("Something went wrong", "server.internal"));
             
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             
-            await context.Response.WriteAsJsonAsync("Something went wrong");
+            await context.Response.WriteAsJsonAsync(envelope);
         }
     }
 }
