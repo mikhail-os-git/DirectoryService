@@ -3,4 +3,4 @@ using DirectoryService.Contracts.Locations;
 
 namespace DirectoryService.Application.Locations;
 
-public record CreateLocationCommand(LocationRequest Request) : ICommand;
+public record CreateLocationCommand(CreateLocationRequest Request) : ICommand;

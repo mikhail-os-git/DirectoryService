@@ -18,13 +18,13 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .HasColumnName("id");
 
         builder.Property(d => d.DepartmentName)
-            .HasConversion(dn => dn.Value, name => DepartmentName.FromDb(name))
+            .HasConversion(dn => dn.Value, name => DepartmentName.Convert(name))
             .HasColumnName("name")
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
 
         builder.Property(d => d.Identifier)
-            .HasConversion(i => i.Value, identidier => Identifier.FromDb(identidier))
+            .HasConversion(i => i.Value, identidier => Identifier.Convert(identidier))
             .HasColumnName("identifier")
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
@@ -40,7 +40,7 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(d => d.Path)
-            .HasConversion(p => p.Value, path => Path.FromDb(path))
+            .HasConversion(p => p.Value, path => Path.Convert(path))
             .IsRequired()
             .HasColumnName("path");
 

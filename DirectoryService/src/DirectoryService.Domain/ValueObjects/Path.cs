@@ -49,11 +49,15 @@ public record Path
     {
         return new Path(Value + Separetor + identifier.Value);
     }
-    
-    public static Path FromDb(string path)
-    {
-        return new Path(path);
-    }
+
+    /// <summary>
+    /// Создаёт экземпляр из сырой строки без доменной валидации.
+    /// Только для десериализации в инфраструктурном слое (EF Core и т.п.).
+    /// Для создания из пользовательского ввода используй <see cref="Create"/>.
+    /// </summary>
+    /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
+    /// <returns>Экземпляр <see cref="Path"/>.</returns>
+    public static Path Convert(string value) => new(value);
     
     private static List<string> SplitRoads(string path)
     {

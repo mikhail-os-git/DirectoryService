@@ -22,7 +22,7 @@ public record LocationName
     {
         if (StringValidator.IsEmpty(value))
         {
-            return Failure.Validation("The value must not be empty.", "location-name-is.invalid");
+            return Failure.Validation("The value must not be empty.", "location-name.is.invalid");
         }
         else if (!StringValidator.Required(value, MAX_LENGTH, MIN_LENGTH))
         {
@@ -33,8 +33,12 @@ public record LocationName
         return new LocationName(value);
     }
 
-    public static LocationName FromDb(string name)
-    {
-        return new LocationName(name);
-    }
+    /// <summary>
+    /// Создаёт экземпляр из сырой строки без доменной валидации.
+    /// Только для десериализации в инфраструктурном слое (EF Core и т.п.).
+    /// Для создания из пользовательского ввода используй <see cref="Create"/>.
+    /// </summary>
+    /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
+    /// <returns>Экземпляр <see cref="LocationName"/>.</returns>
+    public static LocationName Convert(string value) => new(value);
 }

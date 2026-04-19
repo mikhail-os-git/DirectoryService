@@ -14,8 +14,17 @@ public class FailList : IEnumerable<Failure>
     public static implicit operator FailList(Failure failure) => new FailList([failure]);
     public static implicit operator FailList(List<Failure> failures) => new FailList(failures);
     public static implicit operator FailList(Failure[] failures) => new FailList(failures);
+
+    public void AddFailure(Failure failure)
+    {
+        this._failures.Add(failure);
+    }
+
+    public void AddFailures(IEnumerable<Failure> failures)
+    {
+        this._failures.AddRange(failures);
+    }
     
-    // public static FailList FromIEnumerable(IEnumerable<Failure> failures) => new FailList(failures);
     public IEnumerator<Failure> GetEnumerator() => _failures.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_failures).GetEnumerator();

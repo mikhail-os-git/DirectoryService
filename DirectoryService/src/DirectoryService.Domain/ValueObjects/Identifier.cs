@@ -36,5 +36,12 @@ public record Identifier
 
     }
     
-    public static Identifier FromDb(string value) => new(value);
+    /// <summary>
+    /// Создаёт экземпляр из сырой строки без доменной валидации.
+    /// Только для десериализации в инфраструктурном слое (EF Core и т.п.).
+    /// Для создания из пользовательского ввода используй <see cref="Create"/>.
+    /// </summary>
+    /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
+    /// <returns>Экземпляр <see cref="Identifier"/>.</returns>
+    public static Identifier Convert(string value) => new(value);
 }
