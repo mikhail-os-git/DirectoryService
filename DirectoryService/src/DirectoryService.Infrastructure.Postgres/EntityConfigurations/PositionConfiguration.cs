@@ -15,7 +15,7 @@ public class PositionConfiguration: IEntityTypeConfiguration<Position>
         builder.Property(p => p.Id).HasColumnName("id");
 
         builder.Property(p => p.PositionName)
-            .HasConversion(pn => pn.Value, name => PositionName.FromDb(name))
+            .HasConversion(pn => pn.Value, name => PositionName.Convert(name))
             .IsRequired()
             .HasMaxLength(PositionName.MAX_LENGTH)
             .HasColumnName("name");

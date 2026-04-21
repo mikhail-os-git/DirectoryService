@@ -39,8 +39,12 @@ public record Timezone
 
     }
 
-    public static Timezone FromDb(string timezone)
-    {
-        return new Timezone(timezone);
-    }
+    /// <summary>
+    /// Создаёт экземпляр из сырой строки без доменной валидации.
+    /// Только для десериализации в инфраструктурном слое (EF Core и т.п.).
+    /// Для создания из пользовательского ввода используй <see cref="Create"/>.
+    /// </summary>
+    /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
+    /// <returns>Экземпляр <see cref="Timezone"/>.</returns>
+    public static Timezone Convert(string value) => new(value);
 }

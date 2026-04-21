@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace General.Errors;
@@ -7,11 +8,13 @@ public record Failure
 {
     public string Code { get; }
     public string Message { get; }
+
+    private const char MAIN_SEPARATOR = '|';
+    private const char SECOND_SEPARATOR = ':';
     
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public FailureType Type { get; }
     public string? InvalidField { get; }
-
+    
     private Failure(string code, string message, FailureType type, string? invalidField = null)
     {
         Code = code;
@@ -41,8 +44,54 @@ public record Failure
     public FailList ToFailList() => this;
 
     public override string ToString() => JsonSerializer.Serialize(this);
+
+    public static Failure Deserialize(string failureString)
+    {
+        string[] rows = failureString.Split(MAIN_SEPARATOR);
+        if (rows.Length < 3)
+            throw new FormatException($"Invalid failure string format: '{failureString}'");
+
+        Dictionary<string, string> failDictionary = new();
+        foreach (string row in rows)
+        {
+            string[] splited = row.Split(SECOND_SEPARATOR, 2);
+            string key = splited[0].Trim();
+            if (key != nameof(Code) &&
+                key != nameof(Message) &&
+                key != nameof(Type) &&
+                key != nameof(InvalidField))
+            {
+                throw new FormatException($"Unknown field '{key}' in failure string: '{failureString}'");
+            }
+
+            failDictionary.Add(key, splited[1].Trim());
+        }
+
+        if(!Enum.TryParse<FailureType>(failDictionary[nameof(Type)], out FailureType type))
+            throw new ArgumentException($"Unknown FailureType value: '{failDictionary[nameof(Type)]}'", paramName: nameof(failureString));
+
+        var fail = new Failure(failDictionary[nameof(Code)], failDictionary[nameof(Message)], type,
+            failDictionary[nameof(InvalidField)] == "null" ? null : failDictionary[nameof(InvalidField)]);
+        return fail;
+    }
+    
+    public static string Serialize(Failure failure)
+    {
+        string res = $@"{nameof(Code)} {SECOND_SEPARATOR} {failure.Code} {MAIN_SEPARATOR} 
+                        {nameof(Message)} {SECOND_SEPARATOR} {failure.Message} {MAIN_SEPARATOR} 
+                        {nameof(Type)} {SECOND_SEPARATOR} {failure.Type} {MAIN_SEPARATOR}
+                        {nameof(InvalidField)} {SECOND_SEPARATOR} {failure.InvalidField ?? "null"}";
+
+        return res;
+    }
+
+    public string Serialize()
+    {
+        return Serialize(this);
+    }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter<FailureType>))]
 public enum FailureType
 {
     /// <summary>

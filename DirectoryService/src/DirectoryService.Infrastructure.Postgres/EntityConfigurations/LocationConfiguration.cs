@@ -16,7 +16,7 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
         builder.Property(l => l.Id).HasColumnName("id");
 
         builder.Property(l => l.LocationName)
-            .HasConversion(ln => ln.Value, name => LocationName.FromDb(name))
+            .HasConversion(ln => ln.Value, name => LocationName.Convert(name))
             .IsRequired()
             .HasMaxLength(LocationName.MAX_LENGTH)
             .HasColumnName("name");
@@ -34,12 +34,11 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
             lb.Property(a => a.Street).HasJsonPropertyName("street");
             lb.Property(a => a.HouseNumber).HasJsonPropertyName("house_number");
             lb.Property(a => a.PostalCode).HasJsonPropertyName("postal_code");
-
         });
 
         builder.Navigation(l => l.Address).IsRequired();
         builder.Property(l => l.Timezone)
-            .HasConversion(tz => tz.Value, timezone => Timezone.FromDb(timezone))
+            .HasConversion(tz => tz.Value, timezone => Timezone.Convert(timezone))
             .IsRequired()
             .HasColumnName("timezone");
             
