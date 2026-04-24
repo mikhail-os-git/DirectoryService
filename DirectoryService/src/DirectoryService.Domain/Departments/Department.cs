@@ -73,7 +73,7 @@ public class Department
         Guid? id = null)
     {
         var path = ValueObjects.Path.CreateParent(identifier);
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         return new Department(id ?? Guid.NewGuid(), departmentName, identifier, path, 0, true, departmentLocations, now, now);
     }
     
@@ -85,7 +85,7 @@ public class Department
         Guid? id = null)
     {
         var path = parent.Path.CreateChild(identifier);
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         short depth = (short)(parent.Depth + 1);
         return new Department(id ?? Guid.NewGuid(), departmentName, identifier, path, depth, true, departmentLocations, now, now, parent);
     }

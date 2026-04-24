@@ -19,8 +19,13 @@ public class Position
     
     private readonly List<DepartmentPosition> _departmentPositions = [];
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
+
+    // EF Core
+    private Position()
+    {
+    }
     
-    private Position(Guid id, PositionName positionName, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
+    private Position(Guid id, PositionName positionName, IEnumerable<DepartmentPosition> departmentPositions, string? description, bool isActive, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         PositionName = positionName;
@@ -28,12 +33,14 @@ public class Position
         IsActive = isActive;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+        _departmentPositions = departmentPositions.ToList();
     }
 
-    public static Result<Position, Failure> Create(PositionName positionName, bool isActive,
-        string? description = null)
+    public static Result<Position, Failure> Create(
+        PositionName positionName,
+        IEnumerable<DepartmentPosition> departmentPositions,
+        string? description = null, Guid? id = null)
     {
-        Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;
 
         if (!StringValidator.IsEmpty(description))
@@ -46,7 +53,7 @@ public class Position
             }
         }
 
-        return new Position(id, positionName, description, isActive, now, now);
+        return new Position(id ?? Guid.NewGuid(), positionName, departmentPositions, description, true, now, now);
     }
     
     public void AddDepartments(params Guid[] departmentIds)

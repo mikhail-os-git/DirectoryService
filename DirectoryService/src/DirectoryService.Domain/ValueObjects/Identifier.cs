@@ -10,6 +10,7 @@ public record Identifier
 {
     public const int MAX_LENGTH = LengthConstants.MAX_LENGTH_150;
     public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_3;
+    private const char SEPARATOR = '-';
     public string Value { get; }
 
     private Identifier(string value)
@@ -20,19 +21,28 @@ public record Identifier
     public static Result<Identifier, Failure> Create(string value)
     {
         if (StringValidator.IsEmpty(value))
-        {
             return Failure.Validation("The value must not be empty.", "identifier.is.invalid");
-        }
-        else if (!StringValidator.Required(value, MAX_LENGTH, MIN_LENGTH))
+        
+        if (!StringValidator.Required(value, MAX_LENGTH, MIN_LENGTH))
         {
             string message = $"The number of characters in the value is too large or too small. The value size should be from {MAX_LENGTH} to {MIN_LENGTH}";
             return Failure.Validation(message, "identifier.is.invalid");
         }
         
-        if (!StringValidator.IsEnglishWord(value))
-            return Failure.Validation("The identifier must contain only English letters.");
+        if (value.StartsWith(SEPARATOR) || value.EndsWith(SEPARATOR))
+            return Failure.Validation($"Identifier cannot start or end with '{SEPARATOR}'", "identifier.is.invalid");
         
-        return new Identifier(value);
+        if (value.Contains($"{SEPARATOR}{SEPARATOR}", StringComparison.InvariantCulture))
+            return Failure.Validation($"Identifier cannot contain consecutive '{SEPARATOR}' separators", "identifier.is.invalid");
+
+        bool isValid = value.Contains(SEPARATOR, StringComparison.InvariantCulture)
+            ? StringValidator.IsEnglishWordWithSeparator(value, SEPARATOR)
+            : StringValidator.IsEnglishWord(value);
+
+        if (!isValid)
+            return Failure.Validation($"Identifier must contain only English letters or the '{SEPARATOR}' separator", "identifier.is.invalid");
+        
+        return new Identifier(value.ToLowerInvariant());
 
     }
     

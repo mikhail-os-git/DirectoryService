@@ -37,7 +37,7 @@ namespace DirectoryService.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)")
-                        .HasColumnName("name");
+                        .HasColumnName("Name");
 
                     b.Property<short>("Depth")
                         .HasColumnType("smallint")
@@ -151,7 +151,7 @@ namespace DirectoryService.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("character varying(120)")
-                        .HasColumnName("name");
+                        .HasColumnName("Name");
 
                     b.Property<string>("Timezone")
                         .IsRequired()
@@ -198,7 +198,7 @@ namespace DirectoryService.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
+                        .HasColumnName("Name");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
