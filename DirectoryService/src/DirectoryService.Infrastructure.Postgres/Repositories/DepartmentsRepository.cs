@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Domain.Departments;
 using General.Errors;
@@ -26,25 +27,31 @@ public class DepartmentsRepository: IDepartmentsRepository
         if (result.IsFailure)
             return result.Error;
         
-        _logger.LogInformation("Department {Id} created successfully", department.Id);
+        // _logger.LogInformation("Department {Id} created successfully", department.Id);
         return department.Id;
     }
 
-    public async Task<bool> AllDepartmentsExistAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    public async Task<Department?> GetByAsync(
+        Expression<Func<Department, bool>> expression,
+        CancellationToken cancellationToken)
     {
-        List<Guid> collection = ids.ToList();
-        int foundCount = await _context.Departments
-            .CountAsync(d => collection.Contains(d.Id), cancellationToken);
-
-        return foundCount == collection.Count;
+        return await _context.Departments.FirstOrDefaultAsync(expression, cancellationToken);
     }
 
-    public async Task<bool> AllDepartmentsIsActiveAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    public async Task<bool> IsMatchAsync(Expression<Func<Department, bool>> expression, CancellationToken cancellationToken)
     {
-        List<Guid> collection = ids.ToList();
-        return !await _context.Departments.AnyAsync(d => collection.Contains(d.Id) && !d.IsActive, cancellationToken);
+        return await _context.Departments.AnyAsync(expression, cancellationToken);
     }
 
+    public async Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Department, bool>> expression,
+        CancellationToken cancellationToken)
+    {
+        List<Guid> collection = ids.ToList();
+
+        int count = await _context.Departments.Where(expression).CountAsync(cancellationToken);
+        return collection.Count == count;
+    }
+    
     public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
     {
         try
@@ -57,16 +64,6 @@ public class DepartmentsRepository: IDepartmentsRepository
             _logger.LogError("Failed to save changes: {Error}", ex);
             return UnitResult.Failure<Failure>(Failure.Error("Something went wrong", "server.internal"));
         }
-    }
-
-    public async Task<Result<Department, Failure>> GetByIdAsync(Guid departmentId, CancellationToken cancellationToken)
-    {
-        var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
-
-        if (department == null)
-            return Failure.NotFoundEntity("Department not found", departmentId, "department.not.found");
-
-        return department;
     }
     
     // public Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken) => throw new NotImplementedException();

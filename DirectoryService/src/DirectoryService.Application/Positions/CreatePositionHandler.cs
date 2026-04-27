@@ -42,15 +42,29 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             return validateResult.ToFailList();
 
         var name = PositionName.Create(command.Request.Name);
-        
+
         // Бизнес валидация
-        if (await _positionsRepository.ActivePositionWithNameExistsAsync(name.Value, cancellationToken))
-            return Failure.Conflict($"Position with this Name already exists : {name.Value.Value}", "position-name.conflict").ToFailList();
+        bool activePosWithNameExist = await _positionsRepository.IsMatchAsync(
+            p => p.PositionName == name.Value && p.IsActive,
+            cancellationToken);
         
-        if(!await _departmentsRepository.AllDepartmentsExistAsync(command.Request.DepartmentIds, cancellationToken))
+        if (activePosWithNameExist)
+            return Failure.Conflict($"Position with this Name already exists : {name.Value.Value}", "position-name.conflict").ToFailList();
+
+        bool allDepartmentsExist = await _departmentsRepository.AllMatchAsync(
+            command.Request.DepartmentIds,
+            d => command.Request.DepartmentIds.Contains(d.Id), 
+            cancellationToken);
+        
+        if(!allDepartmentsExist)
             return Failure.NotFoundCollectionEntity($"One or more departments not found : {string.Join(',', command.Request.DepartmentIds)}", "departments.not.found").ToFailList();
 
-        if (!await _departmentsRepository.AllDepartmentsIsActiveAsync(command.Request.DepartmentIds, cancellationToken))
+        bool allDepartmentsActive = await _departmentsRepository.AllMatchAsync(
+            command.Request.DepartmentIds,
+            d => command.Request.DepartmentIds.Contains(d.Id) && d.IsActive,
+            cancellationToken);
+        
+        if (!allDepartmentsActive)
             return Failure.Conflict($"One or more departments are inactive : {string.Join(',', command.Request.DepartmentIds)}", "departments.inactive").ToFailList();
         
         // Coздание доменных моделей
@@ -70,6 +84,5 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             return adding.Error.ToFailList();
 
         return adding.Value;
-
     }
 }

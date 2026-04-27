@@ -52,10 +52,20 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
             command.Request.Address.PostalCode);
         
         // Бизнес валидация
-        if (await _repository.LocationNameExistsAsync(name.Value, cancellationToken))
+        bool nameExist = await _repository.IsMatchAsync(l => l.LocationName == name.Value, cancellationToken);
+        
+        if (nameExist)
             return Failure.Conflict($"Location with this Name already exists : {name.Value.Value}", "location-name.conflict").ToFailList();
-
-        if (await _repository.LocationAddressExistsAsync(address.Value, cancellationToken))
+        
+        bool addressExist = await _repository.IsMatchAsync(
+            l => l.Address.Country == address.Value.Country &&
+                 l.Address.City == address.Value.City &&
+                 l.Address.Street == address.Value.Street &&
+                 l.Address.HouseNumber == address.Value.HouseNumber &&
+                 l.Address.PostalCode == address.Value.PostalCode,
+            cancellationToken);
+        
+        if (addressExist)
             return Failure.Conflict($"Location with this address already exists : {address.Value}", "location-address.conflict").ToFailList();
         
         // Coздание доменных моделей

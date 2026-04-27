@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Domain.Positions;
@@ -29,9 +30,30 @@ public class PositionsRepository: IPositionsRepository
         if (saving.IsFailure)
             return saving.Error;
 
-        _logger.LogInformation("Position {Id} created successfully", position.Id);
-        
+        // _logger.LogInformation("Position {Id} created successfully", position.Id);
         return position.Id;
+    }
+
+    public async Task<Position?> GetByAsync(
+        Expression<Func<Position, bool>> expression,
+        CancellationToken cancellationToken)
+    {
+        return await _context.Positions.FirstOrDefaultAsync(expression, cancellationToken);
+    }
+
+    public async Task<bool> IsMatchAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken)
+    {
+        return await _context.Positions.AnyAsync(expression, cancellationToken);
+    }
+
+    public async Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Position, bool>> expression,
+        CancellationToken cancellationToken)
+    {
+        List<Guid> collection = ids.ToList();
+
+        int count = await _context.Positions.Where(expression).CountAsync(cancellationToken);
+
+        return count == collection.Count;
     }
 
     public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
@@ -46,10 +68,5 @@ public class PositionsRepository: IPositionsRepository
             _logger.LogError("Failed to save changes: {Error}", ex);
             return UnitResult.Failure(Failure.Error("Something went wrong", "server.internal"));
         }
-    }
-
-    public async Task<bool> ActivePositionWithNameExistsAsync(PositionName name, CancellationToken cancellationToken)
-    {
-        return await _context.Positions.AnyAsync(p => p.PositionName == name && p.IsActive, cancellationToken);
     }
 }

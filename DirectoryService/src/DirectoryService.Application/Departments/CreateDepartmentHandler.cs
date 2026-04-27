@@ -41,22 +41,26 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         
         var name = DepartmentName.Create(command.Request.Name);
         var identifier = Identifier.Create(command.Request.Identifier);
-        Department? parent = null;
         
+        Department? parent = command.Request.ParentId is not null
+            ? await _departmentsRepository.GetByAsync(d => d.Id == command.Request.ParentId.Value, cancellationToken)
+            : null;
+
         // Бизнес валдидация
-        if (!await _locationsRepository.AllLocationsExistAsync(command.Request.LocationIds, cancellationToken))
-            return Failure.NotFoundCollectionEntity($"One or more locations not found : {string.Join(',', command.Request.LocationIds)}", "locations.not.found").ToFailList();
-
-        if (command.Request.ParentId != null)
+        if (command.Request.ParentId is not null && parent is null)
         {
-            var searchParent =
-                await _departmentsRepository.GetByIdAsync(command.Request.ParentId.Value, cancellationToken);
-
-            if (searchParent.IsFailure)
-                return searchParent.Error.ToFailList();
-
-            parent = searchParent.Value;
+            return Failure
+                .NotFoundEntity("Department not found", command.Request.ParentId.Value, "department.not.found")
+                .ToFailList();
         }
+
+        bool allLocationExist = await _locationsRepository.AllMatchAsync(
+            command.Request.LocationIds,
+            l => command.Request.LocationIds.Contains(l.Id),
+            cancellationToken);
+        
+        if (!allLocationExist)
+            return Failure.NotFoundCollectionEntity($"One or more locations not found : {string.Join(',', command.Request.LocationIds)}", "locations.not.found").ToFailList();
         
         // Coздание доменных моделей
         Guid departmentID = Guid.NewGuid();
@@ -64,7 +68,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         List<DepartmentLocation> departmentLocations = command.Request.LocationIds
             .Select(id => new DepartmentLocation(departmentID, id)).ToList();
 
-        var department = parent == null
+        var department = parent is null
             ? Department.CreateParent(name.Value, identifier.Value, departmentLocations, departmentID)
             : Department.CreateChild(name.Value, identifier.Value, parent, departmentLocations, departmentID);
 
