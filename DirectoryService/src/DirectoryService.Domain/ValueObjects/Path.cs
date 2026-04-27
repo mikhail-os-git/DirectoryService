@@ -7,7 +7,7 @@ namespace DirectoryService.Domain.ValueObjects;
 
 public record Path
 {
-    private const char Separetor = '/';
+    private const char SEPARATOR = '.';
     public string Value { get; }
 
     private readonly List<string> _roads = [];
@@ -29,7 +29,7 @@ public record Path
         
         foreach (char ch in value)
         {
-            if(ch == Separetor) continue;
+            if(ch == SEPARATOR) continue;
             if (!StringValidator.IsEnglishLetter(ch))
             {
                 string message = $"The path can contain only English letters and symbols: '.' and '-";
@@ -47,7 +47,7 @@ public record Path
 
     public Path CreateChild(Identifier identifier)
     {
-        return new Path(Value + Separetor + identifier.Value);
+        return new Path(Value + SEPARATOR + identifier.Value);
     }
 
     /// <summary>
@@ -61,6 +61,6 @@ public record Path
     
     private static List<string> SplitRoads(string path)
     {
-        return path.Split(Separetor).ToList();
+        return path.Split(SEPARATOR).ToList();
     }
 }

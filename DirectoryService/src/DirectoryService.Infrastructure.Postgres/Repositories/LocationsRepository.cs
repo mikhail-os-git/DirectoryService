@@ -1,7 +1,9 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
+using General.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,36 +20,54 @@ public class LocationsRepository: ILocationsRepository
         _logger = logger;
     }
 
-    public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Failure>> AddAsync(Location location, CancellationToken cancellationToken)
     {
-        await _context.Locations.AddAsync(location, cancellationToken);
-        
-        await _context.SaveChangesAsync(cancellationToken);
-        
-        _logger.LogInformation("Location added with Id: {LocationId}", location.Id); 
-        
-        return location.Id;
+      await _context.Locations.AddAsync(location, cancellationToken);
+      var result = await SaveAsync(cancellationToken);
+
+      if (result.IsFailure)
+          return result.Error;
+      
+      // _logger.LogInformation("Location {Id} created successfully", location.Id);
+      return location.Id;
     }
 
-    public async Task<bool> LocationNameExistsAsync(LocationName name, CancellationToken cancellationToken)
+    public async Task<Location?> GetByAsync(Expression<Func<Location, bool>> expression, CancellationToken cancellationToken)
     {
-        bool res = await _context.Locations.AnyAsync(l => l.LocationName == name, cancellationToken);
-        return res;
+        return await _context.Locations.FirstOrDefaultAsync(expression, cancellationToken);
+    }
+
+    public async Task<bool> IsMatchAsync(
+        Expression<Func<Location, bool>> expression,
+        CancellationToken cancellationToken)
+    {
+        return await _context.Locations.AnyAsync(expression, cancellationToken);
+    }
+
+    public async Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Location, bool>> expression, CancellationToken cancellationToken)
+    {
+        List<Guid> collection = ids.ToList();
+        int foundCount = await _context.Locations
+            .Where(expression)
+            .CountAsync(cancellationToken);
+
+        return foundCount == collection.Count;
+    }
+
+    public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken) 
+    {
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+            return UnitResult.Success<Failure>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to save changes: {Error}", ex);
+            return UnitResult.Failure(Failure.Error("Something went wrong", "server.internal"));
+        }
     }
     
-    public async Task<bool> LocationAddressExistsAsync(Address address, CancellationToken cancellationToken)
-    {
-        return await _context.Locations.AnyAsync(
-            l => l.Address.Country == address.Country &&
-                 l.Address.City == address.City &&
-                 l.Address.Street == address.Street &&
-                 l.Address.HouseNumber == address.HouseNumber &&
-                 l.Address.PostalCode == address.PostalCode,
-            cancellationToken);
-    }
-    
-    // public Task<Guid> SaveAsync(Location location, CancellationToken cancellationToken) => throw new NotImplementedException();
-    //
     // public Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken) => throw new NotImplementedException();
     //
     // public Task<Guid> GetByIdAsync(Guid locationId, CancellationToken cancellationToken) => throw new NotImplementedException();

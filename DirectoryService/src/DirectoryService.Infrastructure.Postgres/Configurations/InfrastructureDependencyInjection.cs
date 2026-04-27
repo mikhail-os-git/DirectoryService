@@ -1,5 +1,7 @@
 ﻿using DirectoryService.Application.Configuration;
+using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,9 @@ public static class InfrastructureDependencyInjection
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         // Здесь будет регестрация всех Репозиториев
-        return services.AddScoped<ILocationsRepository, LocationsRepository>();
+        services.AddScoped<ILocationsRepository, LocationsRepository>();
+        services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
+        services.AddScoped<IPositionsRepository, PositionsRepository>();
+        return services;
     }
 }

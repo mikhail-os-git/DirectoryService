@@ -26,9 +26,12 @@ public record Failure
     public static Failure Validation(string message, string? code = null, string? invalidField = null) =>
         new(code ?? "value.is.invalid", message, FailureType.VALIDATION, invalidField);
     
-    public static Failure NotFound(string message, Guid? id, string? code = null) =>
+    public static Failure NotFoundEntity(string message, Guid? id, string? code = null) =>
         new(code ?? "record.not.found", message, FailureType.NOT_FOUND);
-
+    
+    public static Failure NotFoundCollectionEntity(string message, string? code = null) =>
+        new(code ?? "records.not.found", message, FailureType.NOT_FOUND);
+    
     public static Failure Conflict(string message, string? code = null) => new(code ?? "value.conflict", message, FailureType.CONFLICT);
 
     public static Failure Error(string message, string? code = null) =>

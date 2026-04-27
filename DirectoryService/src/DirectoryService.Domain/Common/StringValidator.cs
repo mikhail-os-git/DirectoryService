@@ -11,7 +11,18 @@ public static class StringValidator
     {
         return word.All(char.IsAsciiLetter);
     }
-
+    
+    public static bool IsEnglishWordWithSeparator(string word, char separator)
+    {
+        foreach (char letter in word)
+        {
+            if (!IsEnglishLetter(letter) && letter != separator)
+                return false;
+        }
+        
+        return true;
+    }
+    
     public static bool IsEmpty(string? value)
     {
         return string.IsNullOrWhiteSpace(value);

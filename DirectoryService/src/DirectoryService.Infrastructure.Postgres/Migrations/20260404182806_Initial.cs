@@ -149,13 +149,13 @@ namespace DirectoryService.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "ux_locations_name",
                 table: "locations",
-                column: "name",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ux_position_name",
                 table: "positions",
-                column: "name",
+                column: "Name",
                 unique: true);
         }
 

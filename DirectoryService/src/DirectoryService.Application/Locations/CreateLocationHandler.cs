@@ -36,11 +36,11 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         if (!validationResult.IsValid)
         {
             var errors = validationResult.ToFailList();
-            _logger.LogError("Validation failed: {Errors}", errors);
+            
+            // _logger.LogError("Validation failed: {Errors}", errors);
             return errors;
         }
         
-        // Создание доменных моделей
         var name = LocationName.Create(command.Request.Name);
         var timezone = Timezone.Create(command.Request.Timezone);
         
@@ -52,23 +52,33 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
             command.Request.Address.PostalCode);
         
         // Бизнес валидация
-        if (await _repository.LocationNameExistsAsync(name.Value, cancellationToken))
-        {
-            return Failure.Conflict("Location with this name already exists", "location-name.conflict").ToFailList();
-        }
-
-        if (await _repository.LocationAddressExistsAsync(address.Value, cancellationToken))
-        {
-            return Failure.Conflict("Location with this address already exists", "location-address.conflict").ToFailList();
-        }
+        bool nameExist = await _repository.IsMatchAsync(l => l.LocationName == name.Value, cancellationToken);
         
+        if (nameExist)
+            return Failure.Conflict($"Location with this Name already exists : {name.Value.Value}", "location-name.conflict").ToFailList();
+        
+        bool addressExist = await _repository.IsMatchAsync(
+            l => l.Address.Country == address.Value.Country &&
+                 l.Address.City == address.Value.City &&
+                 l.Address.Street == address.Value.Street &&
+                 l.Address.HouseNumber == address.Value.HouseNumber &&
+                 l.Address.PostalCode == address.Value.PostalCode,
+            cancellationToken);
+        
+        if (addressExist)
+            return Failure.Conflict($"Location with this address already exists : {address.Value}", "location-address.conflict").ToFailList();
+        
+        // Coздание доменных моделей
         var location = Location.Create(name.Value, address.Value, timezone.Value);
         
+        if (location.IsFailure)
+            return location.Error.ToFailList();
+        
         // Сохранение доменных моделей в БД
-        var id = await _repository.AddAsync(location.Value, cancellationToken);
+        var adding = await _repository.AddAsync(location.Value, cancellationToken);
+        if (adding.IsFailure)
+            return adding.Error.ToFailList();
         
-        _logger.LogInformation("Location {Id} created successfully", id);
-        
-        return id;
+        return adding.Value;
     }
 }
