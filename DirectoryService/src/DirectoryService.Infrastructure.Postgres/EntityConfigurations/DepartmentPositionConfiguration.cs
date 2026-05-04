@@ -13,7 +13,11 @@ public class DepartmentPositionConfiguration: IEntityTypeConfiguration<Departmen
 
         builder.HasKey(dp => dp.Id).HasName("pk_department_position");
 
-        builder.Property(dp => dp.Id).HasColumnName("id");
+        builder.Property(dp => dp.Id)
+            .HasColumnName("id")
+            .HasDefaultValueSql("gen_random_uuid()")
+            .ValueGeneratedOnAdd()
+            .HasSentinel(Guid.Empty);
         
         builder.Property(dp => dp.DepartmentId)
             .IsRequired()

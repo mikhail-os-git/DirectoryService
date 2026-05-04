@@ -1,8 +1,10 @@
 ﻿using DirectoryService.Application.Configuration;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Domain.Common.Constants;
+using DirectoryService.Infrastructure.Database;
 using DirectoryService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +42,8 @@ public static class InfrastructureDependencyInjection
             options.UseLoggerFactory(loggerFactory);
         });
 
+        services.AddScoped<ITransactionManager, TransactionManager>();
+        
         return services;
     }
     

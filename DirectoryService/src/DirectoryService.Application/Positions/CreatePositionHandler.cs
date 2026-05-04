@@ -1,10 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
 using DirectoryService.Domain.ValueObjects;
@@ -18,17 +20,20 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
 {
     private readonly IPositionsRepository _positionsRepository;
     private readonly IDepartmentsRepository _departmentsRepository;
+    private readonly ITransactionManager _transactionManager;
     private readonly ILogger<CreatePositionHandler> _logger;
     private readonly IValidator<CreatePositionRequest> _validator;
 
     public CreatePositionHandler(
         IPositionsRepository positionsRepository,
         IDepartmentsRepository departmentsRepository,
+        ITransactionManager transactionManager,
         ILogger<CreatePositionHandler> logger,
         IValidator<CreatePositionRequest> validator) 
     {
         _positionsRepository = positionsRepository;
         _departmentsRepository = departmentsRepository;
+        _transactionManager = transactionManager;
         _logger = logger;
         _validator = validator;
     }
@@ -49,7 +54,7 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             cancellationToken);
         
         if (activePosWithNameExist)
-            return Failure.Conflict($"Position with this Name already exists : {name.Value.Value}", "position-name.conflict").ToFailList();
+            return PositionErrors.PropertyConflict(name.Value.Value, "Name").ToFailList();
 
         bool allDepartmentsExist = await _departmentsRepository.AllMatchAsync(
             command.Request.DepartmentIds,
@@ -57,7 +62,7 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             cancellationToken);
         
         if(!allDepartmentsExist)
-            return Failure.NotFoundCollectionEntity($"One or more departments not found : {string.Join(',', command.Request.DepartmentIds)}", "departments.not.found").ToFailList();
+            return DepartmentErrors.CollectionNotFound(command.Request.DepartmentIds).ToFailList();
 
         bool allDepartmentsActive = await _departmentsRepository.AllMatchAsync(
             command.Request.DepartmentIds,
@@ -65,7 +70,7 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             cancellationToken);
         
         if (!allDepartmentsActive)
-            return Failure.Conflict($"One or more departments are inactive : {string.Join(',', command.Request.DepartmentIds)}", "departments.inactive").ToFailList();
+            return DepartmentErrors.CollectionInactive(command.Request.DepartmentIds).ToFailList();
         
         // Coздание доменных моделей
         Guid positionId = Guid.NewGuid();
@@ -78,11 +83,12 @@ public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand
             return position.Error.ToFailList();
 
         // Сохранение доменных моделей в БД
-        var adding = await _positionsRepository.AddAsync(position.Value, cancellationToken);
+        var id = await _positionsRepository.AddAsync(position.Value, cancellationToken);
 
-        if (adding.IsFailure)
-            return adding.Error.ToFailList();
+        var saving = await _transactionManager.SaveChangesAsync(cancellationToken);
+        if (saving.IsFailure)
+            return saving.Error.ToFailList();
 
-        return adding.Value;
+        return id;
     }
 }

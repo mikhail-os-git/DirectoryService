@@ -1,6 +1,7 @@
 ﻿using DirectoryService.Application.Validation;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
@@ -15,9 +16,9 @@ public class CreatePositionValidator: AbstractValidator<CreatePositionRequest>
         RuleFor(p => p.Name).MustBeValueObject(PositionName.Create);
         RuleFor(p => p.DepartmentIds)
             .NotEmpty()
-            .WithError(Failure.Validation("The collection should not be empty.", "department-id.collection.invalid"))
+            .WithError(CommonErrors.CollectionEmpty("department-id"))
             .AllUnique()
-            .WithError(Failure.Validation("All items in the collection must be unique.", "department-id.collection.invalid"));
+            .WithError(CommonErrors.UniqueCollectionInvalid("department-id"));
 
         RuleFor(p => p.Description).MaximumLength(LengthConstants.MAX_LENGTH_1000).WithError(
             Failure.Validation(

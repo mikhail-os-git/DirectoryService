@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
 using General.Errors;
@@ -17,8 +18,8 @@ public class CreateDepartmentValidator: AbstractValidator<CreateDepartmentReques
 
         RuleFor(d => d.LocationIds)
             .NotEmpty()
-            .WithError(Failure.Validation("The collection should not be empty.", "location-id.collection.invalid"))
+            .WithError(CommonErrors.CollectionEmpty("location-id"))
             .AllUnique()
-            .WithError(Failure.Validation("All items in the collection must be unique.", "location-id.collection.invalid"));
+            .WithError(CommonErrors.UniqueCollectionInvalid("location-id"));
     }
 }

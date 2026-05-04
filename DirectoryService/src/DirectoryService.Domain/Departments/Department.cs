@@ -59,13 +59,6 @@ public class Department
         Parent = parent;
     }
     
-    // public static Result<Department, Failure> Create(DepartmentName departmentName, Identifier identifier, Path path, short depth, Guid? id = null, Guid? parentId = null)
-    // {
-    //     DateTime now = DateTime.UtcNow;
-    //     
-    //     return new Department(id ?? Guid.NewGuid(), departmentName, identifier, parentId, path, depth, true, now, now);
-    //     
-    // }
     public static Result<Department, FailList> CreateParent(
         DepartmentName departmentName,
         Identifier identifier,
@@ -89,36 +82,28 @@ public class Department
         short depth = (short)(parent.Depth + 1);
         return new Department(id ?? Guid.NewGuid(), departmentName, identifier, path, depth, true, departmentLocations, now, now, parent);
     }
-    
-    public Department AddLocations(params Guid[] locationIds)
-    {
-        foreach (Guid id in locationIds)
-        {
-            if(id != Guid.Empty && !CheckLocation(id))
-                _departmentLocations.Add(new DepartmentLocation(Id, id));
-        }
 
-        return this;
+    public void UpdateLocations(IEnumerable<Guid> locationIds)
+    {
+        var list = locationIds.Select(id => new DepartmentLocation(Id, id));
+        _departmentLocations.Clear();
+        _departmentLocations.AddRange(list);
     }
     
-    public Department AddPositions(params Guid[] positionIds)
+    /// <summary>
+    /// Обновляет коллекцию локаций департамента.
+    /// </summary>
+    /// <param name="departmentLocations">Новый список локаций.</param>
+    /// <remarks>
+    /// При передаче сущностей с заполненным Id EF Core пометит их как <c>Modified</c>
+    /// и сгенерирует UPDATE вместо INSERT. Если соответствующих записей в БД не существует —
+    /// выбрасывается <see cref="Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException"/>.
+    /// Используй конструктор без Id либо добавляй записи напрямую через DbSet.AddRangeAsync.
+    /// </remarks>
+    public void UpdateLocations(IEnumerable<DepartmentLocation> departmentLocations)
     {
-        foreach (Guid id in positionIds)
-        {
-            if(id != Guid.Empty && !CheckPosition(id))
-                _departmentPositions.Add(new DepartmentPosition(Id, id));
-        }
-
-        return this;
+        _departmentLocations.Clear();
+        _departmentLocations.AddRange(departmentLocations);
     }
     
-    private bool CheckLocation(Guid id)
-    {
-        return _departmentLocations.Any(dl => dl.LocationId == id);
-    }
-
-    private bool CheckPosition(Guid id)
-    {
-        return _departmentPositions.Any(dp => dp.PositionId == id);
-    }
-}
+ }

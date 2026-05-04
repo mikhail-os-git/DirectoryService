@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
@@ -16,17 +18,20 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
 {
     private readonly IDepartmentsRepository _departmentsRepository;
     private readonly ILocationsRepository _locationsRepository;
+    private readonly ITransactionManager _transactionManager;
     private readonly ILogger<CreateDepartmentHandler> _logger;
     private readonly IValidator<CreateDepartmentRequest> _validator;
 
     public CreateDepartmentHandler(
         IDepartmentsRepository departmentsRepository,
         ILocationsRepository locationsRepository,
+        ITransactionManager transactionManager,
         ILogger<CreateDepartmentHandler> logger,
         IValidator<CreateDepartmentRequest> validator)
     {
         _departmentsRepository = departmentsRepository;
         _locationsRepository = locationsRepository;
+        _transactionManager = transactionManager;
         _logger = logger;
         _validator = validator;
     }
@@ -49,8 +54,7 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
         // Бизнес валдидация
         if (command.Request.ParentId is not null && parent is null)
         {
-            return Failure
-                .NotFoundEntity("Department not found", command.Request.ParentId.Value, "department.not.found")
+            return DepartmentErrors.NotFound(command.Request.ParentId.Value)
                 .ToFailList();
         }
 
@@ -58,9 +62,9 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             command.Request.LocationIds,
             l => command.Request.LocationIds.Contains(l.Id),
             cancellationToken);
-        
+
         if (!allLocationExist)
-            return Failure.NotFoundCollectionEntity($"One or more locations not found : {string.Join(',', command.Request.LocationIds)}", "locations.not.found").ToFailList();
+            return LocationErrors.CollectionNotFound(command.Request.LocationIds).ToFailList();
         
         // Coздание доменных моделей
         Guid departmentID = Guid.NewGuid();
@@ -76,12 +80,13 @@ public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCom
             return department.Error;
         
         // Сохранение доменных моделей в БД
-        var adding = await _departmentsRepository.AddAsync(department.Value, cancellationToken);
+        var id = await _departmentsRepository.AddAsync(department.Value, cancellationToken);
 
-        if (adding.IsFailure)
-            return adding.Error.ToFailList();
+        var saving = await _transactionManager.SaveChangesAsync(cancellationToken);
+        if (saving.IsFailure)
+            return saving.Error.ToFailList();
 
-        return departmentID;
+        return id;
 
     }
 }

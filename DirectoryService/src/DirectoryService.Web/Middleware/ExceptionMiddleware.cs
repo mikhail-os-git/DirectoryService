@@ -1,4 +1,5 @@
-﻿using General;
+﻿using DirectoryService.Domain.Common;
+using General;
 using General.Errors;
 
 namespace DirectoryService.Web.Middleware;
@@ -24,7 +25,7 @@ public class ExceptionMiddleware
         {
             _logger.LogError(exception, "Unhandled exception with message: {Message}", exception.Message);
 
-            var envelope = Envelope.Error(Failure.Error("Something went wrong", "server.internal"));
+            var envelope = Envelope.Error(CommonErrors.InternalError);
             
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;

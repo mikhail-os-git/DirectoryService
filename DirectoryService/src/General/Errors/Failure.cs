@@ -8,32 +8,36 @@ public record Failure
 {
     public string Code { get; }
     public string Message { get; }
-
-    private const char MAIN_SEPARATOR = '|';
-    private const char SECOND_SEPARATOR = ':';
+    
+    public Guid? EntityId { get; }
     
     public FailureType Type { get; }
     public string? InvalidField { get; }
     
-    private Failure(string code, string message, FailureType type, string? invalidField = null)
+    private const char MAIN_SEPARATOR = '|';
+    private const char SECOND_SEPARATOR = ':';
+    private Failure(string code, string message, FailureType type, string? invalidField = null, Guid? entityId = null)
     {
         Code = code;
         Message = message;
         Type = type;
         InvalidField = invalidField;
+        EntityId = entityId;
     }
 
     public static Failure Validation(string message, string? code = null, string? invalidField = null) =>
         new(code ?? "value.is.invalid", message, FailureType.VALIDATION, invalidField);
     
     public static Failure NotFoundEntity(string message, Guid? id, string? code = null) =>
-        new(code ?? "record.not.found", message, FailureType.NOT_FOUND);
+        new(code ?? "record.not.found", message, FailureType.NOT_FOUND, null, id);
     
     public static Failure NotFoundCollectionEntity(string message, string? code = null) =>
         new(code ?? "records.not.found", message, FailureType.NOT_FOUND);
     
     public static Failure Conflict(string message, string? code = null) => new(code ?? "value.conflict", message, FailureType.CONFLICT);
 
+    public static Failure ConflictEntity(string message, string? code = null, Guid? entityId = null) => new(code ?? "value.conflict", message, FailureType.CONFLICT, null, entityId);
+    
     public static Failure Error(string message, string? code = null) =>
         new(code ?? "error", message, FailureType.ERROR);
 
@@ -51,7 +55,7 @@ public record Failure
     public static Failure Deserialize(string failureString)
     {
         string[] rows = failureString.Split(MAIN_SEPARATOR);
-        if (rows.Length < 3)
+        if (rows.Length < 4)
             throw new FormatException($"Invalid failure string format: '{failureString}'");
 
         Dictionary<string, string> failDictionary = new();
@@ -62,7 +66,8 @@ public record Failure
             if (key != nameof(Code) &&
                 key != nameof(Message) &&
                 key != nameof(Type) &&
-                key != nameof(InvalidField))
+                key != nameof(InvalidField) &&
+                key != nameof(EntityId))
             {
                 throw new FormatException($"Unknown field '{key}' in failure string: '{failureString}'");
             }
@@ -73,8 +78,12 @@ public record Failure
         if(!Enum.TryParse<FailureType>(failDictionary[nameof(Type)], out FailureType type))
             throw new ArgumentException($"Unknown FailureType value: '{failDictionary[nameof(Type)]}'", paramName: nameof(failureString));
 
-        var fail = new Failure(failDictionary[nameof(Code)], failDictionary[nameof(Message)], type,
-            failDictionary[nameof(InvalidField)] == "null" ? null : failDictionary[nameof(InvalidField)]);
+        var fail = new Failure(
+            failDictionary[nameof(Code)], 
+            failDictionary[nameof(Message)],
+            type,
+            failDictionary[nameof(InvalidField)] == "null" ? null : failDictionary[nameof(InvalidField)],
+            failDictionary[nameof(EntityId)] == "null" ? null : Guid.Parse(failDictionary[nameof(EntityId)]));
         return fail;
     }
     
@@ -83,7 +92,8 @@ public record Failure
         string res = $@"{nameof(Code)} {SECOND_SEPARATOR} {failure.Code} {MAIN_SEPARATOR} 
                         {nameof(Message)} {SECOND_SEPARATOR} {failure.Message} {MAIN_SEPARATOR} 
                         {nameof(Type)} {SECOND_SEPARATOR} {failure.Type} {MAIN_SEPARATOR}
-                        {nameof(InvalidField)} {SECOND_SEPARATOR} {failure.InvalidField ?? "null"}";
+                        {nameof(InvalidField)} {SECOND_SEPARATOR} {failure.InvalidField ?? "null"} {MAIN_SEPARATOR}
+                        {nameof(EntityId)} {SECOND_SEPARATOR} {(failure.EntityId.HasValue ? failure.EntityId.ToString() : "null")}";
 
         return res;
     }
