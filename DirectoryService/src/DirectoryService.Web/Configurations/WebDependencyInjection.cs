@@ -1,4 +1,5 @@
 ﻿using DirectoryService.Infrastructure.Configurations;
+using General.Converters;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Exceptions;
@@ -45,7 +46,11 @@ public static class WebDependencyInjection
 
     private static IServiceCollection AddControllersAndOpenApi(this IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers().AddJsonOptions(opt =>
+        {
+            // Регистрация Guid Converter
+            opt.JsonSerializerOptions.Converters.Add(new GuidJsonConverter());
+        });
         services.AddOpenApi();
 
         return services;

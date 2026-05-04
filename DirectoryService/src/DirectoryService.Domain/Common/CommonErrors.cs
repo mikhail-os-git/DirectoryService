@@ -40,6 +40,10 @@ public static class CommonErrors
             $"One or more {entity} are inactive: {string.Join(", ", ids)}",
             $"{entity.ToLower(CultureInfo.InvariantCulture)}.inactive");
 
+    public static Failure CollectionItemsInvalid(string collectionName) => Failure.Validation(
+        $"Collection '{collectionName}' contains invalid items.",
+        $"{collectionName.ToLower(CultureInfo.InvariantCulture)}.collection.invalid");
+    
     public static Failure UniqueCollectionInvalid(string collectionName) => Failure.Validation(
             "All items in the collection must be unique.",
             $"{collectionName.ToLower(CultureInfo.InvariantCulture)}.collection.invalid");

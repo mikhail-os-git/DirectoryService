@@ -14,6 +14,9 @@ public class CreatePositionValidator: AbstractValidator<CreatePositionRequest>
     public CreatePositionValidator()
     {
         RuleFor(p => p.Name).MustBeValueObject(PositionName.Create);
+        RuleForEach(r => r.DepartmentIds).NotEqual(Guid.Empty)
+            .WithError(CommonErrors.CollectionItemsInvalid("Department-id"));
+        
         RuleFor(p => p.DepartmentIds)
             .NotEmpty()
             .WithError(CommonErrors.CollectionEmpty("department-id"))
