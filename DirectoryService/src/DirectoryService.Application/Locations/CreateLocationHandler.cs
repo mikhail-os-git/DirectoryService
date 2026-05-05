@@ -1,8 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Locations;
+using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
@@ -15,15 +17,18 @@ namespace DirectoryService.Application.Locations;
 public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
 {
     private readonly ILocationsRepository _repository;
+    private readonly ITransactionManager _transactionManager;
     private readonly ILogger<CreateLocationHandler> _logger;
     private readonly IValidator<CreateLocationRequest> _validator;
 
     public CreateLocationHandler(
-        ILocationsRepository repository, 
+        ILocationsRepository repository,
+        ITransactionManager transactionManager,
         ILogger<CreateLocationHandler> logger,
         IValidator<CreateLocationRequest> validator)
     {
         _repository = repository;
+        _transactionManager = transactionManager;
         _logger = logger;
         _validator = validator;
     }
@@ -36,8 +41,6 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         if (!validationResult.IsValid)
         {
             var errors = validationResult.ToFailList();
-            
-            // _logger.LogError("Validation failed: {Errors}", errors);
             return errors;
         }
         
@@ -55,7 +58,7 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
         bool nameExist = await _repository.IsMatchAsync(l => l.LocationName == name.Value, cancellationToken);
         
         if (nameExist)
-            return Failure.Conflict($"Location with this Name already exists : {name.Value.Value}", "location-name.conflict").ToFailList();
+            return LocationErrors.PropertyConflict(name.Value.Value, "Name").ToFailList();
         
         bool addressExist = await _repository.IsMatchAsync(
             l => l.Address.Country == address.Value.Country &&
@@ -66,7 +69,7 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
             cancellationToken);
         
         if (addressExist)
-            return Failure.Conflict($"Location with this address already exists : {address.Value}", "location-address.conflict").ToFailList();
+            return LocationErrors.PropertyConflict(address.Error.ToString(), "Address").ToFailList();
         
         // Coздание доменных моделей
         var location = Location.Create(name.Value, address.Value, timezone.Value);
@@ -75,10 +78,12 @@ public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
             return location.Error.ToFailList();
         
         // Сохранение доменных моделей в БД
-        var adding = await _repository.AddAsync(location.Value, cancellationToken);
-        if (adding.IsFailure)
-            return adding.Error.ToFailList();
+        var id = await _repository.AddAsync(location.Value, cancellationToken);
         
-        return adding.Value;
+        var saving = await _transactionManager.SaveChangesAsync(cancellationToken);
+        if (saving.IsFailure)
+            return saving.Error.ToFailList();
+        
+        return id;
     }
 }

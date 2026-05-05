@@ -20,15 +20,9 @@ public class LocationsRepository: ILocationsRepository
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Failure>> AddAsync(Location location, CancellationToken cancellationToken)
+    public async Task<Guid> AddAsync(Location location, CancellationToken cancellationToken)
     {
       await _context.Locations.AddAsync(location, cancellationToken);
-      var result = await SaveAsync(cancellationToken);
-
-      if (result.IsFailure)
-          return result.Error;
-      
-      // _logger.LogInformation("Location {Id} created successfully", location.Id);
       return location.Id;
     }
 
@@ -54,19 +48,19 @@ public class LocationsRepository: ILocationsRepository
         return foundCount == collection.Count;
     }
 
-    public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken) 
-    {
-        try
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-            return UnitResult.Success<Failure>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Failed to save changes: {Error}", ex);
-            return UnitResult.Failure(Failure.Error("Something went wrong", "server.internal"));
-        }
-    }
+    // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken) 
+    // {
+    //     try
+    //     {
+    //         await _context.SaveChangesAsync(cancellationToken);
+    //         return UnitResult.Success<Failure>();
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError("Failed to save changes: {Error}", ex);
+    //         return UnitResult.Failure(CommonFailures.InternalError);
+    //     }
+    // }
     
     // public Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken) => throw new NotImplementedException();
     //

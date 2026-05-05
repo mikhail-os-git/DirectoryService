@@ -8,7 +8,7 @@ namespace DirectoryService.Application.Positions.Interfaces;
 
 public interface IPositionsRepository
 {
-    Task<Result<Guid, Failure>> AddAsync(Position position, CancellationToken cancellationToken);
+    Task<Guid> AddAsync(Position position, CancellationToken cancellationToken);
 
     Task<Position?> GetByAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken);
 
@@ -17,7 +17,7 @@ public interface IPositionsRepository
     Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Position, bool>> expression,
         CancellationToken cancellationToken);
     
-    Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
+    // Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
       
     // Task<Guid> DeleteAsync(Guid positionId, CancellationToken cancellationToken);
     

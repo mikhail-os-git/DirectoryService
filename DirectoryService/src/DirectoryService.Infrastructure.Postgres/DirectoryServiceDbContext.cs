@@ -23,5 +23,7 @@ public class DirectoryServiceDbContext : DbContext
     public DbSet<Location> Locations => Set<Location>();
 
     public DbSet<Position> Positions => Set<Position>();
-    
+
+    public DbSet<DepartmentLocation> DepartmentLocations => Set<DepartmentLocation>();
+
 }

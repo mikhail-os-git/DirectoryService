@@ -8,7 +8,7 @@ namespace DirectoryService.Application.Locations.Interfaces;
 
 public interface ILocationsRepository
 {
-    Task<Result<Guid, Failure>> AddAsync(Location location, CancellationToken cancellationToken);
+    Task<Guid> AddAsync(Location location, CancellationToken cancellationToken);
     
     Task<Location?> GetByAsync(Expression<Func<Location, bool>> expression, CancellationToken cancellationToken);
     
@@ -16,7 +16,7 @@ public interface ILocationsRepository
     
     Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Location, bool>> expression, CancellationToken cancellationToken);
     
-    Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
+    // Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
     
     // Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken);
     //
