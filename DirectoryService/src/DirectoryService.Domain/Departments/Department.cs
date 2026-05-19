@@ -12,7 +12,7 @@ public class Department
     public DepartmentName DepartmentName { get; private set; } = null!;
     public Identifier Identifier { get; private set; } = null!;
    
-    // public Guid? ParentId { get; private set; }
+    public Guid? ParentId { get; private set; }
     public Department? Parent { get; private set; }
     public Path Path { get; private set; } = null!;
     public short Depth { get; private set; }
@@ -27,7 +27,7 @@ public class Department
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
     public IReadOnlyList<Department> ChildrenDepartments => _childrenDepartments;
-
+    
     public bool HasLocation => _departmentLocations.Count > 0;
    
     // EF Core v
@@ -83,6 +83,11 @@ public class Department
         return new Department(id ?? Guid.NewGuid(), departmentName, identifier, path, depth, true, departmentLocations, now, now, parent);
     }
 
+    public void SetParent(Guid? parentId) => ParentId = parentId;
+
+    public void SetPath(Path path) => Path = path;
+    public void SetDepth(short depth) => Depth = depth;
+    
     public void UpdateLocations(IEnumerable<Guid> locationIds)
     {
         var list = locationIds.Select(id => new DepartmentLocation(Id, id));

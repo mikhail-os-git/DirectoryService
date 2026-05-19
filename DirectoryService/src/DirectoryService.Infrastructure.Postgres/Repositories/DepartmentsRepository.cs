@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using CSharpFunctionalExtensions;
+using Dapper;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Infrastructure.Database;
 using General.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,11 +15,13 @@ namespace DirectoryService.Infrastructure.Repositories;
 public class DepartmentsRepository: IDepartmentsRepository
 {
     private readonly DirectoryServiceDbContext _context;
+    private readonly IDbConnectionFactory _connectionFactory;
     private readonly ILogger<DepartmentsRepository> _logger;
 
-    public DepartmentsRepository(DirectoryServiceDbContext context, ILogger<DepartmentsRepository> logger)
+    public DepartmentsRepository(DirectoryServiceDbContext context, IDbConnectionFactory connectionFactory,  ILogger<DepartmentsRepository> logger)
     {
         _context = context;
+        _connectionFactory = connectionFactory;
         _logger = logger;
     }
 
@@ -33,7 +37,33 @@ public class DepartmentsRepository: IDepartmentsRepository
     {
         return await _context.Departments.FirstOrDefaultAsync(expression, cancellationToken);
     }
+    
+    public async Task<Department?> GetByIdWithLockAsync(Guid departmentId, CancellationToken cancellationToken)
+    {
+        var department = await _context.Departments.FromSql($"SELECT * FROM departments WHERE id = {departmentId} FOR UPDATE")
+            .FirstOrDefaultAsync(cancellationToken);
+        return department;
+    }
 
+    public async Task<UnitResult<Failure>> LockDescendantsAsync(string path, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var connection = _context.Database.GetDbConnection();
+            string selectLock = """SELECT * FROM departments WHERE path <@ @path::ltree AND path != @path::ltree  FOR UPDATE""";
+
+            await connection.ExecuteAsync(selectLock, new { path });
+
+            return UnitResult.Success<Failure>();
+
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to select with lock");
+            return UnitResult.Failure(CommonErrors.InternalError);
+        }
+    }
+    
     public async Task<bool> IsMatchAsync(Expression<Func<Department, bool>> expression, CancellationToken cancellationToken)
     {
         return await _context.Departments.AnyAsync(expression, cancellationToken);
@@ -48,6 +78,14 @@ public class DepartmentsRepository: IDepartmentsRepository
         return collection.Count == count;
     }
 
+    public async Task<bool> IsDescendantOfAsync(string childPath, string parentPath,
+        CancellationToken cancellationToken)
+    {
+        var count = await _context.Database
+            .ExecuteSqlRawAsync("""SELECT COUNT(*) FROM departments WHERE {0}::ltree <@ {1}::ltree AND {0}::ltree != {1}::ltree """, childPath, parentPath);
+        return count > 0;
+    }
+    
     public async Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken)
     {
         try
@@ -62,25 +100,75 @@ public class DepartmentsRepository: IDepartmentsRepository
             return UnitResult.Failure(CommonErrors.InternalError);
         }
     }
-
-    public async Task<Guid> AddDepartmentLocationsAsync(
-        Guid departmentId,
-        IEnumerable<Guid> locationIds,
+    
+    public async Task<Result<string?, Failure>> MoveDepartmentAsync(string oldChildPath, string parentPath,
         CancellationToken cancellationToken)
     {
-        var list = locationIds.Select(id => new DepartmentLocation(departmentId, id)).ToList();
-        await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
-        return departmentId;
+        var connection = _context.Database.GetDbConnection();
+        
+        try
+        {
+            string updateSql = """
+                               UPDATE departments
+                               SET 
+                                   path = @parentPath::ltree || subpath(@oldChildPath::ltree, -1),
+                                   depth = nlevel(@parentPath::ltree || subpath(@oldChildPath::ltree, -1))
+                               WHERE path = @oldChildPath::ltree
+                               RETURNING path
+                               """;
+
+            string? path = await connection.ExecuteScalarAsync<string>(updateSql, new { oldChildPath, parentPath });
+            return path;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to select");
+            return CommonErrors.InternalError;
+        }
     }
     
-    public async Task<Guid> AddDepartmentLocationsAsync(
-        IEnumerable<DepartmentLocation> departmentLocations,
+    public async Task<UnitResult<Failure>> MoveDescendantsAsync(string oldPath, string newPath,
         CancellationToken cancellationToken)
     {
-        var list = departmentLocations.ToList();
-        await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
-        return list.First().DepartmentId;
+        try
+        {
+            var connection = _context.Database.GetDbConnection();
+            
+            string updateSql = """
+                               UPDATE departments
+                               SET path = @newPath::ltree || subpath(path, nlevel(@oldPath::ltree)),
+                                   depth = nlevel(@newPath::ltree || subpath(path, nlevel(@oldPath::ltree))) - 1
+                               WHERE path <@ @oldPath::ltree AND path != @oldPath::ltree
+                               """;
+            await connection.ExecuteAsync(updateSql, new { newPath, oldPath });
+
+            return UnitResult.Success<Failure>();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to update descendants");
+            return CommonErrors.InternalError;
+        }
     }
+
+    // public async Task<Guid> AddDepartmentLocationsAsync(
+    //     Guid departmentId,
+    //     IEnumerable<Guid> locationIds,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var list = locationIds.Select(id => new DepartmentLocation(departmentId, id)).ToList();
+    //     await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
+    //     return departmentId;
+    // }
+    //
+    // public async Task<Guid> AddDepartmentLocationsAsync(
+    //     IEnumerable<DepartmentLocation> departmentLocations,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var list = departmentLocations.ToList();
+    //     await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
+    //     return list.First().DepartmentId;
+    // }
     
     // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
     // {

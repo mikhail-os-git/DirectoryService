@@ -42,6 +42,8 @@ public static class InfrastructureDependencyInjection
             options.UseLoggerFactory(loggerFactory);
         });
 
+        services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
+
         services.AddScoped<ITransactionManager, TransactionManager>();
         
         return services;

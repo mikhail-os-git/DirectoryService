@@ -1,7 +1,9 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Data;
+using CSharpFunctionalExtensions;
 using DirectoryService.Application.Database;
 using DirectoryService.Domain.Common;
 using General.Errors;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
@@ -23,11 +25,13 @@ public class TransactionManager: ITransactionManager
     }
 
     public async Task<Result<ITransactionScope, Failure>> BeginTransactionAsync(
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, System.Data.IsolationLevel? isolationLevel = null)
     {
         try
         {
-            var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            System.Data.IsolationLevel level = isolationLevel ?? System.Data.IsolationLevel.ReadCommitted;
+
+            var transaction = await _dbContext.Database.BeginTransactionAsync(level, cancellationToken);
             var scopeLogger = _loggerFactory.CreateLogger<TransactionScope>();
             
 #pragma warning disable CA2000
@@ -49,6 +53,11 @@ public class TransactionManager: ITransactionManager
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
             return UnitResult.Success<Failure>();
+        }
+        catch (DbUpdateConcurrencyException concurrencyException)
+        {
+            _logger.LogError(concurrencyException, "Failed to save changes");
+            return UnitResult.Failure(CommonErrors.ConcurrencyConflict);
         }
         catch (Exception exception)
         {
