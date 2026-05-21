@@ -5,11 +5,12 @@ using Npgsql;
 
 namespace DirectoryService.Infrastructure.Database;
 
-public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnectionFactory
+public sealed class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnectionFactory
 {
     private readonly NpgsqlDataSource _dataSource;
     private readonly ILoggerFactory _loggerFactory;
-
+    private bool _disposed;
+    
     public NpgSqlConnectionFactory(IConfiguration configuration)
     {
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("DirectoryServiceDB")!);
@@ -28,24 +29,18 @@ public class NpgSqlConnectionFactory : IDisposable, IAsyncDisposable, IDbConnect
 
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        if (_disposed) return;
+        _disposed = true;
+        _dataSource.Dispose();
+        _loggerFactory.Dispose();
     }
 
     public async ValueTask DisposeAsync()
     {
+        if (_disposed) return;
+        _disposed = true;
         await _dataSource.DisposeAsync();
         _loggerFactory.Dispose();
-        GC.SuppressFinalize(this);
-    }
-    
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            _dataSource.Dispose();
-            _loggerFactory.Dispose();
-        }
     }
 
     private ILoggerFactory CreateLoggerFactory() => LoggerFactory.Create(builder => { builder.AddConsole(); });
