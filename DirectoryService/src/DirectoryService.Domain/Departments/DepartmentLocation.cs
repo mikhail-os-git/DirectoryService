@@ -5,7 +5,8 @@ public sealed class DepartmentLocation
     public Guid Id { get; private set; }
     public Guid DepartmentId { get; private set; }
     public Guid LocationId { get; private set; }
-
+    
+    // public int Version { get; private set; }
     public DepartmentLocation(Guid id, Guid departmentId, Guid locationId)
     {
         Id = id;

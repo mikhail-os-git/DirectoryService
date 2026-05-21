@@ -7,7 +7,9 @@ namespace DirectoryService.Domain.ValueObjects;
 
 public record Path
 {
-    private const char SEPARATOR = '.';
+    private const char IDENTIFIER_SEPARATOR = '-';
+    private const char PATH_SEPARATOR = '.';
+    
     public string Value { get; }
 
     private readonly List<string> _roads = [];
@@ -22,22 +24,7 @@ public record Path
 
     public static Result<Path, Failure> CreateFromString(string value)
     {
-        if (StringValidator.IsEmpty(value))
-        {
-            return Failure.Validation("The value must not be empty.", "path.is.invalid");
-        }
-        
-        foreach (char ch in value)
-        {
-            if(ch == SEPARATOR) continue;
-            if (!StringValidator.IsEnglishLetter(ch))
-            {
-                string message = $"The path can contain only English letters and symbols: '.' and '-";
-                return Failure.Validation(message, "path.is.invalid");
-            }
-        }
-        
-        return new Path(value);
+        return Validate(value).Map(() => new Path(value));
     }
 
     public static Path CreateParent(Identifier identifier)
@@ -47,7 +34,7 @@ public record Path
 
     public Path CreateChild(Identifier identifier)
     {
-        return new Path(Value + SEPARATOR + identifier.Value);
+        return new Path(Value + PATH_SEPARATOR + identifier.Value);
     }
 
     /// <summary>
@@ -61,6 +48,26 @@ public record Path
     
     private static List<string> SplitRoads(string path)
     {
-        return path.Split(SEPARATOR).ToList();
+        return path.Split(PATH_SEPARATOR).ToList();
+    }
+
+    private static UnitResult<Failure> Validate(string value)
+    {
+        if (StringValidator.IsEmpty(value))
+        {
+            return UnitResult.Failure(Failure.Validation("The value must not be empty.", "path.is.invalid"));
+        }
+        
+        foreach (char ch in value)
+        {
+            if(ch == PATH_SEPARATOR || ch == IDENTIFIER_SEPARATOR) continue;
+            if (!StringValidator.IsEnglishLetter(ch))
+            {
+                string message = $"The path can contain only English letters and symbols: '{PATH_SEPARATOR}' and '{IDENTIFIER_SEPARATOR}";
+                return UnitResult.Failure(Failure.Validation(message, "path.is.invalid"));
+            }
+        }
+
+        return UnitResult.Success<Failure>();
     }
 }

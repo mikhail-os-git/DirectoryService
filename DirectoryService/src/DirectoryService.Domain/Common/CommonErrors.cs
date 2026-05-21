@@ -7,6 +7,8 @@ public static class CommonErrors
 {
     public static Failure InternalError =>
         Failure.Error("Something went wrong", "server.internal");
+    
+    public static Failure ConcurrencyConflict => Failure.Conflict("Conflict detected, please try again", "concurrency.conflict");
 
     public static Failure EntityNotFound(string entity, Guid id) =>
         Failure.NotFoundEntity(

@@ -42,5 +42,7 @@ public class DepartmentPositionConfiguration: IEntityTypeConfiguration<Departmen
         builder.HasIndex(dp => new { dp.DepartmentId, dp.PositionId })
             .IsUnique()
             .HasDatabaseName("ux_department_position");
+        
+        // builder.Property(dp => dp.Version).IsRowVersion();
     }
 }

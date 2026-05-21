@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Database;
 
-public class TransactionScope : ITransactionScope
+public sealed class TransactionScope : ITransactionScope
 {
     private readonly DbTransaction _transaction;
     private readonly ILogger<TransactionScope> _logger;
@@ -51,23 +51,15 @@ public class TransactionScope : ITransactionScope
     public async ValueTask DisposeAsync()
     {
         if (_disposed) return;
-        await _transaction.DisposeAsync();
         _disposed = true;
-        GC.SuppressFinalize(this);
+        await _transaction.DisposeAsync();
     }
 
     public void Dispose()
     {
-        Dispose(true);
-        
-        // GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
         if (_disposed) return;
-        if (disposing)
-            _transaction.Dispose();
         _disposed = true;
+        _transaction.Dispose();
+
     }
 }

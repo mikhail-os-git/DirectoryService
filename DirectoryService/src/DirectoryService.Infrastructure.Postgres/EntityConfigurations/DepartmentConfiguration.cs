@@ -29,21 +29,24 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
 
-        builder.Property<Guid?>("ParentId")
+        builder.Property<Guid?>(d => d.ParentId)
             .IsRequired(false)
             .HasColumnName("parent_id");
 
         builder.HasOne(d => d.Parent)
             .WithMany(d => d.ChildrenDepartments)
-            .HasForeignKey("ParentId")
+            .HasForeignKey(d => d.ParentId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(d => d.Path)
             .HasConversion(p => p.Value, path => Path.Convert(path))
+            .HasColumnType("ltree")
             .IsRequired()
             .HasColumnName("path");
 
+        builder.HasIndex(d => d.Path).HasMethod("gist").HasDatabaseName("idx_departments_path");
+        
         builder.Property(d => d.Depth)
             .IsRequired()
             .HasColumnName("depth");
@@ -60,6 +63,6 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
         builder.Property(d => d.UpdatedAt)
             .IsRequired()
             .HasColumnName("updated_at");
-
+        
     }
 }

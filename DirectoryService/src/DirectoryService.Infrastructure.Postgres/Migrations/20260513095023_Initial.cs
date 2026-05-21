@@ -11,6 +11,9 @@ namespace DirectoryService.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:ltree", ",,");
+
             migrationBuilder.CreateTable(
                 name: "departments",
                 columns: table => new
@@ -19,7 +22,7 @@ namespace DirectoryService.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     identifier = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     parent_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    path = table.Column<string>(type: "text", nullable: false),
+                    path = table.Column<string>(type: "ltree", nullable: false),
                     depth = table.Column<short>(type: "smallint", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -50,7 +53,7 @@ namespace DirectoryService.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_loction", x => x.id);
+                    table.PrimaryKey("pk_location", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,7 +76,7 @@ namespace DirectoryService.Infrastructure.Migrations
                 name: "department_location",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     department_id = table.Column<Guid>(type: "uuid", nullable: false),
                     location_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -98,7 +101,7 @@ namespace DirectoryService.Infrastructure.Migrations
                 name: "department_position",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     department_id = table.Column<Guid>(type: "uuid", nullable: false),
                     position_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -142,6 +145,12 @@ namespace DirectoryService.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "idx_departments_path",
+                table: "departments",
+                column: "path")
+                .Annotation("Npgsql:IndexMethod", "gist");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_departments_parent_id",
                 table: "departments",
                 column: "parent_id");
@@ -149,13 +158,13 @@ namespace DirectoryService.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "ux_locations_name",
                 table: "locations",
-                column: "Name",
+                column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ux_position_name",
                 table: "positions",
-                column: "Name",
+                column: "name",
                 unique: true);
         }
 
