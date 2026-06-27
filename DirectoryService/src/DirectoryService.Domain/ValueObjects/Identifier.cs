@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Globalization;
+using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
 using General;
@@ -9,13 +10,13 @@ namespace DirectoryService.Domain.ValueObjects;
 public record Identifier
 {
     public const int MAX_LENGTH = LengthConstants.MAX_LENGTH_150;
-    public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_3;
+    public const int MIN_LENGTH = LengthConstants.MIN_LENGTH_2;
     private const char SEPARATOR = '-';
     public string Value { get; }
 
     private Identifier(string value)
     {
-        Value = value;
+        Value = value.ToLower(CultureInfo.InvariantCulture);
     }
 
     public static Result<Identifier, Failure> Create(string value)

@@ -34,7 +34,7 @@ public record Address
     public static Result<Address, Failure> Create(string country, string city, string street, string houseNumber,
         int postalCode)
     {
-        string houseNumberRegex = @"^[A-Za-z0-9/\-\.]+$";
+        string houseNumberRegex = @"^[A-Za-z0-9\u0400-\u04FF/\-\.]+$";
         bool notEmptyInvalidHouseNumber = false;
         bool invalidPostalCode = false;
         List<string> fields = [];

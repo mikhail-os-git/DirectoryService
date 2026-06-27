@@ -20,7 +20,8 @@ try
     app.UseExceptionMiddleware();
     app.Configure();
     app.MapControllers();
-    app.Run();
+    await app.RunSeedAsync();
+    await app.RunAsync();
 
 }
 catch (Exception ex)
@@ -28,5 +29,10 @@ catch (Exception ex)
     Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally {
-    Log.CloseAndFlush();
+   await Log.CloseAndFlushAsync();
+}
+
+namespace DirectoryService.Web
+{
+    public partial class Program;
 }

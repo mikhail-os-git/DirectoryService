@@ -1,4 +1,6 @@
 ﻿using DirectoryService.Infrastructure.Configurations;
+using DirectoryService.Infrastructure.Database;
+using DirectoryService.TestData;
 using General.Converters;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -14,7 +16,8 @@ public static class WebDependencyInjection
             .AddLogger(configuration)
             .AddInfrastructurePostgres(configuration)
             .AddControllersAndOpenApi()
-            .ConfigureApiBehaviorOptions();
+            .ConfigureApiBehaviorOptions()
+            .AddSeeder();
 
     }
     
@@ -64,5 +67,25 @@ public static class WebDependencyInjection
         });
 
         return services;
+    }
+
+    private static IServiceCollection AddSeeder(this IServiceCollection services)
+    { 
+#if  DEBUG
+        services.AddScoped<IDataSeeder, DataSeeder>();  
+#endif
+        return services;
+    }
+
+    public static async Task<WebApplication> RunSeedAsync(this WebApplication app)
+    {
+        if (!app.Environment.IsDevelopment())
+            return app;
+#if DEBUG
+        await using var scope = app.Services.CreateAsyncScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+        await seeder.SeedAsync();
+#endif
+        return app;
     }
 }

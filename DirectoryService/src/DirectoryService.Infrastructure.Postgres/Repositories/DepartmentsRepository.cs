@@ -78,12 +78,20 @@ public class DepartmentsRepository: IDepartmentsRepository
         return collection.Count == count;
     }
 
-    public async Task<bool> IsDescendantOfAsync(string childPath, string parentPath,
-        CancellationToken cancellationToken)
+    public async Task<bool> IsDescendantOfAsync(string potentialDescendantPath, string ancestorPath, CancellationToken cancellationToken)
     {
-        var count = await _context.Database
-            .ExecuteSqlRawAsync("""SELECT COUNT(*) FROM departments WHERE {0}::ltree <@ {1}::ltree AND {0}::ltree != {1}::ltree """, childPath, parentPath);
-        return count > 0;
+        var connection = _context.Database.GetDbConnection();
+        
+        string query =
+            """ SELECT EXISTS(SELECT 1 FROM departments WHERE  @descendant::ltree <@ @ancestor::ltree AND  @descendant::ltree != @ancestor::ltree) """;
+       
+        var param = new { descendant = potentialDescendantPath, ancestor = ancestorPath };
+        
+        var queryCommand = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+        
+        var result = await connection.ExecuteScalarAsync<bool>(queryCommand);
+
+        return result;
     }
     
     public async Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken)

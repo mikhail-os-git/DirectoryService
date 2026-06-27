@@ -242,6 +242,9 @@ tab_width = 4
 #CUSTOM
 
 #STYLE COP ANALYZERS
+
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.CA1815.serverity = none
 dotnet_diagnostic.CA1034.severity = none
 dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1822.severity = none
