@@ -79,7 +79,7 @@ public class MoveDepartmentTests: DirectoryBaseTests
         var res4 = await ExecuteHandler<MoveDepartmentHandler, Result<Guid, FailList>>(sut =>
             sut.Handle(command4, cnt));
         
-        // Assert.True(res1.IsFailure && res2.IsFailure && res3.IsFailure && res4.IsFailure);
+        Assert.True(res1.IsFailure && res2.IsFailure && res3.IsFailure && res4.IsFailure);
         Assert.Equal(res1.Error, DepartmentErrors.NotFound(command1.departmentId).ToFailList());
         Assert.Equal(res2.Error, DepartmentErrors.NotFound(command2.parentId!.Value).ToFailList());
         Assert.Equal(res3.Error, conflictFailure);

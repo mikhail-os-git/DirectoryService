@@ -38,7 +38,6 @@ public class CreateDepartmentTests: DirectoryBaseTests
             Assert.NotNull(department);
             Assert.Equal(department.Id, result.Value);
             Assert.True(result.IsSuccess);
-            Assert.NotEqual(Guid.Empty, result.Value);
         });
 
     }

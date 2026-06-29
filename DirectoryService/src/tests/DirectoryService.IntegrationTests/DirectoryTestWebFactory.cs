@@ -16,12 +16,20 @@ namespace DirectoryService.IntegrationTests;
 
 public class DirectoryTestWebFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Usage", 
+        "CA2213:Disposable fields should be disposed",
+        Justification = "Disposed in IAsyncLifetime.DisposeAsync")]
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres")
         .WithDatabase("ds_tests_db")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Usage", 
+        "CA2213:Disposable fields should be disposed",
+        Justification = "Disposed in IAsyncLifetime.DisposeAsync")]
     private NpgsqlConnection _dbConnection = null!;
     private Respawner _respawner = null!;
 
@@ -40,15 +48,16 @@ public class DirectoryTestWebFactory : WebApplicationFactory<Program>, IAsyncLif
         await InitializeRespawnerAsync();
     }
 
-    public new async Task DisposeAsync()
+    async Task IAsyncLifetime.DisposeAsync()
     {
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
-
         await _dbConnection.CloseAsync();
         await _dbConnection.DisposeAsync();
+
+        await DisposeAsync();
     }
-    
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
