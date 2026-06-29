@@ -36,12 +36,10 @@ public class Location
     {
     }
 
-    public static Result<Location, Failure> Create(LocationName locationName, Address address, Timezone timezone)
+    public static Result<Location, Failure> Create(LocationName locationName, Address address, Timezone timezone, Guid? id = null)
     {
-        Guid id = Guid.NewGuid();
         var now = DateTime.UtcNow;
-
-        return new Location(id, locationName, address, timezone, true, now, now);
+        return new Location(id ?? Guid.NewGuid(), locationName, address, timezone, true, now, now);
     }
 
     public void AddDepartments(params Guid[] departmentIds)

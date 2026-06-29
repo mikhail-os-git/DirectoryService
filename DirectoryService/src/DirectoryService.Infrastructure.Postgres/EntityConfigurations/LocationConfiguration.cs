@@ -25,9 +25,19 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
             .IsUnique()
             .HasDatabaseName("ux_locations_name");
 
+        // builder.OwnsOne(l => l.Address, lb =>
+        // {
+        //     lb.ToJson("address").HasColumnType("jsonb");
+        //
+        //     lb.Property(a => a.Country).HasJsonPropertyName("country");
+        //     lb.Property(a => a.City).HasJsonPropertyName("city");
+        //     lb.Property(a => a.Street).HasJsonPropertyName("street");
+        //     lb.Property(a => a.HouseNumber).HasJsonPropertyName("house_number");
+        //     lb.Property(a => a.PostalCode).HasJsonPropertyName("postal_code");
+        // });
         builder.OwnsOne(l => l.Address, lb =>
         {
-            lb.ToJson("address").HasColumnType("jsonb");
+            lb.ToJson("address");
 
             lb.Property(a => a.Country).HasJsonPropertyName("country");
             lb.Property(a => a.City).HasJsonPropertyName("city");

@@ -8,5 +8,6 @@ public readonly struct LengthConstants
     public const int MAX_LENGTH_100 = 100;
     public const int MAX_LENGTH_1000 = 1000;
     public const int MIN_LENGTH_3 = 3;
+    public const int MIN_LENGTH_2 = 2;
 }
 #pragma warning restore CA1815

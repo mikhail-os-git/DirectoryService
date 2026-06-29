@@ -18,14 +18,14 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<Guid, UpdateDepa
     private readonly IDepartmentsRepository _departmentsRepository;
     private readonly ILocationsRepository _locationsRepository;
     private readonly ITransactionManager _transactionManager;
-    private readonly IValidator<UpdateDepartmentLocationsRequest> _validator;
+    private readonly IValidator<UpdateDepartmentLocationsCommand> _validator;
     private readonly ILogger<UpdateDepartmentLocationsHandler> _logger;
 
     public UpdateDepartmentLocationsHandler(
         IDepartmentsRepository departmentsRepository,
         ILocationsRepository locationsRepository,
         ITransactionManager transactionManager,
-        IValidator<UpdateDepartmentLocationsRequest> validator,
+        IValidator<UpdateDepartmentLocationsCommand> validator,
         ILogger<UpdateDepartmentLocationsHandler> logger)
     {
         _departmentsRepository = departmentsRepository;
@@ -40,7 +40,7 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<Guid, UpdateDepa
         CancellationToken cancellationToken)
     {
         // Валидация входных параметров
-        var validationResult = await _validator.ValidateAsync(command.Request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
             return validationResult.ToFailList();
@@ -54,12 +54,12 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<Guid, UpdateDepa
 
         // Бизнес валидация
         bool allLocationsExist = await _locationsRepository.AllMatchAsync(
-            command.Request.LocationIds,
-            l => command.Request.LocationIds.Contains(l.Id), 
+            command.LocationIds,
+            l => command.LocationIds.Contains(l.Id), 
             cancellationToken);
 
         if (!allLocationsExist)
-            return LocationErrors.CollectionNotFound(command.Request.LocationIds).ToFailList();
+            return LocationErrors.CollectionNotFound(command.LocationIds).ToFailList();
 
         Department? department = await 
             _departmentsRepository.GetByAsync(d => d.Id == command.DepartmentId, cancellationToken);
@@ -77,7 +77,7 @@ public class UpdateDepartmentLocationsHandler : ICommandHandler<Guid, UpdateDepa
             return delete.Error.ToFailList();
         }
 
-        department.UpdateLocations(command.Request.LocationIds);
+        department.UpdateLocations(command.LocationIds);
         
         var saveChanges = await _transactionManager.SaveChangesAsync(cancellationToken);
 

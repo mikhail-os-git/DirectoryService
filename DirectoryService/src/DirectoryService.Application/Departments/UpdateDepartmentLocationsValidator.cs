@@ -1,22 +1,26 @@
 ﻿using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Common;
+using DirectoryService.Domain.Common.DomainEntityErrors;
 using FluentValidation;
 using General.Errors;
 
 namespace DirectoryService.Application.Departments;
 
-public class UpdateDepartmentLocationsValidator: AbstractValidator<UpdateDepartmentLocationsRequest>
+public class UpdateDepartmentLocationsValidator: AbstractValidator<UpdateDepartmentLocationsCommand>
 {
     public UpdateDepartmentLocationsValidator()
     {
-        RuleFor(r => r).NotNull().WithError(Failure.Error(
+        RuleFor(c => c).NotNull().WithError(Failure.Error(
                                                           "Invalid Request", "request.invalid"));
-
-        RuleForEach(r => r.LocationIds).NotEqual(Guid.Empty)
+        
+        RuleFor(c => c.DepartmentId).NotEqual(Guid.Empty)
+            .WithError(Failure.Validation("The Department ID must not be empty.", "department-id.invalid"));
+        
+        RuleForEach(c => c.LocationIds).NotEqual(Guid.Empty)
             .WithError(CommonErrors.CollectionItemsInvalid("Location-id"));
         
-        RuleFor(r => r.LocationIds)
+        RuleFor(c => c.LocationIds)
             .NotEmpty()
             .WithError(CommonErrors.CollectionEmpty("location-id"))
             .AllUnique()

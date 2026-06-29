@@ -3,4 +3,4 @@ using DirectoryService.Contracts.Departments;
 
 namespace DirectoryService.Application.Departments;
 
-public record UpdateDepartmentLocationsCommand(Guid DepartmentId, UpdateDepartmentLocationsRequest Request) : ICommand;
+public record UpdateDepartmentLocationsCommand(Guid DepartmentId, IReadOnlyList<Guid> LocationIds) : ICommand;

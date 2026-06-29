@@ -19,7 +19,7 @@ public interface IDepartmentsRepository
     
     Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Department, bool>> expression,
         CancellationToken cancellationToken);
-    Task<bool> IsDescendantOfAsync(string childPath, string parentPath, CancellationToken cancellationToken);
+    Task<bool> IsDescendantOfAsync(string potentialDescendantPath, string ancestorPath, CancellationToken cancellationToken);
 
     Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken);
 

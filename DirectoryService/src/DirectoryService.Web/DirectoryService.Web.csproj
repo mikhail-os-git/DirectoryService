@@ -34,5 +34,9 @@
     <ProjectReference Include="..\DirectoryService.Infrastructure.Postgres\DirectoryService.Infrastructure.Postgres.csproj" />
     <ProjectReference Include="..\DirectoryService.Presentation\DirectoryService.Presentation.csproj" />
   </ItemGroup>
+  
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\DirectoryService.TestData\DirectoryService.TestData.csproj" />
+  </ItemGroup>
 
 </Project>

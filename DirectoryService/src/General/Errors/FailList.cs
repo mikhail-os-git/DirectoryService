@@ -2,7 +2,7 @@
 
 namespace General.Errors;
 
-public class FailList : IEnumerable<Failure>
+public class FailList : IEnumerable<Failure>, IEquatable<FailList>
 {
     private readonly List<Failure> _failures;
     public int Count => _failures.Count;
@@ -34,4 +34,8 @@ public class FailList : IEnumerable<Failure>
         get => _failures[index]; 
         set => _failures[index] = value;
     }
+
+    public bool Equals(FailList? other) => other is not null && _failures.SequenceEqual(other._failures);
+    public override bool Equals(object? obj) => Equals(obj as FailList);
+    public override int GetHashCode() => _failures.Aggregate(0, HashCode.Combine);
 }

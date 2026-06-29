@@ -24,7 +24,7 @@ public class DepartmentsController : ControllerBase
         [FromServices] UpdateDepartmentLocationsHandler handler,
         CancellationToken cancellationToken)
     {
-        return await handler.Handle(new UpdateDepartmentLocationsCommand(departmentId, request), cancellationToken);
+        return await handler.Handle(new UpdateDepartmentLocationsCommand(departmentId, request.LocationIds), cancellationToken);
     }
 
     [HttpPut("{departmentId:guid}/parent")]

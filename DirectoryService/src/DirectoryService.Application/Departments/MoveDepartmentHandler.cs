@@ -67,11 +67,11 @@ public class MoveDepartmentHandler : ICommandHandler<Guid, MoveDepartmentCommand
 
         if (parent is not null && department is not null)
         {
-            bool checkPath =
-                await _departmentsRepository.IsDescendantOfAsync(department.Path.Value, parent.Path.Value,
+            bool isDescendant =
+                await _departmentsRepository.IsDescendantOfAsync(parent.Path.Value, department.Path.Value,
                     cancellationToken);
             
-            if (checkPath)
+            if (isDescendant)
             {
                 return Failure
                     .Conflict("A descendant department cannot be set as a parent", "department.path.conflict")
