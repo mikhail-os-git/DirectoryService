@@ -83,8 +83,11 @@ public static class WebDependencyInjection
             return app;
 #if DEBUG
         await using var scope = app.Services.CreateAsyncScope();
-        var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
-        await seeder.SeedAsync();
+        var seeders = scope.ServiceProvider.GetServices<IDataSeeder>();
+        foreach (var seeder in seeders)
+        {
+            await seeder.SeedAsync();
+        }
 #endif
         return app;
     }

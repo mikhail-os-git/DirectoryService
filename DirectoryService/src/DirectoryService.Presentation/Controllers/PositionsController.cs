@@ -1,7 +1,9 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Positions;
+using DirectoryService.Application.Positions.CreatePosition;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Contracts.Positions.CreatePosition;
 using General.EndpointsResult;
 using Microsoft.AspNetCore.Mvc;
 

@@ -4,15 +4,15 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Locations;
+using DirectoryService.Contracts.Locations.CreateLocation;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General;
 using General.Errors;
 using Microsoft.Extensions.Logging;
 
-namespace DirectoryService.Application.Locations;
+namespace DirectoryService.Application.Locations.CreateLocation;
 
 public class CreateLocationHandler: ICommandHandler<Guid, CreateLocationCommand>
 {

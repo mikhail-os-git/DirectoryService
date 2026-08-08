@@ -1,13 +1,13 @@
 ﻿using DirectoryService.Application.Validation;
-using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Contracts.Positions.CreatePosition;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
 using General.Errors;
 
-namespace DirectoryService.Application.Positions;
+namespace DirectoryService.Application.Positions.CreatePosition;
 
 public class CreatePositionValidator: AbstractValidator<CreatePositionRequest>
 {

@@ -1,12 +1,11 @@
-﻿using System.ComponentModel;
-using DirectoryService.Application.Validation;
+﻿using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Contracts.Departments.CreateDepartment;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.CreateDepartment;
 
 public class CreateDepartmentValidator: AbstractValidator<CreateDepartmentRequest>
 {

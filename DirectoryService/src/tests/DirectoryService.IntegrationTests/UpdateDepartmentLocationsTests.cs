@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Departments;
+using DirectoryService.Application.Departments.UpdateDepartmentLocations;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;

@@ -47,6 +47,9 @@ public static class InfrastructureDependencyInjection
             options.UseLoggerFactory(loggerFactory);
         });
         
+        services.AddScoped<IDirectoryReadDbContext>(provider => 
+            provider.GetRequiredService<DirectoryServiceDbContext>());
+        
         return services;
     }
 
