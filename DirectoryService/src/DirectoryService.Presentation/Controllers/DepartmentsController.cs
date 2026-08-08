@@ -41,7 +41,7 @@ public class DepartmentsController : ControllerBase
         CancellationToken cancellationToken) => await handler.Handle(new MoveDepartmentCommand(departmentId, request.parentId), cancellationToken);
     
     [HttpGet("{id:guid}")]
-    public async Task<EndpointResult<GetDepartmentResponse>> GetLocation(
+    public async Task<EndpointResult<GetDepartmentResponse>> GetDepartment(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetDepartmentResponse, GetDepartmentQuery> handler,
         CancellationToken cancellationToken) =>

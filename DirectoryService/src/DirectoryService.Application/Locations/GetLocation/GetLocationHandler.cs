@@ -43,8 +43,8 @@ public class GetLocationHandler : IQueryHandler<GetLocationResponse, GetLocation
             LocationName = location.LocationName.Value,
             Address = location.Address.ToString(),
             Timezone = location.Timezone.Value,
-            CreatedAt = location.CreatedAt.ToLocalTime(),
-            UpdatedAt = location.UpdatedAt.ToLocalTime(),
+            CreatedAt = location.CreatedAt,
+            UpdatedAt = location.UpdatedAt,
             IsActive = location.IsActive
         };
     }

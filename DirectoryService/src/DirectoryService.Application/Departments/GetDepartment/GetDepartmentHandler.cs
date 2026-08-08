@@ -45,8 +45,8 @@ public class GetDepartmentHandler : IQueryHandler<GetDepartmentResponse, GetDepa
             Path = department.Path.Value,
             Depth = department.Depth,
             IsActive = department.IsActive,
-            CreatedAt = department.CreatedAt.ToLocalTime(),
-            UpdatedAt = department.UpdatedAt.ToLocalTime()
+            CreatedAt = department.CreatedAt,
+            UpdatedAt = department.UpdatedAt
         };
     }
 }
