@@ -5,6 +5,7 @@ using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Contracts.Departments.CreateDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
@@ -12,7 +13,7 @@ using FluentValidation;
 using General.Errors;
 using Microsoft.Extensions.Logging;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.CreateDepartment;
 
 public class CreateDepartmentHandler : ICommandHandler<Guid, CreateDepartmentCommand>
 {

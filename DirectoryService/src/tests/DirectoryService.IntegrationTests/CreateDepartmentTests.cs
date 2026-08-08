@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Departments;
+using DirectoryService.Application.Departments.CreateDepartment;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Contracts.Departments.CreateDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;

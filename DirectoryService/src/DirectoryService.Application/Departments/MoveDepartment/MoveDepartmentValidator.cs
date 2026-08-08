@@ -1,9 +1,8 @@
 ﻿using DirectoryService.Application.Validation;
-using DirectoryService.Domain.Common.DomainEntityErrors;
 using FluentValidation;
 using General.Errors;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.MoveDepartment;
 
 public class MoveDepartmentValidator: AbstractValidator<MoveDepartmentCommand>
 {

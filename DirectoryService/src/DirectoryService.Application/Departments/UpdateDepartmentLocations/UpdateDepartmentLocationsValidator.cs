@@ -1,11 +1,9 @@
 ﻿using DirectoryService.Application.Validation;
-using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Common;
-using DirectoryService.Domain.Common.DomainEntityErrors;
 using FluentValidation;
 using General.Errors;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.UpdateDepartmentLocations;
 
 public class UpdateDepartmentLocationsValidator: AbstractValidator<UpdateDepartmentLocationsCommand>
 {

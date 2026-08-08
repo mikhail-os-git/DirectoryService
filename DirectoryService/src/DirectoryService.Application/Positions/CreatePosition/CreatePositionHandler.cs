@@ -4,8 +4,8 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Application.Validation;
-using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
+using DirectoryService.Contracts.Positions.CreatePosition;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
@@ -14,7 +14,7 @@ using FluentValidation;
 using General.Errors;
 using Microsoft.Extensions.Logging;
 
-namespace DirectoryService.Application.Positions;
+namespace DirectoryService.Application.Positions.CreatePosition;
 
 public class CreatePositionHandler : ICommandHandler<Guid, CreatePositionCommand>
 {

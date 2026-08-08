@@ -1,6 +1,5 @@
 ﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Contracts.Departments;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.UpdateDepartmentLocations;
 
 public record UpdateDepartmentLocationsCommand(Guid DepartmentId, IReadOnlyList<Guid> LocationIds) : ICommand;

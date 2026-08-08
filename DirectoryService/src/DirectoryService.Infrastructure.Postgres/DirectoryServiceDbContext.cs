@@ -1,12 +1,14 @@
-﻿using DirectoryService.Domain.Departments;
+﻿using DirectoryService.Application.Database;
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.Positions;
+using DirectoryService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace DirectoryService.Infrastructure;
 
-public class DirectoryServiceDbContext : DbContext
+public class DirectoryServiceDbContext : DbContext, IDirectoryReadDbContext
 {
     public DirectoryServiceDbContext(DbContextOptions<DirectoryServiceDbContext> options)
         : base(options)
@@ -27,4 +29,8 @@ public class DirectoryServiceDbContext : DbContext
 
     public DbSet<DepartmentLocation> DepartmentLocations => Set<DepartmentLocation>();
 
+    public IQueryable<Department> DepartmentsQuery => Departments.AsNoTracking().AsQueryable();
+    public IQueryable<Location> LocationsQuery => Locations.AsNoTracking().AsQueryable();
+    public IQueryable<Position> PositionsQuery => Positions.AsNoTracking().AsQueryable();
+    public IQueryable<DepartmentLocation> DepartmentLocationsQuery => DepartmentLocations.AsNoTracking().AsQueryable();
 }

@@ -13,7 +13,11 @@ public static class ApplicationDependencyInjection
         var assembly = typeof(ApplicationDependencyInjection).Assembly;
         services.Scan(scan => scan.FromAssemblies(assembly)
             .AddClasses(classes => 
-                classes.AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+                classes.AssignableToAny(
+                    typeof(ICommandHandler<,>),
+                    typeof(ICommandHandler<>),
+                    typeof(IQueryHandler<,>),
+                    typeof(IQueryHandler<>)))
             .AsSelfWithInterfaces().WithScopedLifetime());
 
         services.AddValidatorsFromAssembly(typeof(ApplicationDependencyInjection).Assembly);

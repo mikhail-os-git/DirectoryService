@@ -8,7 +8,7 @@ using DirectoryService.Domain.Departments;
 using FluentValidation;
 using General.Errors;
 
-namespace DirectoryService.Application.Departments;
+namespace DirectoryService.Application.Departments.MoveDepartment;
 
 public class MoveDepartmentHandler : ICommandHandler<Guid, MoveDepartmentCommand>
 {
