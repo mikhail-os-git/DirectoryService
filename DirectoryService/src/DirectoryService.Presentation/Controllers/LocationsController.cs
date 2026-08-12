@@ -6,6 +6,7 @@ using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Contracts.Locations.CreateLocation;
 using DirectoryService.Contracts.Locations.GetLocation;
+using DirectoryService.Contracts.Locations.TopLocations;
 using General.EndpointsResult;
 using General.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -30,4 +31,10 @@ public class LocationsController: ControllerBase
         [FromServices] IQueryHandler<GetLocationResponse, GetLocationQuery> handler,
         CancellationToken cancellationToken) =>
         await handler.Handle(new GetLocationQuery(id), cancellationToken);
+    
+    [HttpGet("top")]
+    public async Task<EndpointResult<TopLocationResponse>> TopLocations(
+        [FromServices] IQueryHandler<TopLocationResponse, IQuery> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(NoQuery.Value, cancellationToken);
 }
