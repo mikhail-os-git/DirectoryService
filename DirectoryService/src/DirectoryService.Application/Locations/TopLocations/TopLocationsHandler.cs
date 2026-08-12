@@ -18,24 +18,21 @@ public class TopLocationsHandler: IQueryHandler<TopLocationResponse, IQuery>
 
     public async Task<Result<TopLocationResponse, FailList>> Handle(IQuery query, CancellationToken cancellationToken)
     {
-        var locations = await (from l in _readDbContext.LocationsQuery
-            join dl in _readDbContext.DepartmentLocationsQuery on l.Id equals dl.LocationId
-            group dl by l.Id into g
-            orderby g.Count() descending
+        var sql = from g in 
+                from dl in _readDbContext.DepartmentLocationsQuery
+                group dl by dl.LocationId into g
+                select new { LocationId = g.Key, Count = g.Count() }
+            join l in _readDbContext.LocationsQuery on g.LocationId equals l.Id
+            orderby g.Count descending, g.LocationId ascending 
             select new TopLocationItem
             {
-                Id = g.Key,
-                LocationName = _readDbContext.LocationsQuery
-                    .Where(l => l.Id == g.Key)
-                    .Select(l => l.LocationName.Value)
-                    .FirstOrDefault()!,
-                Address = _readDbContext.LocationsQuery
-                    .Where(l => l.Id == g.Key)
-                    .Select(l => l.Address.ToString())
-                    .FirstOrDefault()!,
-                DepartmentCount = g.Count()
-            }).
-            Take(5).ToListAsync(cancellationToken);
+                Id = l.Id,
+                LocationName = l.LocationName.Value,
+                Address = l.Address.ToString(),
+                DepartmentCount = g.Count
+            };
+
+        var locations = await sql.Take(5).ToListAsync(cancellationToken);
         return new TopLocationResponse(locations);
     }
 }

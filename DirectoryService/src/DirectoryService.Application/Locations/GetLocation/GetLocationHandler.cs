@@ -32,7 +32,9 @@ public class GetLocationHandler : IQueryHandler<GetLocationResponse, GetLocation
             return validate.ToFailList();
         
         var location =
-            await _readDbContext.LocationsQuery.FirstOrDefaultAsync(l => l.Id == query.LocationId, cancellationToken);
+            await _readDbContext.LocationsQuery
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(l => l.Id == query.LocationId, cancellationToken);
 
         if (location is null)
             return LocationErrors.NotFound(query.LocationId).ToFailList();

@@ -65,5 +65,7 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
             .IsRequired()
             .HasColumnName("updated_at");
 
+        builder.HasQueryFilter(l => l.IsActive);
+
     }
 }
