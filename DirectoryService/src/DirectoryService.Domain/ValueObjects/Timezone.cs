@@ -47,4 +47,6 @@ public record Timezone
     /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
     /// <returns>Экземпляр <see cref="Timezone"/>.</returns>
     public static Timezone Convert(string value) => new(value);
+
+    public static implicit operator string(Timezone timezone) => timezone.Value;
 }

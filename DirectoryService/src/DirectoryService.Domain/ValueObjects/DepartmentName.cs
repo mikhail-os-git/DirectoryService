@@ -45,5 +45,5 @@ public record DepartmentName
     /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
     /// <returns>Экземпляр <see cref="DepartmentName"/>.</returns>
     public static DepartmentName Convert(string value) => new (value);
-
+    public static implicit operator string(DepartmentName name) => name.Value;
 }

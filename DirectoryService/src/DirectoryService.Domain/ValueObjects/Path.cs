@@ -70,4 +70,7 @@ public record Path
 
         return UnitResult.Success<Failure>();
     }
+
+    public static implicit operator string(Path path) => path.Value;
+
 }

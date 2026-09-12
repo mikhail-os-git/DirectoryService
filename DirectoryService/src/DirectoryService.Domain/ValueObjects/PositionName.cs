@@ -42,4 +42,6 @@ public record PositionName
     /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
     /// <returns>Экземпляр <see cref="PositionName"/>.</returns>
     public static PositionName Convert(string value) => new(value);
+
+    public static implicit operator string(PositionName name) => name.Value;
 }

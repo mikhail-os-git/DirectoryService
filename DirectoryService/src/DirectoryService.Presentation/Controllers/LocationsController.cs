@@ -12,26 +12,25 @@ using General.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DirectoryService.Presentation.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-public class LocationsController: ControllerBase
+public class LocationsController : ControllerBase
 {
     [HttpPost]
     public async Task<EndpointResult<Guid>> Create(
         [FromBody] CreateLocationRequest request,
         [FromServices] ICommandHandler<Guid, CreateLocationCommand> handler,
-        CancellationToken cancellationToken = default)
-    {
-        return await handler.Handle(new CreateLocationCommand(request), cancellationToken);
-    }
-    
+        CancellationToken cancellationToken = default) =>
+        await handler.Handle(new CreateLocationCommand(request), cancellationToken);
+
     [HttpGet("{id:guid}")]
     public async Task<EndpointResult<GetLocationResponse>> GetLocation(
         [FromRoute] Guid id,
         [FromServices] IQueryHandler<GetLocationResponse, GetLocationQuery> handler,
         CancellationToken cancellationToken) =>
         await handler.Handle(new GetLocationQuery(id), cancellationToken);
-    
+
     [HttpGet("top")]
     public async Task<EndpointResult<TopLocationResponse>> TopLocations(
         [FromServices] IQueryHandler<TopLocationResponse, IQuery> handler,

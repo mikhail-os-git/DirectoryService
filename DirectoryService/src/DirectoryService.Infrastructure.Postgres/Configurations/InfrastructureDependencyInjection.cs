@@ -1,4 +1,5 @@
-﻿using DirectoryService.Application.Configuration;
+﻿using DirectoryService.Application.Abstractions;
+using DirectoryService.Application.Configuration;
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
