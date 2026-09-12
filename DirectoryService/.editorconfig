@@ -243,6 +243,29 @@ tab_width = 4
 
 #STYLE COP ANALYZERS
 
+#Tampates
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+#dotnet_diagnostic..severity = none
+
+
 dotnet_diagnostic.SA1202.severity = none
 dotnet_diagnostic.CA1815.severity = none
 dotnet_diagnostic.CA1034.severity = none
@@ -289,7 +312,7 @@ dotnet_diagnostic.SA1623.severity = none
 dotnet_diagnostic.SA1118.severity = none
 dotnet_diagnostic.eSA1128.severity = none
 dotnet_diagnostic.SA1401.severity = none
-
+dotnet_diagnostic.CA1051.severity = none
 # Отключаем или меняем уровень серьезности предупреждения SA1310, чтобы не конфликтовало с новыми правилами.
 dotnet_diagnostic.SA1310.severity = none
 

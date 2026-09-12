@@ -41,4 +41,6 @@ public record LocationName
     /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
     /// <returns>Экземпляр <see cref="LocationName"/>.</returns>
     public static LocationName Convert(string value) => new(value);
+
+    public static implicit operator string(LocationName name) => name.Value;
 }

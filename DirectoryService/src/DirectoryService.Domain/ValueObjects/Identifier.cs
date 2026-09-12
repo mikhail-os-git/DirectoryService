@@ -55,4 +55,6 @@ public record Identifier
     /// <param name="value">Сырая строка, прочитанная из источника данных.</param>
     /// <returns>Экземпляр <see cref="Identifier"/>.</returns>
     public static Identifier Convert(string value) => new(value);
+
+    public static implicit operator string(Identifier identifier) => identifier.Value;
 }

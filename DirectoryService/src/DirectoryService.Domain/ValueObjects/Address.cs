@@ -151,4 +151,6 @@ public record Address
     /// <returns>Экземпляр <see cref="Address"/>.</returns>
     public static Address Convert(string country, string city, string street, string houseNumber, int postalCode) =>
         new(country, city, street, houseNumber, postalCode);
+
+    public static implicit operator string(Address address) => address.ToString();
 }

@@ -1,11 +1,14 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.CreateDepartment;
+using DirectoryService.Application.Departments.GetAllDepartments;
 using DirectoryService.Application.Departments.GetDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.UpdateDepartmentLocations;
+using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Contracts.Departments.CreateDepartment;
+using DirectoryService.Contracts.Departments.GetAllDepartments;
 using DirectoryService.Contracts.Departments.GetDepartment;
 using DirectoryService.Contracts.Departments.MoveDepartment;
 using DirectoryService.Contracts.Departments.UpdateDepartment;
@@ -46,4 +49,18 @@ public class DepartmentsController : ControllerBase
         [FromServices] IQueryHandler<GetDepartmentResponse, GetDepartmentQuery> handler,
         CancellationToken cancellationToken) =>
         await handler.Handle(new GetDepartmentQuery(id), cancellationToken);
+
+    [HttpGet("all")]
+    public async Task<EndpointResult<PagedResult<GetAllDepartmentsItem>>> GetAll(
+        [FromQuery] GetAllDepartmentsRequest request,
+        [FromServices] IQueryHandler<PagedResult<GetAllDepartmentsItem>, GetAllDepartmentsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        request = request with
+        {
+            PageSettings = request.PageSettings is null ? new PageSettings() : request.PageSettings
+        };
+
+        return await handler.Handle(new GetAllDepartmentsQuery(request), cancellationToken);
+    }
 }
