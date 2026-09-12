@@ -9,7 +9,7 @@ public class GetAllDepartmentsValidator: AbstractValidator<GetAllDepartmentsRequ
 {
     public GetAllDepartmentsValidator()
     {
-        string[] allowSortName = ["name", "cratedAt"];
+        string[] allowSortName = ["name", "createdAt"];
         string[] allowSortDir = ["asc", "desc"];
 
         RuleFor(x => x.PageSettings)
