@@ -6,4 +6,5 @@ public record GetLocationsResponseItem
     public string Name { get; init; } = null!;
     public string Address { get; set; } = null!;
     public DateTime CreatedAt { get; init; }
+    public long DepartmentCount { get; set; }
 }

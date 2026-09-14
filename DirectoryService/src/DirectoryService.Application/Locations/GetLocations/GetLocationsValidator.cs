@@ -39,13 +39,13 @@ public class GetLocationsValidator : AbstractValidator<GetLocationsRequest>
         RuleFor(x => x.SortBy)
             .Must(name => allowSortName.Contains(name))
             .WithError(Failure.Validation(
-                "department.sort-by.invalid",
+                "location.sort-by.invalid",
                 $"Invalid sortBy value. Allowed values: {string.Join(", ", allowSortName)}"));
         
         RuleFor(x => x.SortDir)
             .Must(dir => allowSortDir.Contains(dir))
             .WithError(Failure.Validation(
-                "department.sort-dir.invalid",
+                "location.sort-dir.invalid",
                 $"Invalid sort-direction value. Allowed values: {string.Join(", ", allowSortDir)}"));
     }
 }

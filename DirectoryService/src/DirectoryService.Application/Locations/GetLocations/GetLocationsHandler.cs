@@ -11,21 +11,19 @@ using DirectoryService.Contracts.Locations.GetLocations;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
 using General.Errors;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DirectoryService.Application.Locations.GetLocations;
 
 public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponseItem>, GetLocationsQuery>
 {
-    private readonly IDirectoryReadDbContext _readDbContext;
     private readonly IDbConnectionFactory _connectionFactory;
     private readonly IValidator<GetLocationsRequest> _validator;
 
     public GetLocationsHandler(
-        IDirectoryReadDbContext readDbContext, 
         IDbConnectionFactory connectionFactory,
         IValidator<GetLocationsRequest> validator)
     {
-        _readDbContext = readDbContext;
         _connectionFactory = connectionFactory;
         _validator = validator;
     }
@@ -40,10 +38,14 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
 
         using var connecntion = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         long? totalCount = null;
+
+        var orders = new Dictionary<string, string?>
+        {
+            ["name"] = "l.name", ["createdAt"] = "l.created_at", ["departmentCount"] = " dl.department_count"
+        };
         
         var parameters = new DynamicParameters();
         parameters.Add("dep_count", query.Request.DepartmentCount, DbType.Int32);
-        parameters.Add("order", query.Request.SortBy, DbType.String);
         parameters.Add("offset", (query.Request.PageSettings.Page - 1) * query.Request.PageSettings.PageSize, DbType.Int32);
         parameters.Add("page_size", query.Request.PageSettings.PageSize, DbType.Int32);
         
@@ -53,6 +55,13 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
             where += "and l.name ilike '%' || @search || '%'";
             parameters.Add("search", query.Request.Search, DbType.String);
         }
+
+        if (!orders.TryGetValue(query.Request.SortBy, out string? value))
+        {
+            return Failure.Validation(
+                "location.sort-by.invalid",
+                $"Invalid sortBy value. Allowed values: {string.Join(", ", orders.Keys)}").ToFailList();
+        }
         
         var sql = $"""
                    with dep_loc as ( 
@@ -60,26 +69,26 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
                      from department_location
                      group by location_id
                    )
-                   select id, name, created_at, address, count(*) over() as total_count from locations as l
+                   select l.id, l.name, l.created_at, dl.department_count, l.address, count(*) over() as total_count from locations as l
                    join dep_loc as dl on l.id = dl.location_id
                    where {where}
-                   order by @order {query.Request.SortDir}
+                   order by {orders[query.Request.SortBy]} {query.Request.SortDir}
                    limit @page_size offset @offset
                    """;
         
-        var items = await connecntion.QueryAsync<GetLocationsResponseItem, string, long, GetLocationsResponseItem>(
+        var items = await connecntion.QueryAsync<GetLocationsResponseItem, long, string, long, GetLocationsResponseItem>(
             sql, 
-            splitOn: "address, total_count", 
+            splitOn: "department_count, address, total_count", 
             map:
-            (item, address, count) =>
+            (item, departmentCount, address, totalC) =>
             {
                 if (totalCount is null)
                 {
-                    totalCount = count;
+                    totalCount = totalC;
                 }
 
                 item.Address = AddressNormalize(address);
-                
+                item.DepartmentCount = departmentCount;
                 return item;
             },
             param: parameters);
