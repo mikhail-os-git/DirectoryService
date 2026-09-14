@@ -53,7 +53,7 @@ public class GetAllDepartmentsHandler : IQueryHandler<PagedResult<GetAllDepartme
                 : departments.OrderBy(d => d.DepartmentName),
         };
 
-        var count = await departments.CountAsync(cancellationToken);
+        long count = await departments.CountAsync(cancellationToken);
         
         var items = await departments.Select(d => new GetAllDepartmentsItem
             {

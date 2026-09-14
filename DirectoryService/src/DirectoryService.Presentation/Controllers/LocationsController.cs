@@ -2,10 +2,13 @@
 using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.CreateLocation;
 using DirectoryService.Application.Locations.GetLocation;
+using DirectoryService.Application.Locations.GetLocations;
 using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Contracts.Locations.CreateLocation;
 using DirectoryService.Contracts.Locations.GetLocation;
+using DirectoryService.Contracts.Locations.GetLocations;
 using DirectoryService.Contracts.Locations.TopLocations;
 using General.EndpointsResult;
 using General.Errors;
@@ -36,4 +39,17 @@ public class LocationsController : ControllerBase
         [FromServices] IQueryHandler<TopLocationResponse, IQuery> handler,
         CancellationToken cancellationToken) =>
         await handler.Handle(NoQuery.Value, cancellationToken);
+    
+    [HttpGet]
+    public async Task<EndpointResult<PagedResult<GetLocationsResponseItem>>> GetLocations(
+        [FromQuery] GetLocationsRequest request,
+        [FromServices] IQueryHandler<PagedResult<GetLocationsResponseItem>, GetLocationsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        request = request with
+        {
+            PageSettings = request.PageSettings is null ? new PageSettings() : request.PageSettings
+        };
+        return await handler.Handle(new GetLocationsQuery(request), cancellationToken);
+    }
 }
