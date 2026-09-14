@@ -11,7 +11,6 @@ using DirectoryService.Contracts.Locations.GetLocations;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
 using General.Errors;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DirectoryService.Application.Locations.GetLocations;
 
@@ -36,7 +35,7 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
         if (!validate.IsValid)
             return validate.ToFailList();
 
-        using var connecntion = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+        using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
         long? totalCount = null;
 
         var orders = new Dictionary<string, string?>
@@ -52,15 +51,8 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
         string where = "dl.department_count >= @dep_count";
         if (!string.IsNullOrWhiteSpace(query.Request.Search))
         {
-            where += "and l.name ilike '%' || @search || '%'";
+            where += " and l.name ilike '%' || @search || '%'";
             parameters.Add("search", query.Request.Search, DbType.String);
-        }
-
-        if (!orders.TryGetValue(query.Request.SortBy, out string? value))
-        {
-            return Failure.Validation(
-                "location.sort-by.invalid",
-                $"Invalid sortBy value. Allowed values: {string.Join(", ", orders.Keys)}").ToFailList();
         }
         
         var sql = $"""
@@ -76,7 +68,7 @@ public class GetLocationsHandler: IQueryHandler<PagedResult<GetLocationsResponse
                    limit @page_size offset @offset
                    """;
         
-        var items = await connecntion.QueryAsync<GetLocationsResponseItem, long, string, long, GetLocationsResponseItem>(
+        var items = await connection.QueryAsync<GetLocationsResponseItem, long, string, long, GetLocationsResponseItem>(
             sql, 
             splitOn: "department_count, address, total_count", 
             map:
