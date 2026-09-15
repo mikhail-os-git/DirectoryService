@@ -2,6 +2,7 @@
 using System.Reflection.Metadata;
 using CSharpFunctionalExtensions;
 using Dapper;
+using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Departments;
