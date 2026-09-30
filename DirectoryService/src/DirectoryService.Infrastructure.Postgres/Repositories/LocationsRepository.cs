@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Application.Locations.Interfaces;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
 using General.Errors;
@@ -48,21 +49,34 @@ public class LocationsRepository: ILocationsRepository
         return foundCount == collection.Count;
     }
 
-    // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken) 
-    // {
-    //     try
-    //     {
-    //         await _context.SaveChangesAsync(cancellationToken);
-    //         return UnitResult.Success<Failure>();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError("Failed to save changes: {Error}", ex);
-    //         return UnitResult.Failure(CommonFailures.InternalError);
-    //     }
-    // }
-    
-    // public Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken) => throw new NotImplementedException();
-    //
-    // public Task<Guid> GetByIdAsync(Guid locationId, CancellationToken cancellationToken) => throw new NotImplementedException();
+    public async Task<Result<int, Failure>> HardDeleteAsync(
+        Expression<Func<Location, bool>> expression,
+        CancellationToken cancellationToken, bool save = false)
+    {
+        int delete = await _context.Locations.
+            IgnoreQueryFilters()
+            .Where(expression)
+            .ExecuteDeleteAsync(cancellationToken);
+        
+        if (!save)
+            return delete;
+        
+        var saveChanges = await SaveAsync(cancellationToken);
+        
+        return saveChanges.IsFailure ? saveChanges.Error : delete;
+    }
+
+    private async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken) 
+    {
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+            return UnitResult.Success<Failure>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to save changes: {Error}", ex);
+            return UnitResult.Failure(CommonErrors.InternalError);
+        }
+    }
 }

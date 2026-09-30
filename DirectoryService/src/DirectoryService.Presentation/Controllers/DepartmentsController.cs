@@ -1,13 +1,18 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Departments;
+using DirectoryService.Application.Departments.AttachPosition;
 using DirectoryService.Application.Departments.CreateDepartment;
+using DirectoryService.Application.Departments.DetachPosition;
 using DirectoryService.Application.Departments.GetAllDepartments;
 using DirectoryService.Application.Departments.GetDepartment;
+using DirectoryService.Application.Departments.HardDeleteDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.UpdateDepartmentLocations;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Departments;
+using DirectoryService.Contracts.Departments.AttachPosition;
 using DirectoryService.Contracts.Departments.CreateDepartment;
+using DirectoryService.Contracts.Departments.DetachPosition;
 using DirectoryService.Contracts.Departments.GetAllDepartments;
 using DirectoryService.Contracts.Departments.GetDepartment;
 using DirectoryService.Contracts.Departments.MoveDepartment;
@@ -63,4 +68,28 @@ public class DepartmentsController : ControllerBase
 
         return await handler.Handle(new GetAllDepartmentsQuery(request), cancellationToken);
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<EndpointResult<Guid>> HardDeleteDepartment(
+        [FromRoute] Guid id,
+        [FromServices] ICommandHandler<Guid, HardDeleteDepartmentCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(new HardDeleteDepartmentCommand(id), cancellationToken);
+
+    [HttpPost("{deptId:guid}/positions/{posId:guid}")]
+    public async Task<EndpointResult<AttachPositionResponse>> AttachPosition(
+        [FromRoute] Guid deptId,
+        [FromRoute] Guid posId,
+        [FromServices] ICommandHandler<AttachPositionResponse, AttachPositionCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(new AttachPositionCommand(deptId, posId), cancellationToken);
+    
+    [HttpDelete("{deptId:guid}/positions/{posId:guid}")]
+    public async Task<EndpointResult<DetachPositionResponse>> DetachPosition(
+        [FromRoute] Guid deptId,
+        [FromRoute] Guid posId,
+        [FromServices] ICommandHandler<DetachPositionResponse, DetachPositionCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(new DetachPositionCommand(deptId, posId), cancellationToken);
+    
 }

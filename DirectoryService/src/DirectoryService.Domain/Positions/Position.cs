@@ -55,6 +55,12 @@ public class Position
 
         return new Position(id ?? Guid.NewGuid(), positionName, departmentPositions, description, true, now, now);
     }
+
+    public void Rename(PositionName name)
+    {
+        UpdatedAt = DateTime.UtcNow;
+        PositionName = name;
+    }
     
     public void AddDepartments(params Guid[] departmentIds)
     {

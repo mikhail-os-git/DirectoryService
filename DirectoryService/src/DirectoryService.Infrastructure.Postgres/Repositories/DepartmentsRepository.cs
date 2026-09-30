@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data.Common;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -6,9 +7,12 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Infrastructure.Configurations;
 using DirectoryService.Infrastructure.Database;
 using General.Errors;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Repositories;
@@ -160,6 +164,59 @@ public class DepartmentsRepository: IDepartmentsRepository
         }
     }
 
+    public async Task<Result<int, Failure>> HardDeleteAsync(Department department, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var connection = _context.Database.GetDbConnection();
+            
+            string updateSql = """
+                            UPDATE departments
+                            SET path = subpath(path, nlevel(@parent_path::ltree)),
+                                depth = depth - 1
+                            WHERE path <@ @parent_path::ltree AND path != @parent_path::ltree;
+
+                            UPDATE departments
+                            SET parent_id = NULL
+                            WHERE parent_id = @parent_id;
+                            """;
+            
+            string deleteSql = """
+                            DELETE FROM departments
+                            WHERE id = @parent_id;
+                            """;
+            var parameters = new DynamicParameters();
+            parameters.Add("parent_path", department.Path.Value);
+            parameters.Add("parent_id", department.Id);
+
+            var update = await connection.ExecuteAsync(updateSql, parameters, _context.GetCurrentTransaction());
+            var delete = await connection.ExecuteAsync(deleteSql, new { parent_id = department.Id }, _context.GetCurrentTransaction());
+            
+            return delete;
+
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Fail by Hard Delete from Department: {Id}", department.Id);
+            return CommonErrors.InternalError;
+        }
+    }
+
+    public async Task<bool> CheckAttachedPosition(
+        Expression<Func<DepartmentPosition, bool>> expression,
+        CancellationToken cancellationToken)
+    {
+        return await _context.DepartmentPositions.AnyAsync(expression, cancellationToken);
+    }
+
+    public async Task AttachPosition(Guid depId, Guid posId, CancellationToken cancellationToken) => 
+        await _context.DepartmentPositions.AddAsync(new DepartmentPosition(depId, posId), cancellationToken);
+
+    public async Task<int> DetachPosition(
+        Expression<Func<DepartmentPosition, bool>> expression,
+        CancellationToken cancellationToken) =>
+        await _context.DepartmentPositions.Where(expression).ExecuteDeleteAsync(cancellationToken);
+
     // public async Task<Guid> AddDepartmentLocationsAsync(
     //     Guid departmentId,
     //     IEnumerable<Guid> locationIds,
@@ -178,7 +235,7 @@ public class DepartmentsRepository: IDepartmentsRepository
     //     await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
     //     return list.First().DepartmentId;
     // }
-    
+
     // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
     // {
     //     try
@@ -192,6 +249,6 @@ public class DepartmentsRepository: IDepartmentsRepository
     //         return UnitResult.Failure<Failure>(CommonFailures.InternalError);
     //     }
     // }
-    
+
     // public Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken) => throw new NotImplementedException();
 }

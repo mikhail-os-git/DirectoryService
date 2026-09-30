@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Interfaces;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Positions;
 using DirectoryService.Domain.ValueObjects;
 using General.Errors;
@@ -49,17 +50,33 @@ public class PositionsRepository: IPositionsRepository
         return count == collection.Count;
     }
 
-    // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
-    // {
-    //     try
-    //     {
-    //         await _context.SaveChangesAsync(cancellationToken);
-    //         return UnitResult.Success<Failure>();
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError("Failed to save changes: {Error}", ex);
-    //         return UnitResult.Failure(CommonFailures.InternalError);
-    //     }
-    // }
+    public async Task<Result<int, Failure>> HardDeleteAsync(
+        Expression<Func<Position, bool>> expression,
+        CancellationToken cancellationToken, bool save = false)
+    {
+        int delete = await _context.Positions
+            .IgnoreQueryFilters()
+            .Where(expression)
+            .ExecuteDeleteAsync(cancellationToken);
+        
+        if (!save)
+            return delete;
+
+        var saveChanges = await SaveAsync(cancellationToken);
+        return saveChanges.IsFailure ? saveChanges.Error : delete;
+    }
+    
+    private async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+            return UnitResult.Success<Failure>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to save changes: {Error}", ex);
+            return UnitResult.Failure(CommonErrors.InternalError);
+        }
+    }
 }

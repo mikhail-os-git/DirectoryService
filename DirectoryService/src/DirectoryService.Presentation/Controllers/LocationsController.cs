@@ -3,6 +3,7 @@ using DirectoryService.Application.Locations;
 using DirectoryService.Application.Locations.CreateLocation;
 using DirectoryService.Application.Locations.GetLocation;
 using DirectoryService.Application.Locations.GetLocations;
+using DirectoryService.Application.Locations.HardDeleteLocation;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Locations;
@@ -52,4 +53,11 @@ public class LocationsController : ControllerBase
         };
         return await handler.Handle(new GetLocationsQuery(request), cancellationToken);
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<EndpointResult<Guid>> HardDeleteLocation(
+        [FromRoute] Guid id,
+        [FromServices] ICommandHandler<Guid, HardDeleteLocationCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(new HardDeleteLocationCommand(id), cancellationToken);
 }

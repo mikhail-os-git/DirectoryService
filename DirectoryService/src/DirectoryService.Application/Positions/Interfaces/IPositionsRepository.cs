@@ -17,9 +17,5 @@ public interface IPositionsRepository
     Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Position, bool>> expression,
         CancellationToken cancellationToken);
     
-    // Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
-      
-    // Task<Guid> DeleteAsync(Guid positionId, CancellationToken cancellationToken);
-    
-    // Task<Guid> GetByIdAsync(Guid positionId, CancellationToken cancellationToken);
+    Task<Result<int, Failure>> HardDeleteAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken, bool save = false);
 }

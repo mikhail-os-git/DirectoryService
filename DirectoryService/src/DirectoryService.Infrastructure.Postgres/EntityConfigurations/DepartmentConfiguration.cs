@@ -63,6 +63,8 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
         builder.Property(d => d.UpdatedAt)
             .IsRequired()
             .HasColumnName("updated_at");
-        
+
+        builder.HasQueryFilter(d => d.IsActive);
+
     }
 }
