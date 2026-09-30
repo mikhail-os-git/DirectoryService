@@ -23,12 +23,12 @@ public class HardDeleteDepartmentHandler: ICommandHandler<Guid, HardDeleteDepart
         if (command.DepartmentId == Guid.Empty)
             return Failure.Validation("Department Id can't be Empty", "department-id.invalid.empty").ToFailList();
         
-         var scope = await _transactionManager.BeginTransactionAsync(cancellationToken);
+        var scope = await _transactionManager.BeginTransactionAsync(cancellationToken);
 
          if (scope.IsFailure)
              return scope.Error.ToFailList();
 
-         using var transaction = scope.Value;
+         await using var transaction = scope.Value;
 
          var department = await _departmentsRepository.GetByAsync(d => d.Id == command.DepartmentId, cancellationToken);
 

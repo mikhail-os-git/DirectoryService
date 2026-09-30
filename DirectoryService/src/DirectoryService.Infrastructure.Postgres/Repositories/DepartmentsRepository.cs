@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data.Common;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -6,10 +7,12 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Infrastructure.Configurations;
 using DirectoryService.Infrastructure.Database;
 using General.Errors;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Repositories;
@@ -186,8 +189,8 @@ public class DepartmentsRepository: IDepartmentsRepository
             parameters.Add("parent_path", department.Path.Value);
             parameters.Add("parent_id", department.Id);
 
-            var update = await connection.ExecuteAsync(updateSql, parameters);
-            var delete = await connection.ExecuteAsync(deleteSql, new { parent_id = department.Id });
+            var update = await connection.ExecuteAsync(updateSql, parameters, _context.GetCurrentTransaction());
+            var delete = await connection.ExecuteAsync(deleteSql, new { parent_id = department.Id }, _context.GetCurrentTransaction());
             
             return delete;
 
