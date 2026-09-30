@@ -1,6 +1,8 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.CreatePosition;
+using DirectoryService.Application.Positions.HardDeletePosition;
+using DirectoryService.Application.Positions.RenamePosition;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
 using DirectoryService.Contracts.Positions.CreatePosition;
@@ -20,4 +22,21 @@ public class PositionsController: ControllerBase
     {
         return await handler.Handle(new CreatePositionCommand(request), cancellationToken);
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<EndpointResult<Guid>> HardDeletePosition(
+        [FromRoute] Guid id,
+        [FromServices] ICommandHandler<Guid, HardDeletePositionCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(new HardDeletePositionCommand(id), cancellationToken);
+
+    [HttpPatch("{id:guid}")]
+    public async Task<EndpointResult<Guid>> RenamePosition(
+        [FromRoute] Guid id,
+        [FromBody] RenamePositionRequest request,
+        [FromServices] ICommandHandler<Guid, RenamePositionCommand> handler,
+        CancellationToken cancellationToken) =>
+        await handler.Handle(
+            new RenamePositionCommand(id, request.NewName, request.IncludeInactive),
+            cancellationToken);
 }

@@ -13,4 +13,7 @@ public interface IDirectoryReadDbContext
     public IQueryable<Position> PositionsQuery { get; }
 
     public IQueryable<DepartmentLocation> DepartmentLocationsQuery { get; }
+    
+    public IQueryable<DepartmentPosition> DepartmentPositionsQuery { get; }
+    
 }

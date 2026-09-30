@@ -16,9 +16,7 @@ public interface ILocationsRepository
     
     Task<bool> AllMatchAsync(IEnumerable<Guid> ids, Expression<Func<Location, bool>> expression, CancellationToken cancellationToken);
     
-    // Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
+    Task<Result<int, Failure>> HardDeleteAsync(Expression<Func<Location, bool>> expression, CancellationToken cancellationToken, bool save = false);
     
-    // Task<Guid> DeleteAsync(Guid locationId, CancellationToken cancellationToken);
-    //
-    // Task<Guid> GetByIdAsync(Guid locationId, CancellationToken cancellationToken);
+    // Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken);
 }
