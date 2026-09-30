@@ -10,7 +10,7 @@ public interface IPositionsRepository
 {
     Task<Guid> AddAsync(Position position, CancellationToken cancellationToken);
 
-    Task<Position?> GetByAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken, bool includeInactive = false);
+    Task<Position?> GetByAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken);
 
     Task<bool> IsMatchAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken);
 

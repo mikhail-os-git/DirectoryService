@@ -30,11 +30,22 @@ public class HardDeleteDepartmentHandler: ICommandHandler<Guid, HardDeleteDepart
 
          await using var transaction = scope.Value;
 
-         var department = await _departmentsRepository.GetByAsync(d => d.Id == command.DepartmentId, cancellationToken);
-
+         // Получение Department с блокировкой
+         var department = await _departmentsRepository.GetByIdWithLockAsync(command.DepartmentId, cancellationToken);
+        
          if (department is null)
              return DepartmentErrors.NotFound(command.DepartmentId).ToFailList();
 
+         // Блокировка потомков
+         var lockChildren = await _departmentsRepository.LockDescendantsAsync(department.Path, cancellationToken);
+
+         if (lockChildren.IsFailure)
+         {
+             await transaction.RollbackAsync(cancellationToken);
+             return lockChildren.Error.ToFailList();
+         }
+         
+         // Удаление и пересчет
          var delete = await _departmentsRepository.HardDeleteAsync(department, cancellationToken);
 
          if (delete.IsFailure)

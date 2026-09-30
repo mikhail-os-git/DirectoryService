@@ -28,6 +28,17 @@ public interface IDepartmentsRepository
 
     Task<UnitResult<Failure>> MoveDescendantsAsync(string oldPath, string newPath, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Физически удаляет подразделение. Дочерние подразделения становятся корневыми
+    /// (parent_id = NULL), пути и глубина поддерева пересчитываются.
+    /// </summary>
+    /// <remarks>
+    /// Намеренно работает без фильтра по is_active (Dapper не применяет query filters EF):
+    /// проверка «только активные» выполняется в handler-е, а дети обрабатываются все,
+    /// иначе FK не даст удалить строку.
+    /// Перед пересчётом поддерево блокируется (FOR UPDATE).
+    /// Требует активной транзакции от TransactionManager.
+    /// </remarks>
     Task<Result<int, Failure>> HardDeleteAsync(Department department, CancellationToken cancellationToken);
 
     Task<bool> CheckAttachedPosition(

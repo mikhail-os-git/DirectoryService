@@ -37,6 +37,6 @@ public class PositionsController: ControllerBase
         [FromServices] ICommandHandler<Guid, RenamePositionCommand> handler,
         CancellationToken cancellationToken) =>
         await handler.Handle(
-            new RenamePositionCommand(id, request.NewName, request.IncludeInactive),
+            new RenamePositionCommand(id, request.NewName),
             cancellationToken);
 }

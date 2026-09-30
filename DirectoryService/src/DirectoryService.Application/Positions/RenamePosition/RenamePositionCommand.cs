@@ -2,4 +2,4 @@
 
 namespace DirectoryService.Application.Positions.RenamePosition;
 
-public record RenamePositionCommand(Guid PositionId, string NewName, bool IncludeInactive) : ICommand;
+public record RenamePositionCommand(Guid PositionId, string NewName) : ICommand;

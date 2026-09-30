@@ -30,15 +30,9 @@ public class PositionsRepository: IPositionsRepository
 
     public async Task<Position?> GetByAsync(
         Expression<Func<Position, bool>> expression,
-        CancellationToken cancellationToken,
-        bool includeInactive = false)
+        CancellationToken cancellationToken)
     {
-        IQueryable<Position> query = _context.Positions;
-
-        if (includeInactive)
-            query = query.IgnoreQueryFilters();
-            
-        return await query.FirstOrDefaultAsync(expression, cancellationToken);
+        return await _context.Positions.FirstOrDefaultAsync(expression, cancellationToken);
     }
 
     public async Task<bool> IsMatchAsync(Expression<Func<Position, bool>> expression, CancellationToken cancellationToken)

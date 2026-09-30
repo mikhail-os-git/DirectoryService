@@ -33,8 +33,7 @@ public class RenamePositionHandler: ICommandHandler<Guid, RenamePositionCommand>
         
         Position? position = await _positionsRepository.GetByAsync(
             p => p.Id == command.PositionId, 
-            cancellationToken, 
-            command.IncludeInactive);
+            cancellationToken);
 
         if (position is null)
             return PositionErrors.NotFound(command.PositionId).ToFailList();
