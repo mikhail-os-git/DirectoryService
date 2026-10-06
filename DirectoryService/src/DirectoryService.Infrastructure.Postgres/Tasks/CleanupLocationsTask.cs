@@ -21,7 +21,7 @@ public class CleanupLocationsTask: ICleanupTask
     {
         try
         {
-            int deleted = await _dbContext.Positions
+            int deleted = await _dbContext.Locations
                 .Where(p => !p.IsActive && (p.DeletedAt != null && p.DeletedAt < olderThan))
                 .OrderBy(p => p.Id)
                 .Take(batchSize)
@@ -31,7 +31,7 @@ public class CleanupLocationsTask: ICleanupTask
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Fail to delete Positions");
+            _logger.LogError(e, "Fail to delete Locations");
             return 0;
         }
     }

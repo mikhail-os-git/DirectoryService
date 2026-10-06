@@ -26,7 +26,6 @@ public class CleanupDepartmentsTask: ICleanupTask
                 .IgnoreQueryFilters()
                 .Where(d => 
                     !d.IsActive &&
-                    d.ParentId == null &&
                     (d.DeletedAt != null &&
                      d.DeletedAt < olderThan))
                 .Where(d => !_dbContext.Departments
