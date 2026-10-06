@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Common;
 using DirectoryService.Domain.ValueObjects;
 using General;
 using General.Errors;
@@ -19,7 +20,10 @@ public class Department
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-
+    public DateTime? DeletedAt { get; private set; }
+    
+    public uint Version { get; private set; }
+    
     private readonly List<Department> _childrenDepartments = [];
     private readonly List<DepartmentLocation> _departmentLocations = [];
     private readonly List<DepartmentPosition> _departmentPositions = [];
@@ -27,8 +31,6 @@ public class Department
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
     public IReadOnlyList<Department> ChildrenDepartments => _childrenDepartments;
-    
-    public bool HasLocation => _departmentLocations.Count > 0;
    
     // EF Core v
     private Department()
@@ -87,6 +89,15 @@ public class Department
 
     public void SetPath(Path path) => Path = path;
     public void SetDepth(short depth) => Depth = depth;
+
+    public void Delete()
+    {
+        if (!IsActive)
+            return;
+        
+        IsActive = false;
+        DeletedAt = DateTime.UtcNow;
+    }
     
     public void UpdateLocations(IEnumerable<Guid> locationIds)
     {

@@ -50,5 +50,8 @@ public static class CommonErrors
             "All items in the collection must be unique.",
             $"{collectionName.ToLower(CultureInfo.InvariantCulture)}.collection.invalid");
     public static Failure CollectionEmpty(string collectionName) => Failure.Validation("The collection should not be empty.", $"{collectionName.ToLower(CultureInfo.InvariantCulture)}.collection.invalid");
-    
+
+    public static Failure EntityDeleted(string entity, Guid id) =>
+        Failure.Error($"{entity} with id '{id}' is deleted", $"{entity}.deleted");
+
 }

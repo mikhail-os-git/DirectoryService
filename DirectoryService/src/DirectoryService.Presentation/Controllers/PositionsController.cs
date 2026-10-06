@@ -3,6 +3,7 @@ using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.CreatePosition;
 using DirectoryService.Application.Positions.HardDeletePosition;
 using DirectoryService.Application.Positions.RenamePosition;
+using DirectoryService.Application.Positions.SoftDeletePosition;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
 using DirectoryService.Contracts.Positions.CreatePosition;
@@ -26,9 +27,9 @@ public class PositionsController: ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<EndpointResult<Guid>> HardDeletePosition(
         [FromRoute] Guid id,
-        [FromServices] ICommandHandler<Guid, HardDeletePositionCommand> handler,
+        [FromServices] ICommandHandler<Guid, SoftDeletePositionCommand> handler,
         CancellationToken cancellationToken) =>
-        await handler.Handle(new HardDeletePositionCommand(id), cancellationToken);
+        await handler.Handle(new SoftDeletePositionCommand(id), cancellationToken);
 
     [HttpPatch("{id:guid}")]
     public async Task<EndpointResult<Guid>> RenamePosition(

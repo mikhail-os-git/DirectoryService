@@ -19,8 +19,8 @@ public static class DepartmentErrors
     public static Failure EntityConflict(Guid id) =>
         CommonErrors.EntityConflict(Entity, id);
 
-    public static Failure Inactive(Guid departmentId) =>
-        CommonErrors.EntityInactive(Entity, departmentId);
+    public static Failure Deleted(Guid departmentId) =>
+        CommonErrors.EntityDeleted(Entity, departmentId);
 
     public static Failure CollectionInactive(IEnumerable<Guid> departmentIds) =>
         CommonErrors.EntityCollectionInactive(EntityPlural, departmentIds);

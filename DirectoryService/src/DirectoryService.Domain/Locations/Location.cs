@@ -15,6 +15,8 @@ public class Location
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
+    public uint Version { get; private set; }
     
     private readonly List<DepartmentLocation> _departmentLocations = [];
     public IReadOnlyList<DepartmentLocation> DepartmentLocations => _departmentLocations;
@@ -40,6 +42,15 @@ public class Location
     {
         var now = DateTime.UtcNow;
         return new Location(id ?? Guid.NewGuid(), locationName, address, timezone, true, now, now);
+    }
+
+    public void Delete()
+    {
+        if (!IsActive)
+            return;
+        
+        IsActive = false;
+        DeletedAt = DateTime.UtcNow;
     }
 
     public void AddDepartments(params Guid[] departmentIds)

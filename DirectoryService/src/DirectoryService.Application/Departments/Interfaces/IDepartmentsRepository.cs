@@ -21,6 +21,8 @@ public interface IDepartmentsRepository
         CancellationToken cancellationToken);
     Task<bool> IsDescendantOfAsync(string potentialDescendantPath, string ancestorPath, CancellationToken cancellationToken);
 
+    Task<bool> HasDescendantsAsync(string path, CancellationToken cancellationToken);
+    
     Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken);
 
     Task<Result<string?, Failure>> MoveDepartmentAsync(string oldChildPath, string parentPath,
@@ -40,7 +42,7 @@ public interface IDepartmentsRepository
     /// Требует активной транзакции от TransactionManager.
     /// </remarks>
     Task<Result<int, Failure>> HardDeleteAsync(Department department, CancellationToken cancellationToken);
-
+    
     Task<bool> CheckAttachedPosition(
         Expression<Func<DepartmentPosition, bool>> expression,
         CancellationToken cancellationToken);

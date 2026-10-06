@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
+using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
 using General;
@@ -16,6 +17,8 @@ public class Position
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
+    public uint Version { get; private set; }
     
     private readonly List<DepartmentPosition> _departmentPositions = [];
     public IReadOnlyList<DepartmentPosition> DepartmentPositions => _departmentPositions;
@@ -56,10 +59,23 @@ public class Position
         return new Position(id ?? Guid.NewGuid(), positionName, departmentPositions, description, true, now, now);
     }
 
-    public void Rename(PositionName name)
+    public UnitResult<Failure> Rename(PositionName name)
     {
+        if (!IsActive)
+            return PositionErrors.Deleted(Id);
+        
         UpdatedAt = DateTime.UtcNow;
         PositionName = name;
+        return UnitResult.Success<Failure>();
+    }
+
+    public void Delete()
+    {
+        if (!IsActive)
+            return;
+        
+        IsActive = false;
+        DeletedAt = DateTime.UtcNow;
     }
     
     public void AddDepartments(params Guid[] departmentIds)

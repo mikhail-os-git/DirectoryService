@@ -19,8 +19,8 @@ public static class LocationErrors
     public static Failure EntityConflict(Guid id) =>
         CommonErrors.EntityConflict(Entity, id);
 
-    public static Failure Inactive(Guid locationId) =>
-        CommonErrors.EntityInactive(Entity, locationId);
+    public static Failure Deleted(Guid locationId) =>
+        CommonErrors.EntityDeleted(Entity, locationId);
 
     public static Failure CollectionInactive(IEnumerable<Guid> locationIds) =>
         CommonErrors.EntityCollectionInactive(EntityPlural, locationIds);
