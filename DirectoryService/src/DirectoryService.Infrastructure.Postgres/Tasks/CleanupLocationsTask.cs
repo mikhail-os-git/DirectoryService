@@ -22,6 +22,7 @@ public class CleanupLocationsTask: ICleanupTask
         try
         {
             int deleted = await _dbContext.Locations
+                .IgnoreQueryFilters()
                 .Where(p => !p.IsActive && (p.DeletedAt != null && p.DeletedAt < olderThan))
                 .OrderBy(p => p.Id)
                 .Take(batchSize)
