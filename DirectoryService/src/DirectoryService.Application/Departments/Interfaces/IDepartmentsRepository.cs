@@ -21,7 +21,7 @@ public interface IDepartmentsRepository
         CancellationToken cancellationToken);
     Task<bool> IsDescendantOfAsync(string potentialDescendantPath, string ancestorPath, CancellationToken cancellationToken);
 
-    Task<bool> HasDescendantsAsync(string path, CancellationToken cancellationToken);
+    Task<bool> HasDescendantsAsync(string path, bool activeChildren, CancellationToken cancellationToken);
     
     Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken);
 

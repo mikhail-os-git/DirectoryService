@@ -32,7 +32,7 @@ public class SoftDeleteDepartmentHandler: ICommandHandler<Guid, SoftDeleteDepart
         if (department is null)
             return DepartmentErrors.NotFound(command.DepartmentId).ToFailList();
 
-        bool hasChildren = await _departmentsRepository.HasDescendantsAsync(department.Path, cancellationToken);
+        bool hasChildren = await _departmentsRepository.HasDescendantsAsync(department.Path, activeChildren: true, cancellationToken);
 
         if (hasChildren)
         {

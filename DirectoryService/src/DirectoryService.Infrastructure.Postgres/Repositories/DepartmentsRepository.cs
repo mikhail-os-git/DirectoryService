@@ -100,14 +100,18 @@ public class DepartmentsRepository: IDepartmentsRepository
         return result;
     }
 
-    public async Task<bool> HasDescendantsAsync(string path, CancellationToken cancellationToken)
+    public async Task<bool> HasDescendantsAsync(string path, bool activeChildren, CancellationToken cancellationToken)
     {
         var pathParam = new NpgsqlParameter("path", path);
-
+        string activeWhere = activeChildren ? "AND is_active = true" : string.Empty;
         bool hasChildren = await _context.Database
-            .SqlQueryRaw<int>(
-                "SELECT 1 FROM departments WHERE path <@ @path::ltree AND path != @path::ltree", 
-                pathParam)
+            .SqlQuery<int>($"""
+                            SELECT 1 AS "Value"
+                            FROM departments
+                            WHERE path <@ {path}::ltree
+                              AND path <> {path}::ltree
+                              AND ({!activeChildren} OR is_active = true)
+                            """)
             .AnyAsync(cancellationToken);
         return hasChildren;
     }
