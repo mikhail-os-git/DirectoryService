@@ -104,8 +104,6 @@ public class DepartmentsRepository: IDepartmentsRepository
     {
         var pathParam = new NpgsqlParameter("path", path);
         string activeWhere = activeChildren ? "AND is_active = true" : string.Empty;
-        var param = new DynamicParameters();
-        param.Add("path", path);
         string sqlQuery = $"""
                            SELECT 1 AS "Value"
                            FROM departments
@@ -114,7 +112,7 @@ public class DepartmentsRepository: IDepartmentsRepository
                              AND ({!activeChildren} OR is_active = true)
                            """;
         bool hasChildren = await _context.Database
-            .SqlQueryRaw<int>(sqlQuery, param)
+            .SqlQueryRaw<int>(sqlQuery, new { path })
             .AnyAsync(cancellationToken);
         return hasChildren;
     }
