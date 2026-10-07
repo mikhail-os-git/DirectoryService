@@ -19,8 +19,8 @@ public static class PositionErrors
     public static Failure EntityConflict(Guid id) =>
         CommonErrors.EntityConflict(Entity, id);
     
-    public static Failure Inactive(Guid positionId) =>
-        CommonErrors.EntityInactive(Entity, positionId);
+    public static Failure Deleted(Guid positionId) =>
+        CommonErrors.EntityDeleted(Entity, positionId);
 
     public static Failure CollectionInactive(IEnumerable<Guid> positionIds) =>
         CommonErrors.EntityCollectionInactive(EntityPlural, positionIds);

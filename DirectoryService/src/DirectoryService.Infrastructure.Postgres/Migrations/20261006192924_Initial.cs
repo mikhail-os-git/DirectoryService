@@ -26,7 +26,9 @@ namespace DirectoryService.Infrastructure.Migrations
                     depth = table.Column<short>(type: "smallint", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,6 +51,8 @@ namespace DirectoryService.Infrastructure.Migrations
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     address = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
@@ -65,7 +69,9 @@ namespace DirectoryService.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

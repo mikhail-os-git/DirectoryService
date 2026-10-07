@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace DirectoryService.Infrastructure.Repositories;
 
@@ -97,6 +98,23 @@ public class DepartmentsRepository: IDepartmentsRepository
         var result = await connection.ExecuteScalarAsync<bool>(queryCommand);
 
         return result;
+    }
+
+    public async Task<bool> HasDescendantsAsync(string path, bool activeChildren, CancellationToken cancellationToken)
+    {
+        var pathParam = new NpgsqlParameter("path", path);
+        string activeWhere = activeChildren ? "AND is_active = true" : string.Empty;
+        string sqlQuery = $"""
+                           SELECT 1 AS "Value"
+                           FROM departments
+                           WHERE path <@ @path::ltree
+                             AND path <> @path::ltree
+                             AND ({!activeChildren} OR is_active = true)
+                           """;
+        bool hasChildren = await _context.Database
+            .SqlQueryRaw<int>(sqlQuery, new { path })
+            .AnyAsync(cancellationToken);
+        return hasChildren;
     }
     
     public async Task<UnitResult<Failure>> DeleteDepartmentLocationsByIdAsync(Guid departmentId, CancellationToken cancellationToken)
@@ -217,25 +235,6 @@ public class DepartmentsRepository: IDepartmentsRepository
         CancellationToken cancellationToken) =>
         await _context.DepartmentPositions.Where(expression).ExecuteDeleteAsync(cancellationToken);
 
-    // public async Task<Guid> AddDepartmentLocationsAsync(
-    //     Guid departmentId,
-    //     IEnumerable<Guid> locationIds,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var list = locationIds.Select(id => new DepartmentLocation(departmentId, id)).ToList();
-    //     await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
-    //     return departmentId;
-    // }
-    //
-    // public async Task<Guid> AddDepartmentLocationsAsync(
-    //     IEnumerable<DepartmentLocation> departmentLocations,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var list = departmentLocations.ToList();
-    //     await _context.DepartmentLocations.AddRangeAsync(list, cancellationToken);
-    //     return list.First().DepartmentId;
-    // }
-
     // public async Task<UnitResult<Failure>> SaveAsync(CancellationToken cancellationToken)
     // {
     //     try
@@ -249,6 +248,4 @@ public class DepartmentsRepository: IDepartmentsRepository
     //         return UnitResult.Failure<Failure>(CommonFailures.InternalError);
     //     }
     // }
-
-    // public Task<Guid> DeleteAsync(Guid departmentId, CancellationToken cancellationToken) => throw new NotImplementedException();
 }

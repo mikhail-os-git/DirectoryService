@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DirectoryService.Infrastructure.Migrations
 {
     [DbContext(typeof(DirectoryServiceDbContext))]
-    [Migration("20260513095023_Initial")]
+    [Migration("20261006192924_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DirectoryService.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "ltree");
@@ -36,6 +36,10 @@ namespace DirectoryService.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
@@ -71,6 +75,12 @@ namespace DirectoryService.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_departments");
@@ -152,6 +162,10 @@ namespace DirectoryService.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -172,6 +186,12 @@ namespace DirectoryService.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_location");
@@ -194,6 +214,10 @@ namespace DirectoryService.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
                     b.Property<string>("Description")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -214,6 +238,12 @@ namespace DirectoryService.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id")
                         .HasName("pk_position");
@@ -300,9 +330,7 @@ namespace DirectoryService.Infrastructure.Migrations
 
                             b1.ToTable("locations");
 
-                            b1
-                                .ToJson("address")
-                                .HasColumnType("jsonb");
+                            b1.ToJson("address");
 
                             b1.WithOwner()
                                 .HasForeignKey("LocationId");

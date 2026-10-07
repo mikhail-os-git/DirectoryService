@@ -43,8 +43,11 @@ public class RenamePositionHandler: ICommandHandler<Guid, RenamePositionCommand>
         if (name.IsFailure)
             return name.Error.ToFailList();
         
-        position.Rename(name.Value);
+        var rename = position.Rename(name.Value);
 
+        if (rename.IsFailure)
+            return rename.Error.ToFailList();
+        
         var save = await _transactionManager.SaveChangesAsync(cancellationToken);
 
         if (save.IsFailure)

@@ -4,9 +4,13 @@ using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
+using DirectoryService.Application.Tasks;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Infrastructure.Database;
+using DirectoryService.Infrastructure.Options;
 using DirectoryService.Infrastructure.Repositories;
+using DirectoryService.Infrastructure.Tasks;
+using DirectoryService.Infrastructure.Workers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +29,10 @@ public static class InfrastructureDependencyInjection
         return services.UseCaseRegistration()
             .DbContextRegistration()
             .AddRepositories()
-            .AddTransactionTools();
+            .AddTransactionTools()
+            .ConfigureInfrastructureOptions(configuration)
+            .AddInfrastructureTasks()
+            .AddInfrastructureWorkers();
     }
     
     private static IServiceCollection DbContextRegistration(this IServiceCollection services)
@@ -69,4 +76,32 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IPositionsRepository, PositionsRepository>();
         return services;
     }
+
+    private static IServiceCollection ConfigureInfrastructureOptions(this IServiceCollection services, IConfiguration configurations)
+    {
+        services.AddOptions<DeleteWorkerOptions>()
+            .Bind(configurations.GetSection($"{ApplicationConstants.WORKER_SETTINGS}:{DeleteWorkerOptions.NAME}"))
+            .Validate(
+                o => o.BatchSize > 0 
+                     && o.Interval > TimeSpan.Zero 
+                     && o.Tables.Values.Any(t => t.RetentionPeriod > TimeSpan.Zero),
+                "Invalid DeleteWorker config")
+            .ValidateOnStart();
+        return services;
+    }
+
+    private static IServiceCollection AddInfrastructureTasks(this IServiceCollection services)
+    {
+        services.AddScoped<ICleanupTask, CleanupDepartmentsTask>();
+        services.AddScoped<ICleanupTask, CleanupLocationsTask>();
+        services.AddScoped<ICleanupTask, CleanupPositionsTask>();
+        return services;
+    }
+
+    private static IServiceCollection AddInfrastructureWorkers(this IServiceCollection services)
+    {
+        services.AddHostedService<DeleteBackgroundService>();
+        return services;
+    }
+    
 }

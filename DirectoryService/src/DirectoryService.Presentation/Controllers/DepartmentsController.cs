@@ -7,6 +7,7 @@ using DirectoryService.Application.Departments.GetAllDepartments;
 using DirectoryService.Application.Departments.GetDepartment;
 using DirectoryService.Application.Departments.HardDeleteDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
+using DirectoryService.Application.Departments.SoftDeleteDepartment;
 using DirectoryService.Application.Departments.UpdateDepartmentLocations;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Departments;
@@ -72,9 +73,9 @@ public class DepartmentsController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<EndpointResult<Guid>> HardDeleteDepartment(
         [FromRoute] Guid id,
-        [FromServices] ICommandHandler<Guid, HardDeleteDepartmentCommand> handler,
+        [FromServices] ICommandHandler<Guid, SoftDeleteDepartmentCommand> handler,
         CancellationToken cancellationToken) =>
-        await handler.Handle(new HardDeleteDepartmentCommand(id), cancellationToken);
+        await handler.Handle(new SoftDeleteDepartmentCommand(id), cancellationToken);
 
     [HttpPost("{deptId:guid}/positions/{posId:guid}")]
     public async Task<EndpointResult<AttachPositionResponse>> AttachPosition(

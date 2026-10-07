@@ -261,8 +261,8 @@ tab_width = 4
 #dotnet_diagnostic..severity = none
 #dotnet_diagnostic..severity = none
 #dotnet_diagnostic..severity = none
-#dotnet_diagnostic..severity = none
 
+dotnet_diagnostic.CA1873.severity = none 
 dotnet_diagnostic.SA1611.severity = none 
 dotnet_diagnostic.SA1615.severity = none
 dotnet_diagnostic.SA1202.severity = none
