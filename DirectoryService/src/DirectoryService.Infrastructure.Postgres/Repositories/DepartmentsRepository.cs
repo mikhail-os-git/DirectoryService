@@ -104,14 +104,17 @@ public class DepartmentsRepository: IDepartmentsRepository
     {
         var pathParam = new NpgsqlParameter("path", path);
         string activeWhere = activeChildren ? "AND is_active = true" : string.Empty;
+        var param = new DynamicParameters();
+        param.Add("path", path);
+        string sqlQuery = $"""
+                           SELECT 1 AS "Value"
+                           FROM departments
+                           WHERE path <@ @path::ltree
+                             AND path <> @path::ltree
+                             AND ({!activeChildren} OR is_active = true)
+                           """;
         bool hasChildren = await _context.Database
-            .SqlQuery<int>($"""
-                            SELECT 1 AS "Value"
-                            FROM departments
-                            WHERE path <@ {path}::ltree
-                              AND path <> {path}::ltree
-                              AND ({!activeChildren} OR is_active = true)
-                            """)
+            .SqlQueryRaw<int>(sqlQuery, param)
             .AnyAsync(cancellationToken);
         return hasChildren;
     }
