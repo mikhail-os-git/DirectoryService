@@ -5,6 +5,10 @@ using DirectoryService.Application.Departments.CreateDepartment;
 using DirectoryService.Application.Departments.DetachPosition;
 using DirectoryService.Application.Departments.GetAllDepartments;
 using DirectoryService.Application.Departments.GetDepartment;
+using DirectoryService.Application.Departments.GetDepartmentAncestors;
+using DirectoryService.Application.Departments.GetDepartmentDescendants;
+using DirectoryService.Application.Departments.GetDepartmentsTree;
+using DirectoryService.Application.Departments.GetTreeByQueryDepartments;
 using DirectoryService.Application.Departments.HardDeleteDepartment;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.SoftDeleteDepartment;
@@ -15,7 +19,10 @@ using DirectoryService.Contracts.Departments.AttachPosition;
 using DirectoryService.Contracts.Departments.CreateDepartment;
 using DirectoryService.Contracts.Departments.DetachPosition;
 using DirectoryService.Contracts.Departments.GetAllDepartments;
+using DirectoryService.Contracts.Departments.GetDapartmentAncestors;
 using DirectoryService.Contracts.Departments.GetDepartment;
+using DirectoryService.Contracts.Departments.GetDepartmentDescendants;
+using DirectoryService.Contracts.Departments.GetDepartmentsTree;
 using DirectoryService.Contracts.Departments.MoveDepartment;
 using DirectoryService.Contracts.Departments.UpdateDepartment;
 using General.EndpointsResult;
@@ -68,6 +75,57 @@ public class DepartmentsController : ControllerBase
         };
 
         return await handler.Handle(new GetAllDepartmentsQuery(request), cancellationToken);
+    }
+        
+    [HttpGet("tree")]
+    public async Task<EndpointResult<PagedResult<GetTreeDepartmentsItem>>> GetTree(
+        [FromQuery] PageSettings? settings,
+        [FromServices] IQueryHandler<PagedResult<GetTreeDepartmentsItem>, GetTreeDepartmentsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        if (settings is null)
+            settings = new PageSettings();
+
+        return await handler.Handle(new GetTreeDepartmentsQuery(settings), cancellationToken);
+    }
+    
+    [HttpGet("tree/search")]
+    public async Task<EndpointResult<PagedResult<GetTreeDepartmentsItem>>> GetTree(
+        [FromQuery] string q,
+        [FromQuery] PageSettings? settings,
+        [FromServices] IQueryHandler<PagedResult<GetTreeDepartmentsItem>, GetTreeByQueryDepartmentsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        if (settings is null)
+            settings = new PageSettings();
+
+        return await handler.Handle(new GetTreeByQueryDepartmentsQuery(q, settings), cancellationToken);
+    }
+    
+    [HttpGet("{id:guid}/children")]
+    public async Task<EndpointResult<PagedResult<GetDepartmentDescendantsItem>>> GetChildren(
+        [FromRoute] Guid id,
+        [FromQuery] PageSettings? settings,
+        [FromServices] IQueryHandler<PagedResult<GetDepartmentDescendantsItem>, GetDepartmentDescendantsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        if (settings is null)
+            settings = new PageSettings();
+
+        return await handler.Handle(new GetDepartmentDescendantsQuery(id, settings), cancellationToken);
+    }
+    
+    [HttpGet("{id:guid}/ancestors")]
+    public async Task<EndpointResult<PagedResult<GetDepartmentAncestorsItem>>> GetAncestors(
+        [FromRoute] Guid id,
+        [FromQuery] PageSettings? settings,
+        [FromServices] IQueryHandler<PagedResult<GetDepartmentAncestorsItem>, GetDepartmentAncestorsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        if (settings is null)
+            settings = new PageSettings();
+
+        return await handler.Handle(new GetDepartmentAncestorsQuery(id, settings), cancellationToken);
     }
 
     [HttpDelete("{id:guid}")]

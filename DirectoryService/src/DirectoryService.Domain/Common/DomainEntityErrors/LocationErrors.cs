@@ -9,9 +9,14 @@ public static class LocationErrors
 
     public static Failure NotFound(Guid locationId) =>
         CommonErrors.EntityNotFound(Entity, locationId);
+    public static Failure NotFound() =>
+        CommonErrors.EntityNotFound(Entity);
 
     public static Failure CollectionNotFound(IEnumerable<Guid> locationIds) =>
         CommonErrors.EntityCollectionNotFound(EntityPlural, locationIds);
+    
+    public static Failure CollectionNotFound() =>
+        CommonErrors.EntityCollectionNotFound(EntityPlural);
 
     public static Failure PropertyConflict(string value, string property = "") =>
         CommonErrors.EntityConflictProperty(Entity, property, value);
