@@ -9,9 +9,14 @@ public static class DepartmentErrors
 
     public static Failure NotFound(Guid departmentId) =>
         CommonErrors.EntityNotFound(Entity, departmentId);
+    public static Failure NotFound() =>
+        CommonErrors.EntityNotFound(Entity);
 
     public static Failure CollectionNotFound(IEnumerable<Guid> departmentIds) =>
         CommonErrors.EntityCollectionNotFound(EntityPlural, departmentIds);
+    
+    public static Failure CollectionNotFound() =>
+        CommonErrors.EntityCollectionNotFound(EntityPlural);
 
     public static Failure PropertyConflict(string value, string property = "") =>
         CommonErrors.EntityConflictProperty(Entity, property, value);

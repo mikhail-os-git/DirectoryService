@@ -15,10 +15,21 @@ public static class CommonErrors
             $"{entity} not found",
             id,
             $"{entity.ToLower(CultureInfo.InvariantCulture)}.not_found");
+    
+    public static Failure EntityNotFound(string entity) =>
+        Failure.NotFoundEntity(
+            $"{entity} not found",
+            null,
+            $"{entity.ToLower(CultureInfo.InvariantCulture)}.not_found");
 
     public static Failure EntityCollectionNotFound(string entity, IEnumerable<Guid> ids) =>
         Failure.NotFoundCollectionEntity(
             $"One or more {entity} not found: {string.Join(", ", ids)}",
+            $"{entity.ToLower(CultureInfo.InvariantCulture)}.not_found");
+    
+    public static Failure EntityCollectionNotFound(string entity) =>
+        Failure.NotFoundCollectionEntity(
+            $"One or more {entity} not found",
             $"{entity.ToLower(CultureInfo.InvariantCulture)}.not_found");
 
     public static Failure EntityConflictProperty(string entity, string property, string value) =>
