@@ -49,7 +49,10 @@ public class
             };
 
         long totalCount = await search.CountAsync(cancellationToken);
-        var items = await search.ToListAsync(cancellationToken);
+        var items = await search
+            .Skip((query.PageSettings.Page - 1) * query.PageSettings.PageSize)
+            .Take(query.PageSettings.PageSize)
+            .ToListAsync(cancellationToken);
 
         if (items.ToList().Count == 0)
             return DepartmentErrors.CollectionNotFound().ToFailList();

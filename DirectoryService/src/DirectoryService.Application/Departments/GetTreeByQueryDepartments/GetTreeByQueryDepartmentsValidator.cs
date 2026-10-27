@@ -2,7 +2,6 @@
 using DirectoryService.Domain.Common.Constants;
 using FluentValidation;
 using General.Errors;
-using Microsoft.VisualBasic;
 
 namespace DirectoryService.Application.Departments.GetTreeByQueryDepartments;
 
