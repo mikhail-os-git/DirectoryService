@@ -44,7 +44,7 @@ public class GetDepartmentAncestorsHandler : IQueryHandler<PagedResult<GetDepart
         parameters.Add("page_size", query.PageSettings.PageSize, DbType.Int32);
         
         string sqlSelect = """
-                     SELECT id, name as DepartmentName, parent_id, identifier, path, depth, count(*) over() as total_count
+                     SELECT id, name as DepartmentName, parent_id as ParentId, identifier, path, depth, count(*) over() as total_count
                      FROM departments d
                      WHERE d.path @> @child_path::ltree 
                      AND d.path <> @child_path::ltree
@@ -65,7 +65,7 @@ public class GetDepartmentAncestorsHandler : IQueryHandler<PagedResult<GetDepart
             },
             param: parameters);
 
-        return new PagedResult<GetDepartmentAncestorsItem>(items, totalCount, query.PageSettings.Page,
+        return new PagedResult<GetDepartmentAncestorsItem>(items, totalCount ?? 0, query.PageSettings.Page,
             query.PageSettings.PageSize);
     }
 }

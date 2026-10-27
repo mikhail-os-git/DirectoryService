@@ -47,7 +47,7 @@ public class GetDepartmentDescendantsHandler: IQueryHandler<PagedResult<GetDepar
         parameters.Add("page_size", query.PageSettings.PageSize, DbType.Int32);
         
         string sql = """
-                     SELECT id, name as DepartmentName, identifier, path, depth, 
+                     SELECT id, parent_id as ParentId,name as DepartmentName, identifier, path, depth, 
                             (EXISTS(SELECT 1 FROM departments dp WHERE dp.parent_id = d.id AND dp.is_active = true)) as HasChildren,  
                              COUNT(*) OVER() as total_count
                                  from departments d
@@ -71,7 +71,7 @@ public class GetDepartmentDescendantsHandler: IQueryHandler<PagedResult<GetDepar
             },
             param: parameters);
 
-        return new PagedResult<GetDepartmentDescendantsItem>(items, totalCount, query.PageSettings.Page,
+        return new PagedResult<GetDepartmentDescendantsItem>(items, totalCount ?? 0, query.PageSettings.Page,
             query.PageSettings.PageSize);
 
     }
