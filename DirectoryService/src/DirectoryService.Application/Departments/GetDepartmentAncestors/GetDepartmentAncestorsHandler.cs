@@ -65,9 +65,6 @@ public class GetDepartmentAncestorsHandler : IQueryHandler<PagedResult<GetDepart
             },
             param: parameters);
 
-        if (items is null || items.ToList().Count == 0)
-                return Failure.NotFoundEntity("No parents found", query.DepartmentId).ToFailList();
-
         return new PagedResult<GetDepartmentAncestorsItem>(items, totalCount, query.PageSettings.Page,
             query.PageSettings.PageSize);
     }

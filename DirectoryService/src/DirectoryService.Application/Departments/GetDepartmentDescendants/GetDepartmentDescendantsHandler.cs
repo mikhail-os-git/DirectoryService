@@ -71,9 +71,6 @@ public class GetDepartmentDescendantsHandler: IQueryHandler<PagedResult<GetDepar
             },
             param: parameters);
 
-        if (items is null || items.ToList().Count == 0)
-            return Failure.NotFoundEntity("No children found", query.DepartmentId).ToFailList();
-
         return new PagedResult<GetDepartmentDescendantsItem>(items, totalCount, query.PageSettings.Page,
             query.PageSettings.PageSize);
 

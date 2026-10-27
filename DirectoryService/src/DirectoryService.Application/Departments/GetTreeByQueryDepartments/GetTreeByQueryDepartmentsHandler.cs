@@ -54,9 +54,6 @@ public class
             .Take(query.PageSettings.PageSize)
             .ToListAsync(cancellationToken);
 
-        if (items.ToList().Count == 0)
-            return DepartmentErrors.CollectionNotFound().ToFailList();
-
         return new PagedResult<GetTreeDepartmentsItem>(items, totalCount, query.PageSettings.Page,
             query.PageSettings.PageSize);
 
