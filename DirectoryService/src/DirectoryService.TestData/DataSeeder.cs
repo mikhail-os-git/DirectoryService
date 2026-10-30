@@ -23,7 +23,7 @@ public class DataSeeder: IDataSeeder
         try
         {
             if (await _dbContext.Locations.AnyAsync()) return;
-
+            
             await _dbContext.Locations.AddRangeAsync(LocationFixtures.All);
             await _dbContext.Departments.AddRangeAsync(DepartmentFixtures.All);
             await _dbContext.Positions.AddRangeAsync(PositionFixtures.All);

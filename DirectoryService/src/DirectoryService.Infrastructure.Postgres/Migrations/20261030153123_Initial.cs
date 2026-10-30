@@ -12,7 +12,8 @@ namespace DirectoryService.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:ltree", ",,");
+                .Annotation("Npgsql:PostgresExtension:ltree", ",,")
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
 
             migrationBuilder.CreateTable(
                 name: "departments",
@@ -157,12 +158,32 @@ namespace DirectoryService.Infrastructure.Migrations
                 .Annotation("Npgsql:IndexMethod", "gist");
 
             migrationBuilder.CreateIndex(
+                name: "IX_departments_identifier",
+                table: "departments",
+                column: "identifier",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_departments_parent_id",
                 table: "departments",
                 column: "parent_id");
 
             migrationBuilder.CreateIndex(
-                name: "ux_locations_name",
+                name: "ux_department_name_trgm",
+                table: "departments",
+                column: "name")
+                .Annotation("Npgsql:IndexMethod", "gin")
+                .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_location_name_trgm",
+                table: "locations",
+                column: "name")
+                .Annotation("Npgsql:IndexMethod", "gin")
+                .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_location_name_unique",
                 table: "locations",
                 column: "name",
                 unique: true);

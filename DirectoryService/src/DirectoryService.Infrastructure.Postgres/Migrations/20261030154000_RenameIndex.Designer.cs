@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DirectoryService.Infrastructure.Migrations
 {
     [DbContext(typeof(DirectoryServiceDbContext))]
-    [Migration("20261006192924_Initial")]
-    partial class Initial
+    [Migration("20261030154000_RenameIndex")]
+    partial class RenameIndex
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,7 @@ namespace DirectoryService.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "ltree");
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("DirectoryService.Domain.Departments.Department", b =>
@@ -84,6 +85,15 @@ namespace DirectoryService.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_departments");
+
+                    b.HasIndex("DepartmentName")
+                        .HasDatabaseName("ix_department_name_trgm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("DepartmentName"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("DepartmentName"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("Identifier")
+                        .IsUnique();
 
                     b.HasIndex("ParentId");
 
@@ -198,7 +208,12 @@ namespace DirectoryService.Infrastructure.Migrations
 
                     b.HasIndex("LocationName")
                         .IsUnique()
-                        .HasDatabaseName("ux_locations_name");
+                        .HasDatabaseName("ix_location_name_unique");
+
+                    b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm"), new[] { "gin_trgm_ops" });
 
                     b.ToTable("locations", (string)null);
                 });

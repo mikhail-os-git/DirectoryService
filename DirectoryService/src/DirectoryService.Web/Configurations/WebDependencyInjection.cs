@@ -72,7 +72,7 @@ public static class WebDependencyInjection
     private static IServiceCollection AddSeeder(this IServiceCollection services)
     { 
 #if  DEBUG
-        services.AddScoped<IDataSeeder, DataSeeder>();  
+        services.AddScoped<IDataSeeder, RandomDataSeeder>();  
 #endif
         return services;
     }
