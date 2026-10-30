@@ -22,6 +22,11 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .HasColumnName("name")
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
+        
+        builder.HasIndex(d => d.DepartmentName)
+            .HasDatabaseName("ux_department_name_trgm")
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
 
         builder.Property(d => d.Identifier)
             .HasConversion(i => i.Value, identidier => Identifier.Convert(identidier))
@@ -29,6 +34,8 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .IsRequired()
             .HasMaxLength(DepartmentName.MAX_LENGTH);
 
+        builder.HasIndex(d => d.Identifier).IsUnique();
+        
         builder.Property<Guid?>(d => d.ParentId)
             .IsRequired(false)
             .HasColumnName("parent_id");
@@ -45,7 +52,9 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .IsRequired()
             .HasColumnName("path");
 
-        builder.HasIndex(d => d.Path).HasMethod("gist").HasDatabaseName("idx_departments_path");
+        builder.HasIndex(d => d.Path)
+            .HasMethod("gist")
+            .HasDatabaseName("idx_departments_path");
         
         builder.Property(d => d.Depth)
             .IsRequired()
@@ -73,6 +82,6 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .HasColumnType("xid");
 
         builder.HasQueryFilter(d => d.IsActive);
-
+        
     }
 }
