@@ -183,7 +183,7 @@ namespace DirectoryService.Infrastructure.Migrations
                 .Annotation("Npgsql:IndexOperators", new[] { "gin_trgm_ops" });
 
             migrationBuilder.CreateIndex(
-                name: "ux_location_name_unique",
+                name: "ix_location_name_unique",
                 table: "locations",
                 column: "name",
                 unique: true);

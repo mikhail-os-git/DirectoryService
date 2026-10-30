@@ -23,7 +23,7 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
 
         builder.HasIndex(l => l.LocationName)
             .IsUnique()
-            .HasDatabaseName("ux_location_name_unique");
+            .HasDatabaseName("ix_location_name_unique");
 
         builder.HasIndex(l => l.LocationName, "ix_location_name_trgm")
             .HasMethod("gin")

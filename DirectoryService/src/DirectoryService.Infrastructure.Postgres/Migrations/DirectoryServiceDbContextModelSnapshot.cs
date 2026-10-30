@@ -205,7 +205,7 @@ namespace DirectoryService.Infrastructure.Migrations
 
                     b.HasIndex("LocationName")
                         .IsUnique()
-                        .HasDatabaseName("ux_location_name_unique");
+                        .HasDatabaseName("ix_location_name_unique");
 
                     b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm");
 

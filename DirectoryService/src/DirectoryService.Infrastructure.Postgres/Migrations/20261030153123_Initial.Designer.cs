@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DirectoryService.Infrastructure.Migrations
 {
     [DbContext(typeof(DirectoryServiceDbContext))]
-    [Migration("20261030150052_Initial")]
+    [Migration("20261030153123_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -208,7 +208,7 @@ namespace DirectoryService.Infrastructure.Migrations
 
                     b.HasIndex("LocationName")
                         .IsUnique()
-                        .HasDatabaseName("ux_location_name_unique");
+                        .HasDatabaseName("ix_location_name_unique");
 
                     b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm");
 
