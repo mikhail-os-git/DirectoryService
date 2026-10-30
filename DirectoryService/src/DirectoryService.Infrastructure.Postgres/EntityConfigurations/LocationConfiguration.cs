@@ -25,9 +25,6 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
             .IsUnique()
             .HasDatabaseName("ux_location_name_unique");
 
-        builder.HasIndex(l => l.LocationName, "ux_location_name")
-            .IsUnique();
-
         builder.HasIndex(l => l.LocationName, "ix_location_name_trgm")
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");

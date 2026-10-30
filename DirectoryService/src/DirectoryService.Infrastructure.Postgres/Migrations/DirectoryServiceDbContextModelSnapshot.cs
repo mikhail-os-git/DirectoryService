@@ -212,9 +212,6 @@ namespace DirectoryService.Infrastructure.Migrations
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm"), "gin");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex(new[] { "LocationName" }, "ix_location_name_trgm"), new[] { "gin_trgm_ops" });
 
-                    b.HasIndex(new[] { "LocationName" }, "ux_location_name")
-                        .IsUnique();
-
                     b.ToTable("locations", (string)null);
                 });
 
