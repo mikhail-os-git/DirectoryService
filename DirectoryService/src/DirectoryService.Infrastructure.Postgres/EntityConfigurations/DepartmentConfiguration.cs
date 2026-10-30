@@ -24,7 +24,7 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
             .HasMaxLength(DepartmentName.MAX_LENGTH);
         
         builder.HasIndex(d => d.DepartmentName)
-            .HasDatabaseName("ux_department_name_trgm")
+            .HasDatabaseName("ix_department_name_trgm")
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");
 

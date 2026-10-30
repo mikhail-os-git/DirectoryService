@@ -84,7 +84,7 @@ namespace DirectoryService.Infrastructure.Migrations
                         .HasName("pk_departments");
 
                     b.HasIndex("DepartmentName")
-                        .HasDatabaseName("ux_department_name_trgm");
+                        .HasDatabaseName("ix_department_name_trgm");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("DepartmentName"), "gin");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("DepartmentName"), new[] { "gin_trgm_ops" });
