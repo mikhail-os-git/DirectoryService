@@ -3,14 +3,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CSharpFunctionalExtensions;
 using Dapper;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
-using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Locations.GetLocations;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Locations.GetLocations;
 

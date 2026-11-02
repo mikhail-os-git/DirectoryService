@@ -1,15 +1,15 @@
 ﻿using System.Linq.Expressions;
 using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
-using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments.AttachPosition;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Departments.AttachPosition;
 

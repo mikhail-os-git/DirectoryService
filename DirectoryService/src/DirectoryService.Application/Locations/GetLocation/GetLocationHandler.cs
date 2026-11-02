@@ -1,13 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
-using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Locations.GetLocation;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using FluentValidation;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Locations.GetLocation;
 

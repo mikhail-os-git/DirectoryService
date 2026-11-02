@@ -1,14 +1,14 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Positions;
-using DirectoryService.Application.Positions.CreatePosition;
-using DirectoryService.Application.Positions.HardDeletePosition;
+﻿using DirectoryService.Application.Positions.CreatePosition;
 using DirectoryService.Application.Positions.RenamePosition;
 using DirectoryService.Application.Positions.SoftDeletePosition;
 using DirectoryService.Contracts;
 using DirectoryService.Contracts.Positions;
 using DirectoryService.Contracts.Positions.CreatePosition;
-using General.EndpointsResult;
+using DirectoryService.Contracts.Positions.RenamePostiton;
+
 using Microsoft.AspNetCore.Mvc;
+using Shared.Core.Abstractions;
+using Shared.Framework.EndpointsResult;
 
 namespace DirectoryService.Presentation.Controllers;
 [ApiController]

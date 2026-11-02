@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>MikhailOs.SharedKernel</PackageId>
+    <Version>0.1.1</Version>
+    <Authors>Mikhail Oz</Authors>
+    <Description>Error и Result: общие типы для обработки ошибок PagedResult: Для GET респонсов.</Description>
+    <RepositoryUrl>https://github.com/mikhail-os-git/DirectoryService</RepositoryUrl>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" />
+  </ItemGroup>
+  
+</Project>

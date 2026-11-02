@@ -1,11 +1,9 @@
-﻿using System.Data;
-using CSharpFunctionalExtensions;
-using DirectoryService.Application.Database;
-using DirectoryService.Domain.Common;
-using General.Errors;
+﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Shared.Core.Database;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Infrastructure.Database;
 

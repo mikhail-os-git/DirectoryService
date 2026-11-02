@@ -1,5 +1,4 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Configuration;
+﻿using DirectoryService.Application.Configuration;
 using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
@@ -11,12 +10,13 @@ using DirectoryService.Infrastructure.Options;
 using DirectoryService.Infrastructure.Repositories;
 using DirectoryService.Infrastructure.Tasks;
 using DirectoryService.Infrastructure.Workers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Shared.Core.Database;
+using Shared.Core.Extensions;
 
 namespace DirectoryService.Infrastructure.Configurations;
 
@@ -26,6 +26,7 @@ public static class InfrastructureDependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var assembly = typeof(InfrastructureDependencyInjection).Assembly;
         return services.UseCaseRegistration()
             .DbContextRegistration()
             .AddRepositories()

@@ -1,13 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.UpdateDepartmentLocations;
-using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.TestData.Fixtures;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Sdk;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.IntegrationTests;
 

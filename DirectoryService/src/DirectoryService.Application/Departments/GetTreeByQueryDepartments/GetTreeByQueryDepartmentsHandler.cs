@@ -1,13 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
-using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Common;
-using DirectoryService.Contracts.Departments.GetDepartmentsTree;
-using DirectoryService.Domain.Common.DomainEntityErrors;
+using DirectoryService.Contracts.Departments.GetTreeDepartments;
 using FluentValidation;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
+using Shared.Core.Abstractions;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Departments.GetTreeByQueryDepartments;
 

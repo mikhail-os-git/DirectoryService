@@ -1,6 +1,6 @@
-﻿using DirectoryService.Application.Validation;
-using FluentValidation;
-using General.Errors;
+﻿using FluentValidation;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Departments.GetDepartment;
 

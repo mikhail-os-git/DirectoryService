@@ -1,12 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Common;
-using DirectoryService.Contracts.Departments.GetDepartmentsTree;
-using General.Errors;
+using DirectoryService.Contracts.Departments.GetTreeDepartments;
 using Microsoft.EntityFrameworkCore;
+using Shared.Core.Abstractions;
+using Shared.Kernal.Failures;
 
-namespace DirectoryService.Application.Departments.GetDepartmentsTree;
+namespace DirectoryService.Application.Departments.GetTreeDepartments;
 
 public class GetTreeDepartmentsHandler : IQueryHandler<PagedResult<GetTreeDepartmentsItem>, GetTreeDepartmentsQuery>
 {

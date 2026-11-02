@@ -1,8 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Domain.Common;
 using DirectoryService.Domain.ValueObjects;
-using General;
-using General.Errors;
+using Shared.Kernal.Failures;
 using Path = DirectoryService.Domain.ValueObjects.Path;
 
 namespace DirectoryService.Domain.Departments;

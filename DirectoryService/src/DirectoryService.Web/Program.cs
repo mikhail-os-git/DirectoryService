@@ -1,9 +1,7 @@
 using System.Globalization;
-using DirectoryService.Infrastructure;
-using DirectoryService.Infrastructure.Configurations;
 using DirectoryService.Web.Configurations;
-using DirectoryService.Web.Middleware;
 using Serilog;
+using Shared.Framework.Middleware;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -17,7 +15,7 @@ try
     builder.Services.AddDependencies(builder.Configuration);
     
     var app = builder.Build();
-    app.UseExceptionMiddleware();
+    app.UseAppMiddlewares();
     app.Configure();
     app.MapControllers();
     await app.RunSeedAsync();

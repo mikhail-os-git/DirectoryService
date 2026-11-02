@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
-using General;
-using General.Errors;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Domain.ValueObjects;
 

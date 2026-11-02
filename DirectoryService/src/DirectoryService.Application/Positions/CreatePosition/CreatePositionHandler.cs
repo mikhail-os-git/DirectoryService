@@ -1,18 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Positions.Interfaces;
-using DirectoryService.Application.Validation;
-using DirectoryService.Contracts.Positions;
 using DirectoryService.Contracts.Positions.CreatePosition;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Positions;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
 using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Positions.CreatePosition;
 

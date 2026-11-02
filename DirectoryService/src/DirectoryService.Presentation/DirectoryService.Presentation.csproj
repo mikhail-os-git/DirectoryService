@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RootNamespace>DirectoryService.Presentation</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Shared.Core\Shared.Core.csproj" />
     <ProjectReference Include="..\DirectoryService.Application\DirectoryService.Application.csproj" />
     <ProjectReference Include="..\DirectoryService.Contracts\DirectoryService.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Framework\Shared.Framework.csproj" />
   </ItemGroup>
 
 </Project>

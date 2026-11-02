@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Locations;
-using DirectoryService.Domain.ValueObjects;
-using General.Errors;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Locations.Interfaces;
 

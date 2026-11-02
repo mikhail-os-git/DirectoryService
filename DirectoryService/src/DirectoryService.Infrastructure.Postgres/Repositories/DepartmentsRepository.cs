@@ -1,20 +1,15 @@
 ﻿using System.Data.Common;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
 using CSharpFunctionalExtensions;
 using Dapper;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
-using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Infrastructure.Configurations;
-using DirectoryService.Infrastructure.Database;
-using General.Errors;
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Shared.Core.Database;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

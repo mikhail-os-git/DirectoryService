@@ -1,11 +1,9 @@
-﻿using System.Linq.Expressions;
-using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
+﻿using CSharpFunctionalExtensions;
 using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Domain.Common.DomainEntityErrors;
-using DirectoryService.Domain.Locations;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Locations.HardDeleteLocation;
 

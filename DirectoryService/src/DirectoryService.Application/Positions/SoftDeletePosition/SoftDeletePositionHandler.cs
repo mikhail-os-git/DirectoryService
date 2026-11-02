@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Positions;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Positions.SoftDeletePosition;
 

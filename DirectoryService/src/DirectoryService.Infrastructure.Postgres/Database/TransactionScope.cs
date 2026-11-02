@@ -1,10 +1,8 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using CSharpFunctionalExtensions;
-using DirectoryService.Application.Database;
-using DirectoryService.Domain.Common;
-using General.Errors;
 using Microsoft.Extensions.Logging;
+using Shared.Core.Database;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Infrastructure.Database;
 

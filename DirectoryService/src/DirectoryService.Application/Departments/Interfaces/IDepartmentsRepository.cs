@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Departments;
-using General.Errors;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Departments.Interfaces;
 
@@ -58,7 +58,7 @@ public interface IDepartmentsRepository
     //     CancellationToken cancellationToken);
     //
     // Task<Guid> AddDepartmentLocationsAsync(
-    //     Guid departmentId,
+    //     Guid DepartmentId,
     //     IEnumerable<Guid> locationIds,
     //     CancellationToken cancellationToken);
 }

@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Locations.TopLocations;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
+using Shared.Core.Abstractions;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Locations.TopLocations;
 

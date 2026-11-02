@@ -1,20 +1,15 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Locations;
-using DirectoryService.Application.Locations.CreateLocation;
+﻿using DirectoryService.Application.Locations.CreateLocation;
 using DirectoryService.Application.Locations.GetLocation;
 using DirectoryService.Application.Locations.GetLocations;
-using DirectoryService.Application.Locations.HardDeleteLocation;
-using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Application.Locations.SoftDeleteLocation;
 using DirectoryService.Contracts.Common;
-using DirectoryService.Contracts.Locations;
 using DirectoryService.Contracts.Locations.CreateLocation;
 using DirectoryService.Contracts.Locations.GetLocation;
 using DirectoryService.Contracts.Locations.GetLocations;
 using DirectoryService.Contracts.Locations.TopLocations;
-using General.EndpointsResult;
-using General.Errors;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Core.Abstractions;
+using Shared.Framework.EndpointsResult;
 
 namespace DirectoryService.Presentation.Controllers;
 

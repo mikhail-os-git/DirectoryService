@@ -1,7 +1,7 @@
-﻿using DirectoryService.Application.Validation;
-using DirectoryService.Domain.ValueObjects;
+﻿using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Validation;
+using Shared.Kernal.Failures;
 
 namespace DirectoryService.Application.Positions.RenamePosition;
 

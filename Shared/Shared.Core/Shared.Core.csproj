@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Scrutor" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="CSharpFunctionalExtensions" />
+  </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Shared.Kernal\Shared.Kernal.csproj" />
+    </ItemGroup>
+
+</Project>
