@@ -4,7 +4,7 @@ using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Departments.GetTreeDepartments;
 using Microsoft.EntityFrameworkCore;
 using Shared.Core.Abstractions;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetTreeDepartments;
 

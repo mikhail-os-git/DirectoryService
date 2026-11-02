@@ -4,7 +4,7 @@ using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Locations;
 using Shared.Core.Abstractions;
 using Shared.Core.Database;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Locations.SoftDeleteLocation;
 

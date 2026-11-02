@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace Shared.Core.Validation;
 

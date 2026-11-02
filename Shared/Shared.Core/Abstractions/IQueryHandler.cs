@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace Shared.Core.Abstractions;
 

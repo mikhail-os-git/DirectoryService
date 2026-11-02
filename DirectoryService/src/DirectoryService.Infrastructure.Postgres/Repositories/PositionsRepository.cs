@@ -6,7 +6,7 @@ using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Positions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

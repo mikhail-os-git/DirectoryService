@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Shared.Core.Database;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

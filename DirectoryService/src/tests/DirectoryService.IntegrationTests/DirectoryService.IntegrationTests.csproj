@@ -18,4 +18,10 @@
     <ProjectReference Include="..\..\DirectoryService.Web\DirectoryService.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Shared.Kernel">
+      <HintPath>..\..\DirectoryService.Web\bin\Debug\net10.0\Shared.Kernel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

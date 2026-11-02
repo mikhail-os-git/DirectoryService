@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Common.Constants;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Domain.ValueObjects;
 

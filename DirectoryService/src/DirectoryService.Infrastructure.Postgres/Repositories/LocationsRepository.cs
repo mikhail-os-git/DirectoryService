@@ -4,7 +4,7 @@ using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Domain.Locations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

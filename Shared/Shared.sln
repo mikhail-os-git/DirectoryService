@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Kernal", "Shared.Kernal\Shared.Kernal.csproj", "{E79DE4FA-05D0-43AB-B9FB-604D3654D9D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Kernel", "Shared.Kernel\Shared.Kernel.csproj", "{E79DE4FA-05D0-43AB-B9FB-604D3654D9D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Core", "Shared.Core\Shared.Core.csproj", "{38AD4B68-6DCA-4FAB-AE17-088F096EA976}"
 EndProject

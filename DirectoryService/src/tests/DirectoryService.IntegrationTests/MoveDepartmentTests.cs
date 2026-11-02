@@ -3,7 +3,7 @@ using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.TestData.Fixtures;
 using Microsoft.EntityFrameworkCore;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.IntegrationTests;
 

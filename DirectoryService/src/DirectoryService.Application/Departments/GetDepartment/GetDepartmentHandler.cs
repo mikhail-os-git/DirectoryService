@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Shared.Core.Abstractions;
 using Shared.Core.Validation;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetDepartment;
 

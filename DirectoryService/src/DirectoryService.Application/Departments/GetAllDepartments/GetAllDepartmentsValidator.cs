@@ -1,7 +1,7 @@
 ﻿using DirectoryService.Contracts.Departments.GetAllDepartments;
 using FluentValidation;
 using Shared.Core.Validation;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetAllDepartments;
 

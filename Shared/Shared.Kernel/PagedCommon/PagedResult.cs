@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shared.Kernal.PagedCommon;
+namespace Shared.Kernel.PagedCommon;
 
 public record PagedResult<T>
 {

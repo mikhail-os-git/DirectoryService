@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Shared.Kernal.Failures;
+namespace Shared.Kernel.Failures;
 
 public record Failure
 {

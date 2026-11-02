@@ -3,7 +3,7 @@ using DirectoryService.Application.Locations.Interfaces;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using Shared.Core.Abstractions;
 using Shared.Core.Database;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Locations.HardDeleteLocation;
 

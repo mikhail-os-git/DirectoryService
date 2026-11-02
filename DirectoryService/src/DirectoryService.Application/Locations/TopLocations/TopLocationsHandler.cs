@@ -3,7 +3,7 @@ using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Locations.TopLocations;
 using Microsoft.EntityFrameworkCore;
 using Shared.Core.Abstractions;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Locations.TopLocations;
 

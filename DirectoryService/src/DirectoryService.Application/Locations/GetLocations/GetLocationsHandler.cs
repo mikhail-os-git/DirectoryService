@@ -10,7 +10,7 @@ using FluentValidation;
 using Shared.Core.Abstractions;
 using Shared.Core.Database;
 using Shared.Core.Validation;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Locations.GetLocations;
 

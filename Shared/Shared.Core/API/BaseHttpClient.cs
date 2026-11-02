@@ -3,8 +3,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using Shared.Kernal.Envelopes;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Envelopes;
+using Shared.Kernel.Failures;
 
 namespace Shared.Core.API;
 
@@ -35,7 +35,7 @@ public abstract class BaseHttpClient
 
     public async Task<Result<TResponse, FailList>> PatchAsync<TResponse, TBody>(Uri url, TBody body,
         CancellationToken cancellationToken) => 
-        await SendAsync<TResponse>(HttpMethod.Put, url, JsonContent.Create(body), cancellationToken);
+        await SendAsync<TResponse>(HttpMethod.Patch, url, JsonContent.Create(body), cancellationToken);
     
     protected async Task<UnitResult<FailList>> SendAsync(
         HttpMethod method,

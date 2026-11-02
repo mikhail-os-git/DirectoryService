@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Shared.Kernal.Envelopes;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Envelopes;
+using Shared.Kernel.Failures;
 
 namespace Shared.Framework.Middleware;
 

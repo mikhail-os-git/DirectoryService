@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
-namespace Shared.Kernal.Envelopes;
+namespace Shared.Kernel.Envelopes;
 
 public record Envelope
 {

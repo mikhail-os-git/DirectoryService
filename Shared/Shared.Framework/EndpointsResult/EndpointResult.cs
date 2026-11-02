@@ -3,8 +3,8 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
-using Shared.Kernal.Envelopes;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Envelopes;
+using Shared.Kernel.Failures;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Shared.Framework.EndpointsResult;

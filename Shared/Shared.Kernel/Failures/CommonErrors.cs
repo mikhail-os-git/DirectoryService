@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Shared.Kernal.Failures;
+namespace Shared.Kernel.Failures;
 
 public static class CommonErrors
 {

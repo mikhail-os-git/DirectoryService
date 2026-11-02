@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Shared.Kernal.Envelopes;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Envelopes;
+using Shared.Kernel.Failures;
 
 namespace Shared.Framework.EndpointsResult;
 

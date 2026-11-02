@@ -2,7 +2,7 @@
 using DirectoryService.Application.Departments.SoftDeleteDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.TestData.Fixtures;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.IntegrationTests;
 

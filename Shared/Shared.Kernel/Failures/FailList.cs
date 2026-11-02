@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Shared.Kernal.Failures;
+namespace Shared.Kernel.Failures;
 
 public class FailList : IEnumerable<Failure>, IEquatable<FailList>
 {

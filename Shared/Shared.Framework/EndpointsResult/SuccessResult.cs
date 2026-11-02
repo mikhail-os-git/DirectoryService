@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Http;
-using Shared.Kernal.Envelopes;
+using Shared.Kernel.Envelopes;
 
 namespace Shared.Framework.EndpointsResult;
 

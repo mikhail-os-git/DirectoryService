@@ -5,7 +5,7 @@ using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Locations;
 using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.IntegrationTests;
 

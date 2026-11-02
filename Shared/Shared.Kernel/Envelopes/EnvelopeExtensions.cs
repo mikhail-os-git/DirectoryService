@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Shared.Kernal.Failures;
+using Shared.Kernel.Failures;
 
-namespace Shared.Kernal.Envelopes;
+namespace Shared.Kernel.Envelopes;
 
 public static class EnvelopeExtensions
 {
