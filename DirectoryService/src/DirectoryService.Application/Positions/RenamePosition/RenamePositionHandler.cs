@@ -1,13 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Positions.Interfaces;
-using DirectoryService.Application.Validation;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Positions;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Positions.RenamePosition;
 

@@ -4,8 +4,7 @@ using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.ValueObjects;
-using General;
-using General.Errors;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Domain.Positions;
 

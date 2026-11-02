@@ -1,5 +1,5 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Contracts.Common;
+﻿using DirectoryService.Contracts.Common;
+using Shared.Core.Abstractions;
 
 namespace DirectoryService.Application.Departments.GetDepartmentDescendants;
 

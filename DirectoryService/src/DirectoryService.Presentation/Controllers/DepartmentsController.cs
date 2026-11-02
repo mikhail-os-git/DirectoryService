@@ -1,20 +1,16 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Departments;
-using DirectoryService.Application.Departments.AttachPosition;
+﻿using DirectoryService.Application.Departments.AttachPosition;
 using DirectoryService.Application.Departments.CreateDepartment;
 using DirectoryService.Application.Departments.DetachPosition;
 using DirectoryService.Application.Departments.GetAllDepartments;
 using DirectoryService.Application.Departments.GetDepartment;
 using DirectoryService.Application.Departments.GetDepartmentAncestors;
 using DirectoryService.Application.Departments.GetDepartmentDescendants;
-using DirectoryService.Application.Departments.GetDepartmentsTree;
 using DirectoryService.Application.Departments.GetTreeByQueryDepartments;
-using DirectoryService.Application.Departments.HardDeleteDepartment;
+using DirectoryService.Application.Departments.GetTreeDepartments;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Application.Departments.SoftDeleteDepartment;
 using DirectoryService.Application.Departments.UpdateDepartmentLocations;
 using DirectoryService.Contracts.Common;
-using DirectoryService.Contracts.Departments;
 using DirectoryService.Contracts.Departments.AttachPosition;
 using DirectoryService.Contracts.Departments.CreateDepartment;
 using DirectoryService.Contracts.Departments.DetachPosition;
@@ -22,11 +18,12 @@ using DirectoryService.Contracts.Departments.GetAllDepartments;
 using DirectoryService.Contracts.Departments.GetDapartmentAncestors;
 using DirectoryService.Contracts.Departments.GetDepartment;
 using DirectoryService.Contracts.Departments.GetDepartmentDescendants;
-using DirectoryService.Contracts.Departments.GetDepartmentsTree;
+using DirectoryService.Contracts.Departments.GetTreeDepartments;
 using DirectoryService.Contracts.Departments.MoveDepartment;
 using DirectoryService.Contracts.Departments.UpdateDepartment;
-using General.EndpointsResult;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Core.Abstractions;
+using Shared.Framework.EndpointsResult;
 
 namespace DirectoryService.Presentation.Controllers;
 [ApiController]
@@ -42,14 +39,14 @@ public class DepartmentsController : ControllerBase
         return await handler.Handle(new CreateDepartmentCommand(request), cancellationToken);
     }
 
-    [HttpPut("{departmentId:guid}/locations")]
+    [HttpPut("{DepartmentId:guid}/locations")]
     public async Task<EndpointResult<Guid>> UpdateLocations(
         [FromRoute] Guid departmentId,
         [FromBody] UpdateDepartmentLocationsRequest request,
         [FromServices] ICommandHandler<Guid, UpdateDepartmentLocationsCommand> handler,
         CancellationToken cancellationToken) => await handler.Handle(new UpdateDepartmentLocationsCommand(departmentId, request.LocationIds), cancellationToken);
 
-    [HttpPut("{departmentId:guid}/parent")]
+    [HttpPut("{DepartmentId:guid}/parent")]
     public async Task<EndpointResult<Guid>> MoveDepartment(
         [FromRoute] Guid departmentId,
         [FromBody] MoveDepartmentRequest request,

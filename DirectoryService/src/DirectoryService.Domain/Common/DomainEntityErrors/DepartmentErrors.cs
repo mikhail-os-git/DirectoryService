@@ -1,4 +1,4 @@
-using General.Errors;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Domain.Common.DomainEntityErrors;
 

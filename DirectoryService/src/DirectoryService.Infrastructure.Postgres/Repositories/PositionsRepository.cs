@@ -4,10 +4,9 @@ using DirectoryService.Application.Positions;
 using DirectoryService.Application.Positions.Interfaces;
 using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Positions;
-using DirectoryService.Domain.ValueObjects;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

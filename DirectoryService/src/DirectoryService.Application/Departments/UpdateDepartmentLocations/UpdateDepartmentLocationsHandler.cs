@@ -1,14 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
 using DirectoryService.Application.Locations.Interfaces;
-using DirectoryService.Application.Validation;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
-using General.Errors;
 using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.UpdateDepartmentLocations;
 

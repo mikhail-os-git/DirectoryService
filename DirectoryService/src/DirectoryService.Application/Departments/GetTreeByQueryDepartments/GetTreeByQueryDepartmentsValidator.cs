@@ -1,7 +1,7 @@
-﻿using DirectoryService.Application.Validation;
-using DirectoryService.Domain.Common.Constants;
+﻿using DirectoryService.Domain.Common.Constants;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetTreeByQueryDepartments;
 

@@ -1,6 +1,6 @@
-﻿using DirectoryService.Application.Validation;
-using FluentValidation;
-using General.Errors;
+﻿using FluentValidation;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.MoveDepartment;
 
@@ -8,12 +8,12 @@ public class MoveDepartmentValidator: AbstractValidator<MoveDepartmentCommand>
 {
     public MoveDepartmentValidator()
     {
-        RuleFor(dc => dc.departmentId)
+        RuleFor(dc => dc.DepartmentId)
             .NotEqual(Guid.Empty)
             .WithError(Failure.Validation("The Department ID must not be empty.", "department-id.invalid"));
 
-        RuleFor(dc => dc.departmentId)
-            .Must((dc, id) => !dc.parentId.HasValue || id != dc.parentId.Value)
+        RuleFor(dc => dc.DepartmentId)
+            .Must((dc, id) => !dc.ParentId.HasValue || id != dc.ParentId.Value)
             .WithError(Failure.Validation("Department cannot be moved to itself", "department.request.invalid"));
     }
 }

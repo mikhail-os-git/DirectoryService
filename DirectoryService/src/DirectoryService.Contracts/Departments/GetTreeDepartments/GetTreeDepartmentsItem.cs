@@ -1,4 +1,4 @@
-﻿namespace DirectoryService.Contracts.Departments.GetDepartmentsTree;
+﻿namespace DirectoryService.Contracts.Departments.GetTreeDepartments;
 
 public record GetTreeDepartmentsItem
 {

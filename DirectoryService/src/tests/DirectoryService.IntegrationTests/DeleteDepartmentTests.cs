@@ -2,7 +2,7 @@
 using DirectoryService.Application.Departments.SoftDeleteDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.TestData.Fixtures;
-using General.Errors;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.IntegrationTests;
 
@@ -27,7 +27,7 @@ public class DeleteDepartmentTests : DirectoryBaseTests
     }
 
     [Fact]
-    public async Task Delete_Department_With__Invalid_Data_Expected_Success()
+    public async Task Delete_Department_With_Invalid_Data_Expected_Success()
     {
         var itId = DepartmentFixtures.ItId;
         var businessIntelligenceId = DepartmentFixtures.BusinessIntelligenceId;

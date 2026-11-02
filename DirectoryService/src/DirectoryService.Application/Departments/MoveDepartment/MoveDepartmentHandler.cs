@@ -1,12 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Database;
 using DirectoryService.Application.Departments.Interfaces;
-using DirectoryService.Application.Validation;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.MoveDepartment;
 
@@ -45,24 +45,24 @@ public class MoveDepartmentHandler : ICommandHandler<Guid, MoveDepartmentCommand
 
         // Бизнес валидация и выгрузка данных
         bool departmentExist =
-            await _departmentsRepository.IsMatchAsync(d => d.Id == command.departmentId && d.IsActive, cancellationToken);
+            await _departmentsRepository.IsMatchAsync(d => d.Id == command.DepartmentId && d.IsActive, cancellationToken);
 
         if (!departmentExist)
-            return DepartmentErrors.NotFound(command.departmentId).ToFailList();
+            return DepartmentErrors.NotFound(command.DepartmentId).ToFailList();
 
         Department? department =
-            await _departmentsRepository.GetByIdWithLockAsync(command.departmentId, cancellationToken);
+            await _departmentsRepository.GetByIdWithLockAsync(command.DepartmentId, cancellationToken);
 
         Department? parent = null;
         
-        if (command.parentId.HasValue)
+        if (command.ParentId.HasValue)
         {
-            bool checkParent = await _departmentsRepository.IsMatchAsync(d => d.Id == command.parentId.Value && d.IsActive, cancellationToken);
+            bool checkParent = await _departmentsRepository.IsMatchAsync(d => d.Id == command.ParentId.Value && d.IsActive, cancellationToken);
 
             if (!checkParent)
-                return DepartmentErrors.NotFound(command.parentId.Value).ToFailList();
+                return DepartmentErrors.NotFound(command.ParentId.Value).ToFailList();
 
-            parent = await _departmentsRepository.GetByIdWithLockAsync(command.parentId.Value, cancellationToken);
+            parent = await _departmentsRepository.GetByIdWithLockAsync(command.ParentId.Value, cancellationToken);
         }
 
         if (parent is not null && department is not null)
@@ -122,7 +122,7 @@ public class MoveDepartmentHandler : ICommandHandler<Guid, MoveDepartmentCommand
             return commit.Error.ToFailList();
         }
 
-        return command.departmentId;
+        return command.DepartmentId;
 
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System.Linq.Expressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Application.Locations.Interfaces;
-using DirectoryService.Domain.Common;
 using DirectoryService.Domain.Locations;
-using DirectoryService.Domain.ValueObjects;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Infrastructure.Repositories;
 

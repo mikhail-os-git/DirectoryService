@@ -1,11 +1,9 @@
-﻿using DirectoryService.Application.Validation;
-using DirectoryService.Contracts.Positions;
-using DirectoryService.Contracts.Positions.CreatePosition;
-using DirectoryService.Domain.Common;
+﻿using DirectoryService.Contracts.Positions.CreatePosition;
 using DirectoryService.Domain.Common.Constants;
 using DirectoryService.Domain.ValueObjects;
 using FluentValidation;
-using General.Errors;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Positions.CreatePosition;
 

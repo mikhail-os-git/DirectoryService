@@ -1,11 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Departments;
 using DirectoryService.Application.Departments.MoveDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
-using DirectoryService.Domain.Departments;
 using DirectoryService.TestData.Fixtures;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.IntegrationTests;
 
@@ -81,8 +79,8 @@ public class MoveDepartmentTests: DirectoryBaseTests
             sut.Handle(command4, cnt));
         
         Assert.True(res1.IsFailure && res2.IsFailure && res3.IsFailure && res4.IsFailure);
-        Assert.Equal(res1.Error, DepartmentErrors.NotFound(command1.departmentId).ToFailList());
-        Assert.Equal(res2.Error, DepartmentErrors.NotFound(command2.parentId!.Value).ToFailList());
+        Assert.Equal(res1.Error, DepartmentErrors.NotFound(command1.DepartmentId).ToFailList());
+        Assert.Equal(res2.Error, DepartmentErrors.NotFound(command2.ParentId!.Value).ToFailList());
         Assert.Equal(res3.Error, conflictFailure);
         Assert.Equal(res4.Error, validationFailure.ToFailList());
     }

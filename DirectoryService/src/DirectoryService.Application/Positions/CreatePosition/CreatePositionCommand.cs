@@ -1,6 +1,5 @@
-﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Contracts.Positions;
-using DirectoryService.Contracts.Positions.CreatePosition;
+﻿using DirectoryService.Contracts.Positions.CreatePosition;
+using Shared.Core.Abstractions;
 
 namespace DirectoryService.Application.Positions.CreatePosition;
 

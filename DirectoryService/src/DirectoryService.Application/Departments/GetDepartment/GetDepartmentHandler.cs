@@ -1,12 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
-using DirectoryService.Application.Validation;
 using DirectoryService.Contracts.Departments.GetDepartment;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using FluentValidation;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
+using Shared.Core.Abstractions;
+using Shared.Core.Validation;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetDepartment;
 

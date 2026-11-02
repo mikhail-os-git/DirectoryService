@@ -1,14 +1,15 @@
 ﻿using System.Data;
 using CSharpFunctionalExtensions;
 using Dapper;
-using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Database;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Departments.GetDapartmentAncestors;
 using DirectoryService.Domain.Common.DomainEntityErrors;
 using DirectoryService.Domain.Departments;
-using General.Errors;
 using Microsoft.EntityFrameworkCore;
+using Shared.Core.Abstractions;
+using Shared.Core.Database;
+using Shared.Kernel.Failures;
 
 namespace DirectoryService.Application.Departments.GetDepartmentAncestors;
 
