@@ -2,18 +2,6 @@
 import { Button } from "@/shared/ui/button";
 import { useState } from "react";
 
-const actionState = {
-  show: "Show",
-  hide: "Hide"
-}
-const greetState = {
-  init: "",
-  greet: "Welcome in Directory Service!",
-  check: (gr: string) => gr != greetState.init
-}
-
-
-
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
 
