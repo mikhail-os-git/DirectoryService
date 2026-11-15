@@ -5,6 +5,7 @@ import { cn } from '@/shared/lib/utils';
 import { CART_ITEM_TYPES, CartItemTypes } from '../card-item/CartItem.model';
 import CartItem from '../card-item/CartItem';
 import CartSummary from '../card-summary/CardSummary';
+import CartEmpty from '../cart-empty/CartEmpty';
 
 export default function Card() {
 
@@ -18,16 +19,23 @@ export default function Card() {
     addItem(text);
   }
 
-  return (
-  
+  return  (
     <div className={cn(styles['cart-wrapper'])}>
       <CartForm onSubmit = {handleSubmit}/>
-      <CartSummary counts={itemsState}/>
-      <ul className={cn(styles['cart-container'])}>
-      {items.map((i) => {
-        return <CartItem key={i.id} id={i.id} text={i.text} type={i.type} delete={removeItem} change={changeItem} />;
-      })}
-      </ul>
+      {
+        items.length === 0 ? 
+        (<CartEmpty/>) 
+        :
+        (
+        <>
+          <CartSummary counts={itemsState}/>
+            <ul className={cn(styles['cart-container'])}>
+            {items.map((i) => {
+              return <CartItem key={i.id} id={i.id} text={i.text} type={i.type} delete={removeItem} change={changeItem} />;
+            })}
+          </ul>
+        </>)
+      }
     </div>
 
   );

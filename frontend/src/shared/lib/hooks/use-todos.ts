@@ -14,7 +14,7 @@ export default function useTodos() {
   const [items, setItems] = useState<ICartItem[]>(initialCarts);
 
   const addItem = (text: string) => {
-    if(text === "") return;
+    if(text.trim() === "") return;
     
     const max: number = items.reduce((max, item) => (item.id > max ? item.id : max), 0); 
     const newItem: ICartItem = { id: max + 1, text, type: 'default' };
@@ -22,13 +22,11 @@ export default function useTodos() {
   }
 
   const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems([...items.filter((item) => item.id !== id)]);
   };
 
   const changeItem = (id: number, type: CartItemTypes) => {
-    setItems((prev) => 
-      prev.map(item => (item.id === id? {...item, type} : item))
-    )
+    setItems([...items.map(item => (item.id === id? {...item, type} : item))])
   }
 
 

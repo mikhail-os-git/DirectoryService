@@ -1,5 +1,5 @@
 'use client';
-import Todo from "@/shared/ui/card/Cart";
+import Todo from "@/shared/ui/cart/Cart";
 
 export default function Page() {
   return (<Todo/>)

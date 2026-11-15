@@ -1,34 +1,27 @@
 import styles from './CartIcon.module.css';
 import { cn } from "@/shared/lib/utils";
+import { SvgPath } from './SvgPath';
 
-type CartIconProps = React.ComponentProps<'div'> & {
+export type CartIconProps = React.ComponentProps<'div'> & {
   paths: string[];
 };
 
-export function CartIcon({ paths, className, ...props }: CartIconProps) {
+export function CartIcon({ paths, ...props }: CartIconProps) {
   return (
-    <div {...props} className={cn(styles['cart-item-icon'], className)}>
-      <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" width={20} height={20}>
-          {paths.map((d) => (
-            <path
-              key={d}
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={d} />
-          ))}
-      </svg>
+    <div {...props} className={cn(styles['icon'])}>
+      <SvgPath paths={paths}/>
     </div>
   );
 }
-export function CartIconClose({ onDelete }: { onDelete: () => void }) {
+interface CardIconCloseProps extends React.ComponentProps<'button'> {
+  onDelete: () => void;
+}
+
+export function CartIconClose(props: CardIconCloseProps) {
   const closeIcon = 'M6 18 17.94 6M18 18 6.06 6';
   return (
-    <CartIcon
-      paths={[closeIcon]}
-      className={styles['cart-item-close']}
-      onClick={onDelete}
-    />
+    <button className={cn(styles['icon'], styles['close'])} onClick={props.onDelete} >
+      <SvgPath paths={[closeIcon]}/>
+    </button>
   );
 }
