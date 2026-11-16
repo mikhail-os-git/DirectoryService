@@ -1,0 +1,31 @@
+.icon {
+  display: flex;
+  align-items: center;
+}
+
+.icon svg {
+  width: var(--icon-size, 20px);
+  height: var(--icon-size, 20px);
+  transition: 250ms ease;
+}
+
+/* Крестик */
+
+.close {
+  padding: 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 250ms;
+}
+
+.close:hover {
+  background-color: rgba(204, 204, 204, 0.45);
+}
+
+.close:hover svg {
+  color: rgb(0, 0, 0);
+}
+
+.close:active svg {
+  transform: scale(1.1);
+}

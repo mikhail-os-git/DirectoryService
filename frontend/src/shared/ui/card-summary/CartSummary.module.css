@@ -1,0 +1,31 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: rgba(111, 111, 111, 0.2) 0px 8px 24px;
+  font-family: sans-serif;
+  color: #323232;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  text-transform: capitalize;
+  background: #f1f1f1;
+  color: #323232;
+}
+
+.success { background: #7dffbc; color: #047857; }
+.info    { background: #7eb8ff; color: #1e3a8a; }
+.warning { background: #ffe57e; color: #78350f; }
+.error   { background: #ff7e7e; color: #7f1d1d; }
