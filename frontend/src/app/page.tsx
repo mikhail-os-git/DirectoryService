@@ -2,7 +2,7 @@
 import { ROUTES } from "@/shared/config/routes";
 import NavBar from "@/shared/ui/nav-bar/NavBar";
 import { ILinkInfo } from "@/shared/ui/nav-bar/NavBar.props";
-import { useState } from "react"; 
+
 export default function Home() {
 
     const links: ILinkInfo[] = [
@@ -22,10 +22,8 @@ export default function Home() {
   ] 
 
   return (
-
-
-
-    <main className="main mx-3">
+    <main className="main mx-auto pt-5">
+      <h1>Home</h1>
       <NavBar links={links}/>
     </main>
   );
